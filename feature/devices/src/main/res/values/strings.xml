@@ -1,0 +1,5 @@
+<resources>
+    <string name="devices_kicker">catalog</string>
+    <string name="devices_title">Devices</string>
+    <string name="devices_description">Every device Team StormBreaker builds for, with status and maintainer.</string>
+</resources>

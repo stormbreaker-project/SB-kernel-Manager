@@ -1,0 +1,7 @@
+<resources>
+    <string name="licenses_kicker">licenses</string>
+    <string name="licenses_title">Open-source licenses</string>
+    <string name="licenses_subtitle">SB Kernel Manager ships the following third-party software.</string>
+    <string name="licenses_group">Bundled in this app</string>
+    <string name="licenses_entry_detail">%1$s · %2$s</string>
+</resources>

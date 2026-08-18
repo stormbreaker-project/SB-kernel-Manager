@@ -1,0 +1,4 @@
+<resources>
+    <string name="action_retry">Retry</string>
+    <string name="action_back">Back</string>
+</resources>

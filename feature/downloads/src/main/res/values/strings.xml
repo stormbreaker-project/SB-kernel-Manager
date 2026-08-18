@@ -1,0 +1,5 @@
+<resources>
+    <string name="downloads_kicker">builds</string>
+    <string name="downloads_title">Builds</string>
+    <string name="downloads_description">Kernel builds and changelogs, with checksums, for your device.</string>
+</resources>

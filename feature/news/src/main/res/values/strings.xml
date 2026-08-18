@@ -1,0 +1,20 @@
+<resources>
+    <string name="news_kicker">newsroom</string>
+    <string name="news_title">News &amp; releases</string>
+    <string name="news_subtitle">Kernel drops, project updates and announcements from Team StormBreaker.</string>
+    <string name="news_read">Read</string>
+    <plurals name="news_reading_time">
+        <item quantity="one">%1$d min read</item>
+        <item quantity="other">%1$d min read</item>
+    </plurals>
+    <string name="news_meta_separator">/</string>
+    <string name="news_open_article">Open article: %1$s</string>
+    <string name="news_offline_copy">Offline — showing the last saved copy.</string>
+    <string name="news_empty">No news yet. Check back soon.</string>
+    <string name="news_error_offline_title">You\'re offline</string>
+    <string name="news_error_offline_message">Connect to a network to load the newsroom.</string>
+    <string name="news_error_server_title">Couldn\'t reach the newsroom</string>
+    <string name="news_error_server_message">stormbreaker.squadri.me didn\'t answer. Try again in a moment.</string>
+    <string name="news_error_malformed_title">Couldn\'t read the newsroom</string>
+    <string name="news_error_malformed_message">The feed wasn\'t in a format this version understands. Updating the app may fix it.</string>
+</resources>

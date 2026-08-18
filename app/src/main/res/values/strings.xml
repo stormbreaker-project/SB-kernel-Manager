@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">SB Kernel Manager</string>
 
-    <!-- Top-level destinations. Labels sit inside the nav bar pill, so they
-         need to stay short; content descriptions carry the full meaning. -->
+    <!-- Nav bar. Labels sit inside the pill so they stay short; content
+         descriptions carry the full meaning. -->
     <string name="tab_news">News</string>
     <string name="tab_news_description">News</string>
     <string name="tab_devices">Devices</string>
@@ -11,51 +11,4 @@
     <string name="tab_downloads_description">Kernel builds and changelogs</string>
     <string name="tab_more">More</string>
     <string name="tab_more_description">Community, contributing, and about</string>
-
-    <!-- Newsroom. Kicker and heading mirror the website's news page. -->
-    <string name="news_kicker">newsroom</string>
-    <string name="news_title">News &amp; releases</string>
-    <string name="news_subtitle">Kernel drops, project updates and announcements from Team StormBreaker.</string>
-    <string name="news_read">Read</string>
-    <plurals name="news_reading_time">
-        <item quantity="one">%1$d min read</item>
-        <item quantity="other">%1$d min read</item>
-    </plurals>
-    <string name="news_meta_separator">/</string>
-    <string name="news_open_article">Open article: %1$s</string>
-    <string name="news_offline_copy">Offline — showing the last saved copy.</string>
-    <string name="news_empty">No news yet. Check back soon.</string>
-
-    <string name="news_error_offline_title">You\'re offline</string>
-    <string name="news_error_offline_message">Connect to a network to load the newsroom.</string>
-    <string name="news_error_server_title">Couldn\'t reach the newsroom</string>
-    <string name="news_error_server_message">stormbreaker.squadri.me didn\'t answer. Try again in a moment.</string>
-    <string name="news_error_malformed_title">Couldn\'t read the newsroom</string>
-    <string name="news_error_malformed_message">The feed wasn\'t in a format this version understands. Updating the app may fix it.</string>
-
-    <string name="action_retry">Retry</string>
-    <string name="action_back">Back</string>
-
-    <!-- More -->
-    <string name="more_kicker">more</string>
-    <string name="more_title">Project &amp; community</string>
-    <string name="more_soon">soon</string>
-
-
-    <string name="more_appearance">Appearance</string>
-    <string name="more_theme">Theme</string>
-    <string name="more_theme_system">System</string>
-    <string name="more_theme_light">Light</string>
-    <string name="more_theme_dark">Dark</string>
-
-    <string name="more_about">About</string>
-    <string name="more_about_version">App version</string>
-    <string name="more_about_licenses">Open-source licenses</string>
-    <string name="more_about_licenses_description">What this app is built on</string>
-
-    <!-- Licenses -->
-    <string name="licenses_kicker">licenses</string>
-    <string name="licenses_title">Open-source licenses</string>
-    <string name="licenses_subtitle">SB Kernel Manager ships the following third-party software.</string>
-    <string name="licenses_group">Bundled in this app</string>
 </resources>

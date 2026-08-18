@@ -1,47 +1,19 @@
 package dev.danascape.kernelmanager
 
 import android.app.Application
-import android.content.Context
 import coil3.ImageLoader
 import coil3.PlatformContext
 import coil3.SingletonImageLoader
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.svg.SvgDecoder
-import dev.danascape.kernelmanager.core.data.links.LinksRepository
-import dev.danascape.kernelmanager.core.data.news.NewsRepository
-import dev.danascape.kernelmanager.core.data.settings.ThemeRepository
-import dev.danascape.kernelmanager.core.datastore.SettingsStore
-import dev.danascape.kernelmanager.core.network.createHttpClient
-import io.ktor.client.HttpClient
+import dev.danascape.kernelmanager.core.di.AppContainer
+import dev.danascape.kernelmanager.core.di.AppContainerOwner
 
-/**
- * Manual dependency container.
- */
-class AppContainer(context: Context) {
+class SBApplication : Application(), AppContainerOwner, SingletonImageLoader.Factory {
 
-    private val appContext: Context = context.applicationContext
+    override val appContainer: AppContainer by lazy { AppContainer(this) }
 
-    private val httpClient: HttpClient by lazy { createHttpClient(appContext.cacheDir) }
-
-    val newsRepository: NewsRepository by lazy { NewsRepository(httpClient) }
-
-    val linksRepository: LinksRepository by lazy {
-        LinksRepository(httpClient, appContext.assets)
-    }
-
-    val themeRepository: ThemeRepository by lazy { ThemeRepository(SettingsStore(appContext)) }
-}
-
-class SBApplication : Application(), SingletonImageLoader.Factory {
-
-    lateinit var container: AppContainer
-        private set
-
-    override fun onCreate() {
-        super.onCreate()
-        container = AppContainer(this)
-    }
-
+    /** Every news cover the site publishes is an SVG, which Coil cannot decode without this. */
     override fun newImageLoader(context: PlatformContext): ImageLoader =
         ImageLoader.Builder(context)
             .components {
