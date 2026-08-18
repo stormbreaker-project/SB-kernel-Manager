@@ -1,8 +1,8 @@
 package dev.danascape.kernelmanager.feature.news
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,6 +26,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import dev.danascape.kernelmanager.R
+import dev.danascape.kernelmanager.core.designsystem.component.pressScaleModifier
+import dev.danascape.kernelmanager.core.designsystem.component.revealModifier
 import dev.danascape.kernelmanager.core.designsystem.theme.SBTheme
 import dev.danascape.kernelmanager.core.model.NewsPost
 import java.time.LocalDate
@@ -32,12 +35,15 @@ import java.time.format.DateTimeFormatter
 
 private val DateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
 
+/** Matches the outer radius of the grouped rows on More. */
+private val CardRadius = 24.dp
+
 /**
  * One post, laid out like the website's news card: a mono meta line, the
  * headline, the summary, then a read affordance.
  *
- * Flat by construction — a hairline border rather than elevation or a fill,
- * matching the site's cards.
+ * A filled surface rather than an outlined box, on the same shape and motion
+ * vocabulary as the grouped rows on More.
  */
 @Composable
 fun NewsCard(
@@ -45,16 +51,24 @@ fun NewsCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     showCover: Boolean = false,
+    revealIndex: Int = 0,
 ) {
     val openLabel = stringResource(R.string.news_open_article, post.title)
+    val interactionSource = remember { MutableInteractionSource() }
+    val shape = RoundedCornerShape(CardRadius)
 
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(14.dp))
-            .border(1.dp, SBTheme.colors.hairline, RoundedCornerShape(14.dp))
-            .background(MaterialTheme.colorScheme.surface)
-            .clickable(onClick = onClick)
+            .then(revealModifier(revealIndex))
+            .then(pressScaleModifier(interactionSource))
+            .clip(shape)
+            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = onClick,
+            )
             .semantics { contentDescription = openLabel },
     ) {
         if (showCover && post.coverUrl != null) {

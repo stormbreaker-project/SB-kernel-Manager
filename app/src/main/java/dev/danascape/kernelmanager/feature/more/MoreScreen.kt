@@ -28,6 +28,7 @@ import dev.danascape.kernelmanager.R
 import dev.danascape.kernelmanager.core.data.settings.ThemePreference
 import dev.danascape.kernelmanager.core.designsystem.component.ActionRow
 import dev.danascape.kernelmanager.core.designsystem.component.SettingsGroup
+import dev.danascape.kernelmanager.core.designsystem.component.revealModifier
 import dev.danascape.kernelmanager.core.designsystem.component.ValueRow
 import dev.danascape.kernelmanager.core.designsystem.theme.SBTheme
 import dev.danascape.kernelmanager.core.model.LinkItem
@@ -88,7 +89,10 @@ private fun MoreContent(
 
 @Composable
 private fun Header() {
-    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+    Column(
+        modifier = Modifier.then(revealModifier(0)),
+        verticalArrangement = Arrangement.spacedBy(6.dp),
+    ) {
         Text(
             text = stringResource(R.string.more_kicker),
             style = MaterialTheme.typography.labelSmall,

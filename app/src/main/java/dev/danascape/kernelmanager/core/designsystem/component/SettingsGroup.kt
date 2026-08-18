@@ -2,7 +2,6 @@ package dev.danascape.kernelmanager.core.designsystem.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,10 +21,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import dev.danascape.kernelmanager.core.designsystem.theme.SBMotion
 import dev.danascape.kernelmanager.core.designsystem.theme.SBTheme
 
 /*
@@ -95,23 +91,13 @@ private fun GroupedRow(
     content: @Composable RowScope.() -> Unit,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
-    val pressed by interactionSource.collectIsPressedAsState()
-    val scale by animateFloatAsState(
-        targetValue = if (pressed) SBMotion.PressedScale else 1f,
-        animationSpec = SBMotion.pressSpring(),
-        label = "pressScale",
-    )
-
     val shape = groupShape(index, count)
 
     Row(
         modifier = modifier
             .fillMaxWidth()
             .then(revealModifier(revealIndex))
-            .graphicsLayer {
-                scaleX = scale
-                scaleY = scale
-            }
+            .then(pressScaleModifier(interactionSource))
             .clip(shape)
             .background(MaterialTheme.colorScheme.surfaceContainerHigh)
             .then(

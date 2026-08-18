@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.danascape.kernelmanager.R
+import dev.danascape.kernelmanager.core.designsystem.component.revealModifier
 import dev.danascape.kernelmanager.core.designsystem.theme.SBTheme
 import dev.danascape.kernelmanager.core.model.LoadError
 import dev.danascape.kernelmanager.core.model.NewsPost
@@ -125,11 +126,12 @@ private fun LazyListScope.newsItems(
     onPostClick: (NewsPost) -> Unit,
 ) {
     val featuredId = posts.firstOrNull()?.id
-    items(items = posts, key = { it.id }) { post ->
+    itemsIndexed(items = posts, key = { _, post -> post.id }) { index, post ->
         NewsCard(
             post = post,
             onClick = { onPostClick(post) },
             showCover = post.id == featuredId,
+            revealIndex = index,
         )
     }
 }
@@ -137,7 +139,9 @@ private fun LazyListScope.newsItems(
 @Composable
 private fun Header() {
     Column(
-        modifier = Modifier.padding(bottom = 4.dp),
+        modifier = Modifier
+            .then(revealModifier(0))
+            .padding(bottom = 4.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
         Text(
@@ -170,8 +174,8 @@ private fun OfflineNotice() {
         color = SBTheme.colors.faint,
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(10.dp))
-            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .clip(RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
             .padding(horizontal = 12.dp, vertical = 10.dp),
     )
 }
