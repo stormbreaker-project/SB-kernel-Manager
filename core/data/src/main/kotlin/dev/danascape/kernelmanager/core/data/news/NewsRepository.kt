@@ -15,6 +15,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.http.HttpHeaders
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerializationException
@@ -28,19 +29,26 @@ import java.io.IOException
  */
 class NewsRepository(
     private val client: HttpClient,
+    // Taken as a parameter so a test can substitute it; a dispatcher chosen
+    // inside the function could not be replaced.
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
+    // The final catch is deliberately broad: anything Ktor or the platform
+    // raises that is not IO or a parse failure is reported as a server problem,
+    // and the cause travels with it rather than being discarded.
+    @Suppress("TooGenericExceptionCaught")
     suspend fun news(): DataResult<List<NewsPost>> =
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             try {
                 DataResult.Success(client.get(SBEndpoints.NEWS).body<NewsFeedDto>().toDomain())
             } catch (cancellation: CancellationException) {
                 throw cancellation
             } catch (io: IOException) {
-                cached() ?: DataResult.Failure(LoadError.OFFLINE)
+                cached() ?: DataResult.Failure(LoadError.OFFLINE, io)
             } catch (malformed: SerializationException) {
-                DataResult.Failure(LoadError.MALFORMED)
+                DataResult.Failure(LoadError.MALFORMED, malformed)
             } catch (other: Exception) {
-                DataResult.Failure(LoadError.SERVER)
+                DataResult.Failure(LoadError.SERVER, other)
             }
         }
 

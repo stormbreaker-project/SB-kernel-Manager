@@ -8,6 +8,7 @@ import dev.danascape.kernelmanager.core.device.DeviceProfileReader
 import dev.danascape.kernelmanager.core.device.SystemVitalsReader
 import dev.danascape.kernelmanager.core.model.DeviceProfile
 import dev.danascape.kernelmanager.core.model.Vitals
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -17,13 +18,14 @@ private const val LOAD_WINDOW_MILLIS = 500L
 class DeviceRepository(
     private val profileReader: DeviceProfileReader,
     private val vitalsReader: SystemVitalsReader,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
     /**
      * Read once and cached. Shelling out to `getprop` and walking cpufreq is
      * not something to repeat on every recomposition.
      */
     suspend fun profile(): DeviceProfile =
-        cachedProfile ?: withContext(Dispatchers.IO) {
+        cachedProfile ?: withContext(ioDispatcher) {
             profileReader.read().also { cachedProfile = it }
         }
 
@@ -35,7 +37,7 @@ class DeviceRepository(
      * the sampling window rather than returning instantly.
      */
     suspend fun vitals(): Vitals =
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             val first = CpuLoadReader.sample()
             delay(LOAD_WINDOW_MILLIS)
             val load = first?.let { start -> CpuLoadReader.sample()?.let { CpuLoadReader.load(start, it) } }

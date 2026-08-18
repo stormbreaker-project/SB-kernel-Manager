@@ -11,8 +11,13 @@ sealed interface DataResult<out T> {
         val stale: Boolean = false,
     ) : DataResult<T>
 
+    /**
+     * @param cause the original failure. Carried rather than discarded: [error]
+     *   is what the UI acts on, the cause is what a bug report needs.
+     */
     data class Failure(
         val error: LoadError,
+        val cause: Throwable? = null,
     ) : DataResult<Nothing>
 }
 

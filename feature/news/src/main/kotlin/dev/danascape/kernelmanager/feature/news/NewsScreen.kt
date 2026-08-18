@@ -73,13 +73,13 @@ private fun NewsContent(
 ) {
     when (state) {
         NewsUiState.Loading -> {
-            Centered(modifier, contentPadding) {
+            Centered(contentPadding, modifier) {
                 CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
             }
         }
 
         NewsUiState.Empty -> {
-            Centered(modifier, contentPadding) {
+            Centered(contentPadding, modifier) {
                 Text(
                     text = stringResource(R.string.news_empty),
                     style = MaterialTheme.typography.bodyMedium,
@@ -90,7 +90,7 @@ private fun NewsContent(
         }
 
         is NewsUiState.Failed -> {
-            Centered(modifier, contentPadding) {
+            Centered(contentPadding, modifier) {
                 LoadFailure(error = state.error, onRetry = onRetry)
             }
         }
@@ -255,8 +255,8 @@ private fun LoadFailure(
 
 @Composable
 private fun Centered(
-    modifier: Modifier,
     contentPadding: PaddingValues,
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
     Box(

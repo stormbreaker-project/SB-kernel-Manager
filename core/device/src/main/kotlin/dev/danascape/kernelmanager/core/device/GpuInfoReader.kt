@@ -22,6 +22,9 @@ import dev.danascape.kernelmanager.core.model.GpuInfo
  * Identification only. Usage and clocks are not exposed this way.
  */
 object GpuInfoReader {
+    // Setting up EGL is a sequence of steps that can each fail, and an early
+    // return per step reads better than the nesting that avoids them.
+    @Suppress("ReturnCount")
     fun read(): GpuInfo? {
         var display: EGLDisplay? = null
         var context: EGLContext? = null

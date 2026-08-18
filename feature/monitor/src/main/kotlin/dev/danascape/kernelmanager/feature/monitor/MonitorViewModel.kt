@@ -22,6 +22,9 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
+private const val MICROAMPS_PER_MILLIAMP = 1000f
+private const val MILLIS_PER_SECOND = 1000f
+
 /** Roughly thirty seconds at the sampling rate the idle window imposes. */
 private const val WINDOW = 60
 
@@ -104,7 +107,7 @@ class MonitorViewModel(
             // Sign convention for draw varies by vendor; magnitude is the signal.
             batteryDrawMilliAmps =
                 batteryDrawMilliAmps
-                    .append(vitals.battery?.currentMicroAmps?.let { abs(it) / 1000f }),
+                    .append(vitals.battery?.currentMicroAmps?.let { abs(it) / MICROAMPS_PER_MILLIAMP }),
             networkBytesPerSecond = networkBytesPerSecond.append(networkRate(vitals)),
         )
     }
@@ -119,7 +122,7 @@ class MonitorViewModel(
         previousUptimeMillis = now
 
         if (previousBytes == null || previousMillis == null) return null
-        val seconds = (now - previousMillis) / 1000f
+        val seconds = (now - previousMillis) / MILLIS_PER_SECOND
         if (seconds <= 0f) return null
         return ((total - previousBytes).coerceAtLeast(0) / seconds)
     }

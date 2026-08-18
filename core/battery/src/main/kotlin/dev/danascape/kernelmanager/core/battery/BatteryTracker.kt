@@ -3,6 +3,9 @@
 
 package dev.danascape.kernelmanager.core.battery
 
+// Drain is accumulated in tenths so a slow discharge does not round away.
+private const val TENTHS_PER_PERCENT = 10
+
 /**
  * Folds samples into a session.
  *
@@ -27,9 +30,9 @@ object BatteryTracker {
         val rebooted = previous != null && sample.elapsedMillis < previous.elapsedMillis
         val unplugged = previous != null && previous.charging && !sample.charging
 
-        if (session == null || rebooted || unplugged || sample.charging) {
-            return start(sample)
-        }
+        // Any of these makes the accumulated totals meaningless to continue.
+        val startsFresh = session == null || rebooted || unplugged || sample.charging
+        if (startsFresh) return start(sample)
         if (previous == null) return session.copy(latest = sample)
 
         val elapsed = sample.elapsedMillis - previous.elapsedMillis
@@ -40,7 +43,8 @@ object BatteryTracker {
         // samples on the transition itself rather than only on a timer.
         val wasScreenOn = previous.screenOn
 
-        val drainedTenths = ((previous.levelPercent - sample.levelPercent) * 10).coerceAtLeast(0)
+        val drainedTenths =
+            ((previous.levelPercent - sample.levelPercent) * TENTHS_PER_PERCENT).coerceAtLeast(0)
         val drainedUah = drainedMicroAmpHours(previous, sample)
         val awake = (sample.awakeMillis - previous.awakeMillis).coerceIn(0, elapsed)
         val slept = (elapsed - awake).coerceAtLeast(0)

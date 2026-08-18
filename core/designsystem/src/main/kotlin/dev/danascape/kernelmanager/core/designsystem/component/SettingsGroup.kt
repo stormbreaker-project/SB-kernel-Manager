@@ -136,9 +136,16 @@ fun ValueRow(
     value: String,
     index: Int,
     count: Int,
+    modifier: Modifier = Modifier,
     revealIndex: Int = index,
 ) {
-    GroupedRow(index = index, count = count, revealIndex = revealIndex, onClick = null) {
+    GroupedRow(
+        index = index,
+        count = count,
+        revealIndex = revealIndex,
+        onClick = null,
+        modifier = modifier,
+    ) {
         Text(
             text = label,
             style = MaterialTheme.typography.bodyLarge,
@@ -164,17 +171,21 @@ fun ActionRow(
     label: String,
     index: Int,
     count: Int,
+    // Ahead of the modifier because it is required, and out of trailing
+    // position because a trailing lambda reads as a content slot, not a click.
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
     description: String? = null,
     trailing: String? = null,
     enabled: Boolean = true,
     revealIndex: Int = index,
-    onClick: () -> Unit,
 ) {
     GroupedRow(
         index = index,
         count = count,
         revealIndex = revealIndex,
         onClick = onClick.takeIf { enabled },
+        modifier = modifier,
     ) {
         Column(
             modifier = Modifier.weight(1f),

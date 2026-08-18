@@ -15,6 +15,11 @@ import kotlinx.serialization.Serializable
  * A session resets on unplug rather than on boot, so the figures describe one
  * discharge rather than a mixture of charging and discharging.
  */
+private const val TENTHS_PER_PERCENT = 10f
+private const val MICRO_PER_UNIT = 1_000_000f
+private const val MILLI_PER_UNIT = 1000f
+private const val MILLIS_PER_HOUR = 3_600_000L
+
 @Serializable
 data class BatterySession(
     val startedAtElapsedMillis: Long,
@@ -32,8 +37,8 @@ data class BatterySession(
     val screenOffAwakeMillis: Long = 0,
     val latest: BatterySample? = null,
 ) {
-    val screenOnDrainedPercent: Float get() = screenOnDrainedTenths / 10f
-    val screenOffDrainedPercent: Float get() = screenOffDrainedTenths / 10f
+    val screenOnDrainedPercent: Float get() = screenOnDrainedTenths / TENTHS_PER_PERCENT
+    val screenOffDrainedPercent: Float get() = screenOffDrainedTenths / TENTHS_PER_PERCENT
 
     /** Percent per hour while the screen was on, or null before there is enough of a window. */
     val activeDrainPerHour: Float? get() = ratePerHour(screenOnDrainedPercent, screenOnMillis)
@@ -53,8 +58,8 @@ data class BatterySession(
     /** Power now, in watts, from current and voltage. */
     val watts: Float?
         get() {
-            val amps = latest?.currentMicroAmps?.let { kotlin.math.abs(it) / 1_000_000f } ?: return null
-            val volts = latest?.voltageMilliVolts?.let { it / 1000f } ?: return null
+            val amps = latest?.currentMicroAmps?.let { kotlin.math.abs(it) / MICRO_PER_UNIT } ?: return null
+            val volts = latest?.voltageMilliVolts?.let { it / MILLI_PER_UNIT } ?: return null
             return amps * volts
         }
 
@@ -68,7 +73,7 @@ data class BatterySession(
             if (sample.charging) return null
             val rate = (if (sample.screenOn) activeDrainPerHour else idleDrainPerHour) ?: return null
             if (rate <= 0f) return null
-            return ((sample.levelPercent / rate) * 3_600_000L).toLong()
+            return ((sample.levelPercent / rate) * MILLIS_PER_HOUR).toLong()
         }
 
     private companion object {
@@ -80,7 +85,7 @@ data class BatterySession(
             windowMillis: Long,
         ): Float? {
             if (windowMillis < MIN_WINDOW_MILLIS || drainedPercent <= 0f) return null
-            return drainedPercent / (windowMillis / 3_600_000f)
+            return drainedPercent / (windowMillis.toFloat() / MILLIS_PER_HOUR)
         }
     }
 }

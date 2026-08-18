@@ -13,6 +13,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -28,9 +29,10 @@ internal const val BUNDLED_LINKS_ASSET = "links.json"
 class LinksRepository(
     private val client: HttpClient,
     private val assets: AssetManager,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
     suspend fun links(): List<LinkSection> =
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             remote() ?: bundled()
         }
 

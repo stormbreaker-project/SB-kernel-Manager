@@ -9,6 +9,9 @@ import java.io.File
 private const val CPU_ROOT = "/sys/devices/system/cpu"
 private const val THERMAL_ROOT = "/sys/class/thermal"
 
+/** Thermal zones report thousandths of a degree. */
+private const val MILLI_DEGREES_PER_DEGREE = 1000f
+
 /**
  * cpufreq is one of the few kernel nodes still world-readable on a stock
  * device. Thermal zones are not, so a temperature here is the exception.
@@ -53,13 +56,14 @@ object CpuReader {
         val zones =
             File(THERMAL_ROOT).listFiles { file -> file.name.startsWith("thermal_zone") }
                 ?: return null
-        for (zone in zones) {
-            val type = zone.resolve("type").readTextOrNull() ?: continue
-            if (!type.contains("cpu", ignoreCase = true)) continue
-            val milliC = zone.resolve("temp").readIntOrNull() ?: continue
-            return milliC / 1000f
-        }
-        return null
+        return zones
+            .firstNotNullOfOrNull { zone ->
+                zone
+                    .resolve("type")
+                    .readTextOrNull()
+                    ?.takeIf { it.contains("cpu", ignoreCase = true) }
+                    ?.let { zone.resolve("temp").readIntOrNull() }
+            }?.div(MILLI_DEGREES_PER_DEGREE)
     }
 }
 

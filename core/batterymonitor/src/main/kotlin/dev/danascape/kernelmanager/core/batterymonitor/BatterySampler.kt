@@ -12,6 +12,8 @@ import android.os.SystemClock
 import androidx.core.content.getSystemService
 import dev.danascape.kernelmanager.core.battery.BatterySample
 
+private const val TENTHS_PER_DEGREE = 10f
+
 /**
  * Takes one reading of the battery and both clocks.
  *
@@ -54,7 +56,7 @@ class BatterySampler(
                     ?.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW)
                     ?.takeIf { it != Int.MIN_VALUE && it != 0 },
             voltageMilliVolts = milliVolts.takeIf { it > 0 },
-            temperatureC = tenthsC.takeIf { it != Int.MIN_VALUE }?.let { it / 10f },
+            temperatureC = tenthsC.takeIf { it != Int.MIN_VALUE }?.let { it / TENTHS_PER_DEGREE },
             charging =
                 status == BatteryManager.BATTERY_STATUS_CHARGING ||
                     status == BatteryManager.BATTERY_STATUS_FULL,

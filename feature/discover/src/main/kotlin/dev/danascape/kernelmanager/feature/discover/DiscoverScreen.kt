@@ -55,6 +55,9 @@ import dev.danascape.kernelmanager.core.model.NewsPost
 import dev.danascape.kernelmanager.core.model.Vitals
 import java.util.Locale
 
+private const val KHZ_PER_GHZ = 1_000_000f
+private const val BYTES_PER_GB = 1_073_741_824f
+
 @Composable
 fun DiscoverScreen(
     contentPadding: PaddingValues,
@@ -305,13 +308,13 @@ private fun CpuRow(
             max != null -> {
                 stringResource(
                     R.string.discover_cpu_value,
-                    stringResource(R.string.discover_ghz, current / 1_000_000f),
-                    stringResource(R.string.discover_ghz, max / 1_000_000f),
+                    stringResource(R.string.discover_ghz, current / KHZ_PER_GHZ),
+                    stringResource(R.string.discover_ghz, max / KHZ_PER_GHZ),
                 )
             }
 
             else -> {
-                stringResource(R.string.discover_ghz, current / 1_000_000f)
+                stringResource(R.string.discover_ghz, current / KHZ_PER_GHZ)
             }
         }
     ValueRow(stringResource(R.string.discover_cpu), value, index, count)
@@ -343,7 +346,7 @@ private fun NewsGroup(
     }
 }
 
-private fun formatGigabytes(bytes: Long): String = String.format(Locale.getDefault(), "%.1f GB", bytes / 1_073_741_824f)
+private fun formatGigabytes(bytes: Long): String = String.format(Locale.getDefault(), "%.1f GB", bytes / BYTES_PER_GB)
 
 @Preview
 @Composable

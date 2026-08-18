@@ -13,6 +13,8 @@ import dev.danascape.kernelmanager.core.model.BatteryVitals
 import dev.danascape.kernelmanager.core.model.MemoryVitals
 import dev.danascape.kernelmanager.core.model.Vitals
 
+private const val TENTHS_PER_DEGREE = 10f
+
 /**
  * Samples live state.
  *
@@ -70,7 +72,7 @@ class SystemVitalsReader(
 
         return BatteryVitals(
             percent = (level * 100) / scale,
-            temperatureC = tenthsC.takeIf { it != Int.MIN_VALUE }?.let { it / 10f },
+            temperatureC = tenthsC.takeIf { it != Int.MIN_VALUE }?.let { it / TENTHS_PER_DEGREE },
             charging =
                 status == BatteryManager.BATTERY_STATUS_CHARGING ||
                     status == BatteryManager.BATTERY_STATUS_FULL,

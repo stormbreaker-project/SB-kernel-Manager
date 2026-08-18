@@ -23,6 +23,12 @@ internal const val CHANNEL_ID = "battery_monitor"
  */
 private const val FIELD_SEPARATOR = "   ·   "
 
+private const val PERCENT = 100
+private const val MICROAMPS_PER_MILLIAMP = 1000
+private const val MILLIS_PER_SECOND = 1000
+private const val SECONDS_PER_HOUR = 3600
+private const val SECONDS_PER_MINUTE = 60
+
 /**
  * Renders the session as an ongoing notification.
  *
@@ -103,7 +109,7 @@ internal class BatteryNotification(
                 ),
             )
             sample.currentMicroAmps?.let {
-                add(context.getString(R.string.battery_current, abs(it) / 1000))
+                add(context.getString(R.string.battery_current, abs(it) / MICROAMPS_PER_MILLIAMP))
             }
         }.joinToString(FIELD_SEPARATOR)
     }
@@ -144,7 +150,7 @@ internal class BatteryNotification(
     private fun share(
         part: Long,
         whole: Long,
-    ): Int = if (whole <= 0) 0 else ((part.toFloat() / whole) * 100).roundToInt()
+    ): Int = if (whole <= 0) 0 else ((part.toFloat() / whole) * PERCENT).roundToInt()
 
     private fun rate(value: Float) = context.getString(R.string.battery_rate_value, value)
 
@@ -152,10 +158,10 @@ internal class BatteryNotification(
 
     /** Zero units are dropped, so a fresh session reads "12s" rather than "0h 0m 12s". */
     private fun duration(millis: Long): String {
-        val seconds = millis / 1000
-        val h = seconds / 3600
-        val m = (seconds % 3600) / 60
-        val s = seconds % 60
+        val seconds = millis / MILLIS_PER_SECOND
+        val h = seconds / SECONDS_PER_HOUR
+        val m = (seconds % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE
+        val s = seconds % SECONDS_PER_MINUTE
         return when {
             h > 0 -> String.format(Locale.getDefault(), "%dh %dm %ds", h, m, s)
             m > 0 -> String.format(Locale.getDefault(), "%dm %ds", m, s)

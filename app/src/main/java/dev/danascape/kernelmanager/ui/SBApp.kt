@@ -23,7 +23,7 @@ import dev.danascape.kernelmanager.navigation.topLevelDestination
  * The app shell: one nav bar over the top-level destinations.
  */
 @Composable
-fun SBApp() {
+fun SBApp(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
 
@@ -45,7 +45,7 @@ fun SBApp() {
         }
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
             PvotNavBar(

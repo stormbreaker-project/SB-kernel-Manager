@@ -100,6 +100,9 @@ internal fun sbTypography(context: Context): Typography {
     return sbTypography(display = displayFamily(available), mono = monoFamily(available))
 }
 
+// One entry per Material type role. Splitting a table to satisfy a line
+// count would scatter it across functions that each say less.
+@Suppress("LongMethod")
 internal fun sbTypography(
     display: FontFamily,
     mono: FontFamily,

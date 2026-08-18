@@ -9,57 +9,113 @@ build:
 
 complexity:
   LongMethod:
-    # Composables read as one declarative block; splitting them to satisfy a
-    # line count usually makes them harder to follow, not easier.
+    # Declarative UI is not judged by the line count that suits imperative
+    # logic. Compose structure is enforced instead by the Compose rules below —
+    # nesting depth, emitters, slot reuse — which measure the thing that
+    # actually goes wrong in a long composable.
     ignoreAnnotated: ['Composable']
   LongParameterList:
+    # Compose APIs legitimately take many parameters, most of them defaulted.
     ignoreAnnotated: ['Composable']
+    # A defaulted parameter is not a burden at the call site.
+    ignoreDefaultParameters: true
   TooManyFunctions:
     ignoreAnnotated: ['Composable']
     thresholdInFiles: 20
     thresholdInClasses: 20
 
+coroutines:
+  InjectDispatcher:
+    # A dispatcher chosen inside a function cannot be replaced in a test, so
+    # repositories take one as a parameter.
+    #
+    # Note this rule needs type resolution, which this setup does not run, so it
+    # is currently inert — the repositories were changed by hand. Left enabled
+    # so it starts enforcing the moment type resolution is turned on.
+    active: true
+  RedundantSuspendModifier:
+    active: true
+  SuspendFunWithFlowReturnType:
+    active: true
+  GlobalCoroutineUsage:
+    active: true
+
+exceptions:
+  TooGenericExceptionCaught:
+    # Enabled deliberately. Reading sysfs, shelling out and talking to the
+    # network do fail in many unrelated ways, but that is a claim to make at the
+    # call site with a local suppression, not a blindfold for the whole project.
+    active: true
+  SwallowedException:
+    # Discarding an exception has to be an explicit local decision.
+    active: true
+
+naming:
+  MatchingDeclarationName:
+    # A navigation file pairs a route with the extensions that operate on it and
+    # is named for that pair, not for the single class inside it.
+    active: false
+  FunctionNaming:
+    # Composables are PascalCase by Compose convention.
+    ignoreAnnotated: ['Composable']
+  TopLevelPropertyNaming:
+    # Constants stay UPPER_SNAKE, as Kotlin has it. PascalCase is permitted
+    # because design-system tokens are conventionally named that way
+    # (val OuterRadius, val SBTypography) — it is not licence for ordinary
+    # properties to adopt it.
+    constantPattern: '[A-Z][_A-Z0-9]*'
+    privatePropertyPattern: '_?[A-Z][_A-Za-z0-9]*|_?[a-z][A-Za-z0-9]*'
+
 style:
   MagicNumber:
-    # Sizes, weights and durations are the values themselves; naming every dp
-    # constant adds indirection without meaning.
+    # A number is not magic merely for being numeric. 16.dp in a padding has no
+    # meaning a name could add; a retry count does, and stays named.
     ignoreAnnotated: ['Composable', 'Preview']
     ignorePropertyDeclaration: true
     ignoreCompanionObjectPropertyDeclaration: true
   MaxLineLength:
-    maxLineLength: 120
+    # ktlint owns formatting, from .editorconfig. Two tools enforcing line
+    # length is one tool too many, even while they agree.
+    active: false
   ReturnCount:
+    # Guard clauses read better than the nesting that avoids them.
     max: 4
+    excludeGuardClauses: true
   UnusedPrivateMember:
+    # A preview exists to be found by tooling, not called.
     ignoreAnnotated: ['Preview']
 
-naming:
-  FunctionNaming:
-    # Composables are PascalCase by convention.
-    ignoreAnnotated: ['Composable']
-  TopLevelPropertyNaming:
-    constantPattern: '[A-Z][A-Za-z0-9]*'
-    privatePropertyPattern: '_?[A-Z][A-Za-z0-9]*|_?[a-z][A-Za-z0-9]*'
-
-exceptions:
-  TooGenericExceptionCaught:
-    # Reading sysfs and the network fails in many unrelated ways, and the
-    # response is the same for all of them: report nothing rather than crash.
-    active: false
-  SwallowedException:
-    active: false
-
-# Compose-specific analysis, from io.nlopez.compose.rules.
+# Compose-specific analysis, from io.nlopez.compose.rules. Rule ids are taken
+# from the ruleset's own bundled config, not guessed from class names, because
+# third-party rulesets rename rules between releases.
 Compose:
+  CompositionLocalAllowlist:
+    # One, deliberately: the brand tokens Material has no slot for. Anything
+    # else wanting a CompositionLocal has to argue for it here first.
+    allowedCompositionLocals: ['LocalSBExtendedColors']
   ComposableAnnotationNaming:
     active: true
-  ComposableParametersOrdering:
+  ComposableNaming:
+    active: true
+  ComposableParamOrder:
+    active: true
+  CompositionLocalNaming:
     active: true
   ContentEmitterReturningValues:
     active: true
-  ModifierComposable:
+  ContentSlotReused:
+    active: true
+  ContentTrailingLambda:
+    active: true
+  DefaultsVisibility:
+    active: true
+  ModifierClickableOrder:
+    active: true
+  ModifierComposed:
     active: true
   ModifierMissing:
+    active: true
+  ModifierNaming:
     active: true
   ModifierNotUsedAtRoot:
     active: true
@@ -71,17 +127,26 @@ Compose:
     active: true
   MutableParams:
     active: true
-  ComposableNaming:
+  MutableStateAutoboxing:
+    active: true
+  MutableStateParam:
+    active: true
+  ParameterNaming:
     active: true
   PreviewAnnotationNaming:
     active: true
   PreviewPublic:
     active: true
+  RememberContentMissing:
+    active: true
   RememberMissing:
     active: true
   UnstableCollections:
-    # Every list here is built once and never mutated; enabling this would
-    # demand ImmutableList wrappers across the whole model layer for no gain.
+    # Revisit after a deliberate stability audit of the UI-state models. Do not
+    # wrap the model layer in ImmutableList to satisfy a linter; optimise
+    # stability at the Compose boundaries where recomposition actually costs.
     active: false
   ViewModelForwarding:
+    active: true
+  ViewModelInjection:
     active: true

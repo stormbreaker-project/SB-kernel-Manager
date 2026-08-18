@@ -1,0 +1,44 @@
+# SPDX-FileCopyrightText: 2026 Saalim Quadri <danascape@gmail.com>
+# SPDX-License-Identifier: Apache-2.0
+
+name: Quality
+
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: ktlint, detekt, build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      # Reported together rather than stopping at the first failure, so one run
+      # surfaces everything that needs fixing.
+      - name: ktlint
+        run: ./gradlew ktlintCheck --continue
+
+      - name: detekt
+        if: '!cancelled()'
+        run: ./gradlew detekt --continue
+
+      - name: Build and test
+        if: '!cancelled()'
+        run: ./gradlew build --continue
