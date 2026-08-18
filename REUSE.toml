@@ -10,6 +10,7 @@ SPDX-PackageDownloadLocation = "https://github.com/stormbreaker-project/SB-kerne
 path = [
     ".gitignore",
     ".gitmodules",
+    "CLAUDE.md",
     "app/.gitignore",
     "app/src/main/keepRules/rules.keep",
     "app/src/main/res/mipmap-**/*.webp",

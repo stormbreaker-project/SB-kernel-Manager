@@ -31,7 +31,10 @@ Dependencies point one way only. A feature cannot reach the HTTP client, and
 | `:core:common` | `DataResult`, `LoadError`. Plain Kotlin. | — |
 | `:core:network` | Ktor client, wire DTOs, endpoints | `:core:model` |
 | `:core:datastore` | Preference storage | `:core:model` |
-| `:core:data` | Repositories | `:core:network`, `:core:datastore` |
+| `:core:data` | Repositories | `:core:network`, `:core:datastore`, `:core:device` |
+| `:core:device` | Unprivileged sysfs/procfs readers | `:core:model` |
+| `:core:battery` | Session accounting. Plain Kotlin. | `:core:model` |
+| `:core:batterymonitor` | Foreground service and notification | `:core:battery` |
 | `:core:di` | `AppContainer`, `AppContainerOwner` | `:core:data` |
 | `:core:designsystem` | Brand palette, type, shared components | `:design-system` (PvotLib) |
 | `:feature:*` | One screen each | `:core:designsystem`, `:core:di`, `:core:model`, `:core:common` |
