@@ -9,6 +9,7 @@ android {
 
 dependencies {
     api(project(":core:data"))
+    api(project(":core:batterymonitor"))
     implementation(project(":core:datastore"))
     implementation(project(":core:network"))
     implementation(libs.ktor.client.okhttp)

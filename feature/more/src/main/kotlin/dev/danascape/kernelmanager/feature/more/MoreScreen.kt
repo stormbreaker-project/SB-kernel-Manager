@@ -1,5 +1,9 @@
 package dev.danascape.kernelmanager.feature.more
 
+import android.Manifest
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,13 +30,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.danascape.kernelmanager.feature.more.R
-import dev.danascape.kernelmanager.core.model.ThemePreference
+import dev.danascape.kernelmanager.core.batterymonitor.BatteryMonitorService
 import dev.danascape.kernelmanager.core.designsystem.component.ActionRow
 import dev.danascape.kernelmanager.core.designsystem.component.SettingsGroup
 import com.prauga.pvot.designsystem.modifier.pvotReveal
 import dev.danascape.kernelmanager.core.designsystem.component.ValueRow
 import dev.danascape.kernelmanager.core.designsystem.theme.SBTheme
 import dev.danascape.kernelmanager.core.model.LinkItem
+import dev.danascape.kernelmanager.core.model.ThemePreference
 import dev.danascape.kernelmanager.core.model.LinkSection
 import dev.danascape.kernelmanager.core.designsystem.component.expandedBy
 import dev.danascape.kernelmanager.core.designsystem.component.topInset
@@ -51,11 +56,28 @@ fun MoreScreen(
     val context = LocalContext.current
     val toolbarColor = MaterialTheme.colorScheme.surface.toArgb()
 
+    // The service accumulates either way; the permission only decides whether
+    // the readout is visible, so the result is not acted on.
+    val notificationPermission = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission(),
+    ) { }
+
     MoreContent(
         state = state,
         contentPadding = contentPadding,
         onLinkClick = { item -> item.url?.let { context.openArticle(it, toolbarColor) } },
         onThemeChange = viewModel::setTheme,
+        onToggleBatteryMonitor = { enabled ->
+            viewModel.setBatteryMonitorEnabled(enabled)
+            if (enabled) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    notificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
+                BatteryMonitorService.start(context)
+            } else {
+                BatteryMonitorService.stop(context)
+            }
+        },
         onOpenDevices = onOpenDevices,
         onOpenNews = onOpenNews,
         onOpenLicenses = onOpenLicenses,
@@ -69,6 +91,7 @@ private fun MoreContent(
     contentPadding: PaddingValues,
     onLinkClick: (LinkItem) -> Unit,
     onThemeChange: (ThemePreference) -> Unit,
+    onToggleBatteryMonitor: (Boolean) -> Unit,
     onOpenDevices: () -> Unit,
     onOpenNews: () -> Unit,
     onOpenLicenses: () -> Unit,
@@ -92,6 +115,13 @@ private fun MoreContent(
             BrowseGroup(onOpenDevices = onOpenDevices, onOpenNews = onOpenNews)
         }
 
+        item(key = "battery") {
+            BatteryMonitorGroup(
+                enabled = state.batteryMonitorEnabled,
+                onToggle = onToggleBatteryMonitor,
+            )
+        }
+
         item(key = "appearance") {
             SettingsGroup(title = stringResource(R.string.more_appearance)) {
                 ThemeRow(selected = state.theme, onSelect = onThemeChange)
@@ -103,6 +133,26 @@ private fun MoreContent(
         }
 
         item(key = "about") { AboutGroup(onOpenLicenses = onOpenLicenses) }
+    }
+}
+
+/**
+ * Off by default, and says why up front: nothing reports discharge history
+ * retroactively, so the figures only start when the user opts in.
+ */
+@Composable
+private fun BatteryMonitorGroup(enabled: Boolean, onToggle: (Boolean) -> Unit) {
+    SettingsGroup(title = stringResource(R.string.more_battery)) {
+        ActionRow(
+            label = stringResource(R.string.more_battery_toggle),
+            index = 0,
+            count = 1,
+            description = stringResource(R.string.more_battery_description),
+            trailing = stringResource(
+                if (enabled) R.string.more_battery_on else R.string.more_battery_off,
+            ),
+            onClick = { onToggle(!enabled) },
+        )
     }
 }
 
@@ -247,6 +297,7 @@ private fun MorePreview() {
             contentPadding = PaddingValues(),
             onLinkClick = {},
             onThemeChange = {},
+            onToggleBatteryMonitor = {},
             onOpenDevices = {},
             onOpenNews = {},
             onOpenLicenses = {},

@@ -7,6 +7,7 @@ import dev.danascape.kernelmanager.core.di.appContainer
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import dev.danascape.kernelmanager.core.batterymonitor.BatterySessionStore
 import dev.danascape.kernelmanager.core.data.links.LinksRepository
 import dev.danascape.kernelmanager.core.model.ThemePreference
 import dev.danascape.kernelmanager.core.data.settings.ThemeRepository
@@ -20,11 +21,13 @@ import kotlinx.coroutines.launch
 data class MoreUiState(
     val sections: List<LinkSection> = emptyList(),
     val theme: ThemePreference = ThemePreference.SYSTEM,
+    val batteryMonitorEnabled: Boolean = false,
 )
 
 class MoreViewModel(
     private val linksRepository: LinksRepository,
     private val themeRepository: ThemeRepository,
+    private val batteryStore: BatterySessionStore,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(MoreUiState())
@@ -42,10 +45,20 @@ class MoreViewModel(
                 _state.update { it.copy(theme = theme) }
             }
         }
+        viewModelScope.launch {
+            batteryStore.enabled.collect { enabled ->
+                _state.update { it.copy(batteryMonitorEnabled = enabled) }
+            }
+        }
     }
 
     fun setTheme(preference: ThemePreference) {
         viewModelScope.launch { themeRepository.setTheme(preference) }
+    }
+
+    /** Only records the preference; starting the service is the UI's job. */
+    fun setBatteryMonitorEnabled(enabled: Boolean) {
+        viewModelScope.launch { batteryStore.setEnabled(enabled) }
     }
 
     companion object {
@@ -55,6 +68,7 @@ class MoreViewModel(
                 MoreViewModel(
                     linksRepository = container.linksRepository,
                     themeRepository = container.themeRepository,
+                    batteryStore = container.batterySessionStore,
                 )
             }
         }

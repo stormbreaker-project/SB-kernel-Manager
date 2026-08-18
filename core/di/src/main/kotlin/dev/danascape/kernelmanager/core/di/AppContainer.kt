@@ -3,6 +3,8 @@ package dev.danascape.kernelmanager.core.di
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import dev.danascape.kernelmanager.core.battery.BatterySession
+import dev.danascape.kernelmanager.core.batterymonitor.BatterySessionStore
 import dev.danascape.kernelmanager.core.data.device.DeviceRepository
 import dev.danascape.kernelmanager.core.data.links.LinksRepository
 import dev.danascape.kernelmanager.core.data.news.NewsRepository
@@ -43,6 +45,8 @@ class AppContainer(context: Context) {
     }
 
     val themeRepository: ThemeRepository by lazy { ThemeRepository(SettingsStore(appContext)) }
+
+    val batterySessionStore: BatterySessionStore by lazy { BatterySessionStore(appContext) }
 }
 
 /** Implemented by the Application so features can reach the container. */
