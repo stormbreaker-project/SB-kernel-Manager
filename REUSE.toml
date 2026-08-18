@@ -13,7 +13,6 @@ path = [
     "CLAUDE.md",
     "app/.gitignore",
     "app/src/main/keepRules/rules.keep",
-    "app/src/main/res/mipmap-**/*.webp",
     "core/data/src/main/assets/links.json",
     "docs/**",
 ]
