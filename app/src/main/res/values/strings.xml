@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">SB Kernel Manager</string>
+
+    <!-- Top-level destinations. Labels sit inside the nav bar pill, so they
+         need to stay short; content descriptions carry the full meaning. -->
+    <string name="tab_news">News</string>
+    <string name="tab_news_description">News</string>
+    <string name="tab_devices">Devices</string>
+    <string name="tab_devices_description">Supported devices</string>
+    <string name="tab_downloads">Builds</string>
+    <string name="tab_downloads_description">Kernel builds and changelogs</string>
+    <string name="tab_more">More</string>
+    <string name="tab_more_description">Community, contributing, and about</string>
 </resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Line art, 1.75dp stroke. Icon() applies the tint, so the stroke colour here is a placeholder. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:pathData="M4,5h16v14h-16z"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="1.75"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M7,9h6M7,12.5h10M7,16h10"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="1.75"
+        android:strokeLineCap="round" />
+</vector>

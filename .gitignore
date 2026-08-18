@@ -1,5 +1,4 @@
 *.iml
-.claude
 .gradle
 /local.properties
 /.idea
@@ -9,3 +8,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Claude Code
+.claude/

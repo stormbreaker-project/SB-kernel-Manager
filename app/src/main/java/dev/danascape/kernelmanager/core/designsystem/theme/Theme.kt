@@ -7,7 +7,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.prauga.pvot.designsystem.components.navigation.PvotNavBarColors
+import com.prauga.pvot.designsystem.components.navigation.PvotNavBarSizes
 import com.prauga.pvot.designsystem.theme.PvotAppTheme
 
 /**
@@ -47,6 +50,26 @@ fun SBTheme(
                 containerColor = colorScheme.surface,
                 iconSelectedColor = colorScheme.onPrimary,
                 iconUnselectedColor = extendedColors.muted,
+            ),
+            // barWidth/expandedWidth are left unset so the bar measures
+            // intrinsically. A fixed 367dp bar plus 22dp padding a side needs
+            // a 411dp viewport and would clip on the 360dp-wide devices a lot
+            // of this fleet still runs.
+            //
+            // labelFontSize drops from the 16sp default because the label text
+            // style here is monospace, which sets appreciably wider.
+            navBarSizes = PvotNavBarSizes(
+                barHeight = 72.dp,
+                collapsedItemSize = 56.dp,
+                cornerRadius = 100.dp,
+                itemCornerRadius = 28.dp,
+                collapsedIconSize = 22.dp,
+                expandedIconSize = 22.dp,
+                labelFontSize = 14.sp,
+                maxExpandedWidth = 180.dp,
+                horizontalPadding = 22.dp,
+                contentPaddingHorizontal = 9.dp,
+                itemSpacing = 4.dp,
             ),
             content = content,
         )
