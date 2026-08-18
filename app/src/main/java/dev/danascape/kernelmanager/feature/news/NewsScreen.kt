@@ -1,23 +1,284 @@
 package dev.danascape.kernelmanager.feature.news
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import dev.danascape.kernelmanager.core.designsystem.component.SectionPlaceholder
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import dev.danascape.kernelmanager.R
 import dev.danascape.kernelmanager.core.designsystem.theme.SBTheme
+import dev.danascape.kernelmanager.core.model.LoadError
+import dev.danascape.kernelmanager.core.model.NewsPost
+import dev.danascape.kernelmanager.core.ui.openArticle
+import java.time.LocalDate
 
 @Composable
-fun NewsScreen(modifier: Modifier = Modifier) {
-    SectionPlaceholder(
-        kicker = "NEWS",
-        title = "News",
-        description = "Release notes and project updates, pulled from the same source as the website.",
+fun NewsScreen(
+    modifier: Modifier = Modifier,
+    viewModel: NewsViewModel = viewModel(factory = NewsViewModel.Factory),
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val toolbarColor = MaterialTheme.colorScheme.surface.toArgb()
+
+    NewsContent(
+        state = state,
+        onPostClick = { post -> context.openArticle(post.url, toolbarColor) },
+        onRetry = viewModel::refresh,
         modifier = modifier,
     )
 }
 
+/** Stateless body, so every state is previewable and testable on its own. */
+@Composable
+private fun NewsContent(
+    state: NewsUiState,
+    onPostClick: (NewsPost) -> Unit,
+    onRetry: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    when (state) {
+        NewsUiState.Loading -> Centered(modifier) {
+            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+        }
+
+        NewsUiState.Empty -> Centered(modifier) {
+            Text(
+                text = stringResource(R.string.news_empty),
+                style = MaterialTheme.typography.bodyMedium,
+                color = SBTheme.colors.muted,
+                textAlign = TextAlign.Center,
+            )
+        }
+
+        is NewsUiState.Failed -> Centered(modifier) {
+            LoadFailure(error = state.error, onRetry = onRetry)
+        }
+
+        is NewsUiState.Ready -> NewsList(
+            posts = state.posts,
+            stale = state.stale,
+            onPostClick = onPostClick,
+            modifier = modifier,
+        )
+    }
+}
+
+@Composable
+private fun NewsList(
+    posts: List<NewsPost>,
+    stale: Boolean,
+    onPostClick: (NewsPost) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    LazyColumn(
+        modifier = modifier.fillMaxSize(),
+        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 24.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        item(key = "header") { Header() }
+
+        if (stale) {
+            item(key = "stale") { OfflineNotice() }
+        }
+
+        newsItems(posts, onPostClick)
+    }
+}
+
+/**
+ * The newest post carries its cover, matching the website's featured card;
+ * the rest stay text-only so the list reads as a feed rather than a gallery.
+ */
+private fun LazyListScope.newsItems(
+    posts: List<NewsPost>,
+    onPostClick: (NewsPost) -> Unit,
+) {
+    val featuredId = posts.firstOrNull()?.id
+    items(items = posts, key = { it.id }) { post ->
+        NewsCard(
+            post = post,
+            onClick = { onPostClick(post) },
+            showCover = post.id == featuredId,
+        )
+    }
+}
+
+@Composable
+private fun Header() {
+    Column(
+        modifier = Modifier.padding(bottom = 4.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp),
+    ) {
+        Text(
+            text = stringResource(R.string.news_kicker),
+            style = MaterialTheme.typography.labelSmall,
+            color = SBTheme.colors.accent,
+        )
+        Text(
+            text = stringResource(R.string.news_title),
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.onBackground,
+        )
+        Text(
+            text = stringResource(R.string.news_subtitle),
+            style = MaterialTheme.typography.bodyMedium,
+            color = SBTheme.colors.muted,
+        )
+    }
+}
+
+/**
+ * Says plainly that the list is a saved copy. Showing cached posts as though
+ * they were live would be the kind of small lie this project avoids.
+ */
+@Composable
+private fun OfflineNotice() {
+    Text(
+        text = stringResource(R.string.news_offline_copy),
+        style = MaterialTheme.typography.labelSmall,
+        color = SBTheme.colors.faint,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(10.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .padding(horizontal = 12.dp, vertical = 10.dp),
+    )
+}
+
+@Composable
+private fun LoadFailure(error: LoadError, onRetry: () -> Unit) {
+    val (title, message) = when (error) {
+        LoadError.OFFLINE ->
+            stringResource(R.string.news_error_offline_title) to
+                stringResource(R.string.news_error_offline_message)
+
+        LoadError.SERVER ->
+            stringResource(R.string.news_error_server_title) to
+                stringResource(R.string.news_error_server_message)
+
+        LoadError.MALFORMED ->
+            stringResource(R.string.news_error_malformed_title) to
+                stringResource(R.string.news_error_malformed_message)
+    }
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        modifier = Modifier.padding(horizontal = 32.dp),
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onBackground,
+            textAlign = TextAlign.Center,
+        )
+        Text(
+            text = message,
+            style = MaterialTheme.typography.bodyMedium,
+            color = SBTheme.colors.muted,
+            textAlign = TextAlign.Center,
+        )
+        OutlinedButton(onClick = onRetry) {
+            Text(
+                text = stringResource(R.string.action_retry),
+                style = MaterialTheme.typography.labelMedium,
+            )
+        }
+    }
+}
+
+@Composable
+private fun Centered(modifier: Modifier, content: @Composable () -> Unit) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+        content = { content() },
+    )
+}
+
+private val PreviewPosts = listOf(
+    NewsPost(
+        id = "2026-08-12-stormbreaker-clang-default",
+        title = "StormBreaker Clang is now our default toolchain",
+        date = LocalDate.of(2026, 8, 12),
+        tag = "Toolchain",
+        author = "Saalim Quadri",
+        summary = "Our in-house LLVM/Clang build is back, and from here on it " +
+            "compiles every StormBreaker kernel by default.",
+        coverUrl = null,
+        url = "https://stormbreaker.squadri.me/news/2026-08-12-stormbreaker-clang-default/",
+        readingMinutes = 2,
+    ),
+    NewsPost(
+        id = "2026-08-11-we-are-alive",
+        title = "We're alive, and we're building again",
+        date = LocalDate.of(2026, 8, 11),
+        tag = "Announcement",
+        author = "Saalim Quadri",
+        summary = "It went quiet for a while. It never went away.",
+        coverUrl = null,
+        url = "https://stormbreaker.squadri.me/news/2026-08-11-we-are-alive/",
+        readingMinutes = 3,
+    ),
+)
+
 @Preview
 @Composable
-private fun NewsScreenPreview() {
-    SBTheme { NewsScreen() }
+private fun NewsReadyPreview() {
+    SBTheme {
+        NewsContent(
+            state = NewsUiState.Ready(PreviewPosts, stale = false),
+            onPostClick = {},
+            onRetry = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun NewsOfflinePreview() {
+    SBTheme {
+        NewsContent(
+            state = NewsUiState.Ready(PreviewPosts, stale = true),
+            onPostClick = {},
+            onRetry = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun NewsFailedPreview() {
+    SBTheme {
+        NewsContent(
+            state = NewsUiState.Failed(LoadError.OFFLINE),
+            onPostClick = {},
+            onRetry = {},
+        )
+    }
 }

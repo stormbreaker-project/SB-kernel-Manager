@@ -2,6 +2,11 @@ package dev.danascape.kernelmanager
 
 import android.app.Application
 import android.content.Context
+import coil3.ImageLoader
+import coil3.PlatformContext
+import coil3.SingletonImageLoader
+import coil3.network.okhttp.OkHttpNetworkFetcherFactory
+import coil3.svg.SvgDecoder
 import dev.danascape.kernelmanager.core.data.news.NewsRepository
 import dev.danascape.kernelmanager.core.network.createHttpClient
 import io.ktor.client.HttpClient
@@ -18,7 +23,7 @@ class AppContainer(context: Context) {
     val newsRepository: NewsRepository by lazy { NewsRepository(httpClient) }
 }
 
-class SBApplication : Application() {
+class SBApplication : Application(), SingletonImageLoader.Factory {
 
     lateinit var container: AppContainer
         private set
@@ -27,4 +32,12 @@ class SBApplication : Application() {
         super.onCreate()
         container = AppContainer(this)
     }
+
+    override fun newImageLoader(context: PlatformContext): ImageLoader =
+        ImageLoader.Builder(context)
+            .components {
+                add(SvgDecoder.Factory())
+                add(OkHttpNetworkFetcherFactory())
+            }
+            .build()
 }
