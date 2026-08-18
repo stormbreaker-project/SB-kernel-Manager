@@ -13,17 +13,14 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-private const val BUNDLED_ASSET = "links.json"
+internal const val BUNDLED_LINKS_ASSET = "links.json"
 
 /**
- * Community and project links.
+ * Community and project links, published by the site with a copy bundled here.
  *
- * Published by the website so a moved Telegram invite is a site deploy rather
- * than an app release, with a copy bundled in the APK as the floor. The bundled
- * copy is what makes this screen work on first run with no network — it is
- * allowed to go stale, because the network copy wins whenever it is reachable.
- *
- * There is deliberately no failure path: something is always available.
+ * The bundled copy is the floor: it makes More work on first run with no
+ * network, and is allowed to go stale because the remote copy wins whenever it
+ * is reachable. There is deliberately no failure path.
  */
 class LinksRepository(
     private val client: HttpClient,
@@ -43,12 +40,12 @@ class LinksRepository(
     }
 
     private fun bundled(): List<LinkSection> = try {
-        assets.open(BUNDLED_ASSET).bufferedReader().use { reader ->
+        assets.open(BUNDLED_LINKS_ASSET).bufferedReader().use { reader ->
             SBJson.decodeFromString<LinksDto>(reader.readText()).toDomain()
         }
     } catch (_: Exception) {
-        // Only reachable if the APK asset is missing or malformed, which is a
-        // build error rather than a runtime condition.
+        // Only reachable if the shipped asset is missing or malformed, which is
+        // a build error rather than a runtime condition.
         emptyList()
     }
 }

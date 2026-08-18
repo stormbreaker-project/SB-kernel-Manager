@@ -1,6 +1,8 @@
-package dev.danascape.kernelmanager.core.network.dto
+package dev.danascape.kernelmanager.core.data
 
 import dev.danascape.kernelmanager.core.network.SBJson
+import dev.danascape.kernelmanager.core.network.dto.LinksDto
+import dev.danascape.kernelmanager.core.network.dto.toDomain
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.File

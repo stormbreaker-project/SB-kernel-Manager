@@ -1,4 +1,4 @@
-package dev.danascape.kernelmanager.core.data.settings
+package dev.danascape.kernelmanager.core.datastore
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -17,13 +17,13 @@ private val Context.settingsDataStore: DataStore<Preferences> by preferencesData
 
 private val ThemeKey = stringPreferencesKey("theme")
 
-class ThemeRepository(context: Context) {
+/** Persisted user settings. */
+class SettingsStore(context: Context) {
 
     private val dataStore = context.applicationContext.settingsDataStore
 
     val theme: Flow<ThemePreference> = dataStore.data
-        // A corrupt or unreadable store must not take the whole UI down; the
-        // system default is always a safe answer.
+        // A corrupt store must not take the UI down; the system default is safe.
         .catch { cause -> if (cause is IOException) emit(emptyPreferences()) else throw cause }
         .map { preferences ->
             preferences[ThemeKey]

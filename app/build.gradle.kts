@@ -42,7 +42,10 @@ android {
 dependencies {
     implementation(project(":design-system"))
     implementation(project(":core:common"))
+    implementation(project(":core:data"))
+    implementation(project(":core:datastore"))
     implementation(project(":core:model"))
+    implementation(project(":core:network"))
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)

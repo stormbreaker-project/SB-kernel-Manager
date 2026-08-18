@@ -8,7 +8,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import dev.danascape.kernelmanager.SBApplication
 import dev.danascape.kernelmanager.core.data.news.NewsRepository
-import dev.danascape.kernelmanager.core.data.news.NewsResult
+import dev.danascape.kernelmanager.core.common.DataResult
 import dev.danascape.kernelmanager.core.common.LoadError
 import dev.danascape.kernelmanager.core.model.NewsPost
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,11 +45,11 @@ class NewsViewModel(private val repository: NewsRepository) : ViewModel() {
                 _state.value = NewsUiState.Loading
             }
             _state.value = when (val result = repository.news()) {
-                is NewsResult.Ok ->
-                    if (result.posts.isEmpty()) NewsUiState.Empty
-                    else NewsUiState.Ready(result.posts, result.stale)
+                is DataResult.Success ->
+                    if (result.data.isEmpty()) NewsUiState.Empty
+                    else NewsUiState.Ready(result.data, result.stale)
 
-                is NewsResult.Failed -> NewsUiState.Failed(result.error)
+                is DataResult.Failure -> NewsUiState.Failed(result.error)
             }
         }
     }

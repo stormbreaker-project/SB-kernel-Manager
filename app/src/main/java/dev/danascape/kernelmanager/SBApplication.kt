@@ -10,6 +10,7 @@ import coil3.svg.SvgDecoder
 import dev.danascape.kernelmanager.core.data.links.LinksRepository
 import dev.danascape.kernelmanager.core.data.news.NewsRepository
 import dev.danascape.kernelmanager.core.data.settings.ThemeRepository
+import dev.danascape.kernelmanager.core.datastore.SettingsStore
 import dev.danascape.kernelmanager.core.network.createHttpClient
 import io.ktor.client.HttpClient
 
@@ -28,7 +29,7 @@ class AppContainer(context: Context) {
         LinksRepository(httpClient, appContext.assets)
     }
 
-    val themeRepository: ThemeRepository by lazy { ThemeRepository(appContext) }
+    val themeRepository: ThemeRepository by lazy { ThemeRepository(SettingsStore(appContext)) }
 }
 
 class SBApplication : Application(), SingletonImageLoader.Factory {
