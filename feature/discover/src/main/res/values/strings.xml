@@ -1,5 +1,33 @@
 <resources>
     <string name="discover_kicker">discover</string>
-    <string name="discover_title">Discover</string>
-    <string name="discover_description">Your device at a glance: update status, latest releases and news. Coming with the OTA updater.</string>
+
+    <!-- Identity -->
+    <string name="discover_kernel_stock">Not a StormBreaker kernel</string>
+    <string name="discover_kernel_running">Running normally</string>
+    <string name="discover_android">Android %1$s · API %2$d</string>
+
+    <!-- Update -->
+    <string name="discover_update">Kernel</string>
+    <string name="discover_update_unavailable_title">Update checks aren\'t live yet</string>
+    <string name="discover_update_unavailable_body">Arriving with the OTA updater, once the release manifest is published.</string>
+
+    <!-- Vitals -->
+    <string name="discover_vitals">Vitals</string>
+    <string name="discover_battery">Battery</string>
+    <string name="discover_memory">RAM</string>
+    <string name="discover_cpu">CPU</string>
+    <string name="discover_governor">Governor</string>
+    <string name="discover_percent">%1$d%%</string>
+    <string name="discover_celsius">%1$.0f°C</string>
+    <string name="discover_battery_charging">%1$d%% · charging</string>
+    <string name="discover_memory_value">%1$s / %2$s</string>
+    <string name="discover_ghz">%1$.2f GHz</string>
+    <string name="discover_cpu_value">%1$s of %2$s</string>
+    <string name="discover_view_monitoring">View monitoring</string>
+    <string name="discover_vitals_none">Nothing readable on this device without root.</string>
+    <string name="discover_thermal_locked">Temperatures need a StormBreaker kernel — Android blocks thermal sensors for ordinary apps.</string>
+
+    <!-- News -->
+    <string name="discover_news">Latest from the project</string>
+    <string name="discover_news_all">News archive</string>
 </resources>

@@ -16,6 +16,7 @@ import dev.danascape.kernelmanager.feature.discover.discoverScreen
 import dev.danascape.kernelmanager.feature.licenses.licensesScreen
 import dev.danascape.kernelmanager.feature.licenses.navigateToLicenses
 import dev.danascape.kernelmanager.feature.monitor.monitorScreen
+import dev.danascape.kernelmanager.feature.monitor.navigateToMonitor
 import dev.danascape.kernelmanager.feature.more.MoreRoute
 import dev.danascape.kernelmanager.feature.more.moreScreen
 import dev.danascape.kernelmanager.feature.news.navigateToNews
@@ -56,7 +57,11 @@ fun SBNavHost(
         startDestination = DiscoverRoute,
         modifier = modifier,
     ) {
-        discoverScreen(contentPadding)
+        discoverScreen(
+            contentPadding = contentPadding,
+            onOpenMonitoring = { navController.navigateToMonitor() },
+            onOpenNews = { navController.navigateToNews() },
+        )
         tuneScreen(contentPadding)
         monitorScreen(contentPadding)
         buildsScreen(contentPadding)

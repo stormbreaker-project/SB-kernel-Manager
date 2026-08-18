@@ -13,6 +13,16 @@ data object DiscoverRoute
 fun NavController.navigateToDiscover(navOptions: NavOptions? = null) =
     navigate(DiscoverRoute, navOptions)
 
-fun NavGraphBuilder.discoverScreen(contentPadding: PaddingValues) {
-    composable<DiscoverRoute> { DiscoverScreen(contentPadding = contentPadding) }
+fun NavGraphBuilder.discoverScreen(
+    contentPadding: PaddingValues,
+    onOpenMonitoring: () -> Unit,
+    onOpenNews: () -> Unit,
+) {
+    composable<DiscoverRoute> {
+        DiscoverScreen(
+            contentPadding = contentPadding,
+            onOpenMonitoring = onOpenMonitoring,
+            onOpenNews = onOpenNews,
+        )
+    }
 }
