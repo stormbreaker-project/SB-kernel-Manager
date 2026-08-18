@@ -8,7 +8,6 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import dev.danascape.kernelmanager.R
 import dev.danascape.kernelmanager.feature.builds.BuildsRoute
 import dev.danascape.kernelmanager.feature.discover.DiscoverRoute
-import dev.danascape.kernelmanager.feature.monitor.MonitorRoute
 import dev.danascape.kernelmanager.feature.tune.TuneRoute
 
 /**
@@ -42,7 +41,7 @@ enum class SBDestination(
         contentDescriptionRes = R.string.tab_tune_description,
     ),
     MONITOR(
-        route = MonitorRoute,
+        route = MonitorGraphRoute,
         iconRes = R.drawable.ic_tab_monitor,
         labelRes = R.string.tab_monitor,
         contentDescriptionRes = R.string.tab_monitor_description,

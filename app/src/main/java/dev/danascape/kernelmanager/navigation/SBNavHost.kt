@@ -15,7 +15,10 @@ import dev.danascape.kernelmanager.feature.discover.DiscoverRoute
 import dev.danascape.kernelmanager.feature.discover.discoverScreen
 import dev.danascape.kernelmanager.feature.licenses.licensesScreen
 import dev.danascape.kernelmanager.feature.licenses.navigateToLicenses
+import dev.danascape.kernelmanager.feature.monitor.MonitorRoute
+import dev.danascape.kernelmanager.feature.monitor.cpuDetailScreen
 import dev.danascape.kernelmanager.feature.monitor.monitorScreen
+import dev.danascape.kernelmanager.feature.monitor.navigateToCpuDetail
 import dev.danascape.kernelmanager.feature.monitor.navigateToMonitor
 import dev.danascape.kernelmanager.feature.more.MoreRoute
 import dev.danascape.kernelmanager.feature.more.moreScreen
@@ -37,6 +40,14 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data object MoreGraphRoute
+
+/**
+ * Monitor's nested graph, for the same reason as More's: the CPU detail screen
+ * has to keep Monitor selected in the bar rather than dropping to the start
+ * destination.
+ */
+@Serializable
+data object MonitorGraphRoute
 
 /**
  * Composes the feature graphs.
@@ -63,7 +74,13 @@ fun SBNavHost(
             onOpenNews = { navController.navigateToNews() },
         )
         tuneScreen(contentPadding)
-        monitorScreen(contentPadding)
+        navigation<MonitorGraphRoute>(startDestination = MonitorRoute) {
+            monitorScreen(
+                contentPadding = contentPadding,
+                onOpenCpuDetail = { navController.navigateToCpuDetail() },
+            )
+            cpuDetailScreen(contentPadding)
+        }
         buildsScreen(contentPadding)
 
         navigation<MoreGraphRoute>(startDestination = MoreRoute) {

@@ -10,9 +10,25 @@ import kotlinx.serialization.Serializable
 @Serializable
 data object MonitorRoute
 
+/** Detail pushed from the CPU card. */
+@Serializable
+data object CpuDetailRoute
+
 fun NavController.navigateToMonitor(navOptions: NavOptions? = null) =
     navigate(MonitorRoute, navOptions)
 
-fun NavGraphBuilder.monitorScreen(contentPadding: PaddingValues) {
-    composable<MonitorRoute> { MonitorScreen(contentPadding = contentPadding) }
+fun NavController.navigateToCpuDetail(navOptions: NavOptions? = null) =
+    navigate(CpuDetailRoute, navOptions)
+
+fun NavGraphBuilder.monitorScreen(
+    contentPadding: PaddingValues,
+    onOpenCpuDetail: () -> Unit,
+) {
+    composable<MonitorRoute> {
+        MonitorScreen(contentPadding = contentPadding, onOpenCpuDetail = onOpenCpuDetail)
+    }
+}
+
+fun NavGraphBuilder.cpuDetailScreen(contentPadding: PaddingValues) {
+    composable<CpuDetailRoute> { CpuDetailScreen(contentPadding = contentPadding) }
 }

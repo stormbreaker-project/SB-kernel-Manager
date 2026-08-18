@@ -17,10 +17,30 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlin.math.abs
+
+/** Roughly thirty seconds at the sampling rate the idle window imposes. */
+private const val WINDOW = 60
+
+/**
+ * Recent history, kept only while the screen is open.
+ *
+ * Nothing is persisted and nothing is sampled in the background: a monitor
+ * nobody is looking at is a battery cost. The consequence is that graphs fill
+ * as you watch rather than showing history from before you arrived.
+ */
+data class MetricHistory(
+    val totalLoad: List<Float> = emptyList(),
+    val perCoreLoad: List<List<Float>> = emptyList(),
+    val memoryUsed: List<Float> = emptyList(),
+    val batteryDrawMilliAmps: List<Float> = emptyList(),
+    val networkBytesPerSecond: List<Float> = emptyList(),
+)
 
 data class MonitorUiState(
     val profile: DeviceProfile? = null,
     val vitals: Vitals? = null,
+    val history: MetricHistory = MetricHistory(),
 )
 
 class MonitorViewModel(private val deviceRepository: DeviceRepository) : ViewModel() {
@@ -29,6 +49,8 @@ class MonitorViewModel(private val deviceRepository: DeviceRepository) : ViewMod
     val state: StateFlow<MonitorUiState> = _state.asStateFlow()
 
     private var sampling: Job? = null
+    private var previousNetworkBytes: Long? = null
+    private var previousUptimeMillis: Long? = null
 
     init {
         viewModelScope.launch {
@@ -38,19 +60,18 @@ class MonitorViewModel(private val deviceRepository: DeviceRepository) : ViewMod
     }
 
     /**
-     * Sampling runs only while the screen is on screen.
-     *
      * Each pass already spends half a second measuring idle residency, so this
      * polls continuously rather than on a timer — the measurement window is the
-     * interval. Leaving it running in the background would be a battery cost
-     * for a screen nobody is looking at.
+     * interval.
      */
     fun startSampling() {
         if (sampling?.isActive == true) return
         sampling = viewModelScope.launch {
             while (isActive) {
                 val vitals = deviceRepository.vitals()
-                _state.update { it.copy(vitals = vitals) }
+                _state.update { current ->
+                    current.copy(vitals = vitals, history = current.history.plus(vitals))
+                }
             }
         }
     }
@@ -58,6 +79,48 @@ class MonitorViewModel(private val deviceRepository: DeviceRepository) : ViewMod
     fun stopSampling() {
         sampling?.cancel()
         sampling = null
+        previousNetworkBytes = null
+        previousUptimeMillis = null
+    }
+
+    private fun MetricHistory.plus(vitals: Vitals): MetricHistory {
+        val cores = vitals.load?.perCore.orEmpty()
+        return copy(
+            totalLoad = totalLoad.append(vitals.load?.average),
+            perCoreLoad = if (cores.isEmpty()) {
+                perCoreLoad
+            } else {
+                List(cores.size) { core ->
+                    perCoreLoad.getOrNull(core).orEmpty().append(cores[core])
+                }
+            },
+            memoryUsed = memoryUsed.append(vitals.memory?.usedFraction),
+            // Sign convention for draw varies by vendor; magnitude is the signal.
+            batteryDrawMilliAmps = batteryDrawMilliAmps
+                .append(vitals.battery?.currentMicroAmps?.let { abs(it) / 1000f }),
+            networkBytesPerSecond = networkBytesPerSecond.append(networkRate(vitals)),
+        )
+    }
+
+    /** TrafficStats reports totals since boot, so the rate is a delta over elapsed time. */
+    private fun networkRate(vitals: Vitals): Float? {
+        val total = vitals.network?.let { it.rxBytes + it.txBytes } ?: return null
+        val now = vitals.uptimeMillis
+        val previousBytes = previousNetworkBytes
+        val previousMillis = previousUptimeMillis
+        previousNetworkBytes = total
+        previousUptimeMillis = now
+
+        if (previousBytes == null || previousMillis == null) return null
+        val seconds = (now - previousMillis) / 1000f
+        if (seconds <= 0f) return null
+        return ((total - previousBytes).coerceAtLeast(0) / seconds)
+    }
+
+    private fun List<Float>.append(value: Float?): List<Float> {
+        if (value == null) return this
+        val next = this + value
+        return if (next.size > WINDOW) next.takeLast(WINDOW) else next
     }
 
     companion object {

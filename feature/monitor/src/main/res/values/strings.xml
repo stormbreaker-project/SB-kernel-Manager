@@ -53,4 +53,16 @@
     <string name="monitor_milliamps">%1$d mA</string>
     <string name="monitor_milliamp_hours">%1$d mAh</string>
     <string name="monitor_duration">%1$s</string>
+
+    <string name="monitor_tap_detail">Tap for detail</string>
+    <string name="monitor_collecting">Collecting…</string>
+    <string name="monitor_cores_summary">%1$d cores · %2$d clusters</string>
+    <string name="monitor_cluster_peak">Cluster %1$d peak</string>
+    <string name="monitor_rate">%1$s/s</string>
+    <string name="monitor_of_total">of %1$s</string>
+    <string name="monitor_detail_cpu">Per-core load</string>
+    <string name="monitor_detail_cpu_freq">Per-core frequency</string>
+    <string name="monitor_detail_note">Each core is its own chart. Load and frequency are separate — they do not share a scale.</string>
+    <string name="monitor_back">Back to monitor</string>
+    <string name="monitor_thermal_note">Throttling severity from the framework. Exact temperatures need a StormBreaker kernel.</string>
 </resources>
