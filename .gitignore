@@ -11,3 +11,6 @@ local.properties
 
 # Claude Code
 .claude/
+
+# Kotlin compiler scratch output
+.kotlin/
