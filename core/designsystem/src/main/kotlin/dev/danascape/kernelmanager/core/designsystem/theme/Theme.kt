@@ -41,6 +41,7 @@ fun SBTheme(
                     containerColor = colorScheme.surface,
                     iconSelectedColor = colorScheme.onPrimary,
                     iconUnselectedColor = extendedColors.muted,
+                    rippleColor = colorScheme.onSurface.copy(alpha = 0.2f),
                 ),
             navBarSizes =
                 PvotNavBarSizes(
