@@ -1,0 +1,36 @@
+# SPDX-FileCopyrightText: 2026 Saalim Quadri <danascape@gmail.com>
+# SPDX-License-Identifier: Apache-2.0
+
+version = 1
+SPDX-PackageName = "SB Kernel Manager"
+SPDX-PackageSupplier = "Saalim Quadri <danascape@gmail.com>"
+SPDX-PackageDownloadLocation = "https://github.com/stormbreaker-project/SB-kernel-Manager"
+
+[[annotations]]
+path = [
+    ".gitignore",
+    ".gitmodules",
+    "app/.gitignore",
+    "app/src/main/keepRules/rules.keep",
+    "app/src/main/res/mipmap-**/*.webp",
+    "core/data/src/main/assets/links.json",
+    "docs/**",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Saalim Quadri <danascape@gmail.com>"
+SPDX-License-Identifier = "Apache-2.0"
+
+[[annotations]]
+path = [
+    "gradle/wrapper/gradle-wrapper.jar",
+    "gradle/wrapper/gradle-wrapper.properties",
+]
+precedence = "override"
+SPDX-FileCopyrightText = "Gradle Inc."
+SPDX-License-Identifier = "Apache-2.0"
+
+[[annotations]]
+path = ["core/designsystem/src/main/res/values/font_certs.xml"]
+precedence = "override"
+SPDX-FileCopyrightText = "2022 The Android Open Source Project"
+SPDX-License-Identifier = "Apache-2.0"

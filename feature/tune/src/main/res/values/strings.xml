@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: 2026 Saalim Quadri <danascape@gmail.com>
+SPDX-License-Identifier: Apache-2.0
+-->
+
 <resources>
     <string name="tune_kicker">tune</string>
     <string name="tune_title">Tune</string>
