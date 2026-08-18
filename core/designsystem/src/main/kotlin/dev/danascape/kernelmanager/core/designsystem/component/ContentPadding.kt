@@ -24,12 +24,27 @@ fun PaddingValues.expandedBy(
     horizontal: Dp = 0.dp,
     top: Dp = 0.dp,
     bottom: Dp = 0.dp,
+    /**
+     * False when the caller has already applied the top inset to its container
+     * via [topInset], which is what keeps scrolled content from colliding with
+     * the status bar.
+     */
+    includeTopInset: Boolean = true,
 ): PaddingValues {
     val direction = LocalLayoutDirection.current
     return PaddingValues(
         start = calculateStartPadding(direction) + horizontal,
         end = calculateEndPadding(direction) + horizontal,
-        top = calculateTopPadding() + top,
+        top = if (includeTopInset) calculateTopPadding() + top else top,
         bottom = calculateBottomPadding() + bottom,
     )
 }
+
+/**
+ * The status bar inset, for a scrolling container to consume.
+ *
+ * The two ends are not symmetrical: the nav bar floats and is opaque, so
+ * content passing beneath it is simply hidden, but the status bar is
+ * transparent and content passing under it collides with the clock.
+ */
+fun PaddingValues.topInset(): Dp = calculateTopPadding()

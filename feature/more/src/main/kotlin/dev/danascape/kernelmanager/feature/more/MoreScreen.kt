@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -34,6 +35,7 @@ import dev.danascape.kernelmanager.core.designsystem.theme.SBTheme
 import dev.danascape.kernelmanager.core.model.LinkItem
 import dev.danascape.kernelmanager.core.model.LinkSection
 import dev.danascape.kernelmanager.core.designsystem.component.expandedBy
+import dev.danascape.kernelmanager.core.designsystem.component.topInset
 import dev.danascape.kernelmanager.core.designsystem.component.openArticle
 
 @Composable
@@ -73,8 +75,15 @@ private fun MoreContent(
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
-        modifier = modifier.fillMaxSize(),
-        contentPadding = contentPadding.expandedBy(horizontal = 16.dp, top = 24.dp, bottom = 24.dp),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(top = contentPadding.topInset()),
+        contentPadding = contentPadding.expandedBy(
+            horizontal = 16.dp,
+            top = 24.dp,
+            bottom = 24.dp,
+            includeTopInset = false,
+        ),
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         item(key = "header") { Header() }

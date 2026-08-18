@@ -1,5 +1,56 @@
 <resources>
     <string name="monitor_kicker">monitor</string>
-    <string name="monitor_title">Monitor</string>
-    <string name="monitor_description">Live per-core frequencies, load, temperatures, GPU busy and battery draw.</string>
+    <string name="monitor_title">Live metrics</string>
+    <string name="monitor_description">Read without root. What is missing needs a StormBreaker kernel.</string>
+
+    <string name="monitor_cpu">CPU</string>
+    <string name="monitor_cpu_load">Total load</string>
+    <string name="monitor_cluster">Cluster %1$d</string>
+    <string name="monitor_cluster_cores">%1$d cores · %2$s</string>
+    <string name="monitor_core">Core %1$d</string>
+    <string name="monitor_core_value">%1$s · %2$s</string>
+    <string name="monitor_governor">Governor</string>
+    <string name="monitor_governors_available">Available</string>
+    <string name="monitor_freq_range">Range</string>
+    <string name="monitor_opp_count">%1$d steps</string>
+
+    <string name="monitor_gpu">GPU</string>
+    <string name="monitor_gpu_renderer">Renderer</string>
+    <string name="monitor_gpu_vendor">Vendor</string>
+    <string name="monitor_gpu_gl">OpenGL</string>
+    <string name="monitor_gpu_locked">Usage and clocks need a StormBreaker kernel — vendor GPU nodes are not readable.</string>
+
+    <string name="monitor_memory">Memory</string>
+    <string name="monitor_used">Used</string>
+    <string name="monitor_total">Total</string>
+
+    <string name="monitor_storage">Storage</string>
+    <string name="monitor_filesystem">Filesystem</string>
+
+    <string name="monitor_battery">Battery</string>
+    <string name="monitor_level">Level</string>
+    <string name="monitor_temperature">Temperature</string>
+    <string name="monitor_draw">Draw</string>
+    <string name="monitor_capacity">Capacity</string>
+    <string name="monitor_health">Health</string>
+    <string name="monitor_technology">Technology</string>
+
+    <string name="monitor_uptime">Uptime</string>
+    <string name="monitor_awake">Awake</string>
+    <string name="monitor_deep_sleep">Deep sleep</string>
+
+    <string name="monitor_network">Network since boot</string>
+    <string name="monitor_received">Received</string>
+    <string name="monitor_sent">Sent</string>
+
+    <string name="monitor_thermal">Thermal</string>
+    <string name="monitor_throttling">Throttling</string>
+
+    <string name="monitor_percent">%1$d%%</string>
+    <string name="monitor_celsius">%1$.1f°C</string>
+    <string name="monitor_mhz">%1$d MHz</string>
+    <string name="monitor_ghz">%1$.2f GHz</string>
+    <string name="monitor_milliamps">%1$d mA</string>
+    <string name="monitor_milliamp_hours">%1$d mAh</string>
+    <string name="monitor_duration">%1$s</string>
 </resources>
