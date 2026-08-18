@@ -9,12 +9,7 @@ import org.junit.Assert.assertNull
 import org.junit.Test
 import java.time.LocalDate
 
-/**
- * Guards the contract with `/api/v1/news.json`.
- *
- * The site can be deployed independently of any installed app, so the decoder
- * has to survive fields being added and individual posts being malformed.
- */
+/** Guards the contract with `/api/v1/news.json`. */
 class NewsFeedDtoTest {
     @Test
     fun `decodes a post as published by the site`() {
@@ -85,7 +80,6 @@ class NewsFeedDtoTest {
         assertNull(post.author)
         assertNull(post.summary)
         assertNull(post.coverUrl)
-        // Absent reading time still has to render, so it floors at one minute.
         assertEquals(1, post.readingMinutes)
     }
 

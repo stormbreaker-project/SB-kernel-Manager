@@ -151,8 +151,6 @@ private fun CpuCard(
             stringResource(R.string.monitor_cores_summary, topology.coreCount, topology.clusters.size),
             vitals?.cpu?.governor.orEmpty(),
         )
-        // Per-cluster ceilings, because one "max frequency" is meaningless on a
-        // heterogeneous SoC.
         topology.clusters.forEach { cluster ->
             MetricLine(
                 stringResource(R.string.monitor_cluster_peak, cluster.id),
@@ -191,7 +189,6 @@ private fun BatteryCard(
         caption = battery.temperatureC?.let { stringResource(R.string.monitor_celsius, it) },
         revealIndex = revealIndex,
     ) {
-        // No natural ceiling for draw, so this one is fitted to its own range.
         SBSparkline(values = history.batteryDrawMilliAmps, domain = null)
 
         battery.currentMicroAmps?.let {

@@ -12,13 +12,7 @@ import org.junit.runner.RunWith
 
 private const val TAG = "DeviceReaders"
 
-/**
- * Smoke test for the readers, and a dump of what this particular device gives up.
- *
- * Assertions stay deliberately loose: what is readable varies by vendor and
- * Android version, so this checks the readers do not crash or return nonsense,
- * rather than pinning values that are legitimately different elsewhere.
- */
+/** Smoke test for the readers, and a dump of what this particular device gives up. */
 @RunWith(AndroidJUnit4::class)
 class DeviceReadersTest {
     private val context = InstrumentationRegistry.getInstrumentation().targetContext
@@ -64,10 +58,8 @@ class DeviceReadersTest {
         Log.i(TAG, "=== GPU ===")
         Log.i(TAG, "gpu=${profile.gpu}")
 
-        // The identity fields come from Build and are always populated.
         assertTrue(profile.identity.codename.isNotBlank())
         assertTrue(profile.os.sdkInt > 0)
-        // Every cluster must report a sane ceiling if it reports one at all.
         profile.cpu?.clusters?.forEach { cluster ->
             cluster.hardwareMaxKhz?.let { assertTrue("max looks wrong: $it", it in 100_000..10_000_000) }
         }
@@ -95,9 +87,7 @@ class DeviceReadersTest {
         )
 
         assertTrue(vitals.uptimeMillis > 0)
-        // Awake can never exceed elapsed, or the sleep split is nonsense.
         assertTrue(vitals.sleep.awakeMillis <= vitals.sleep.elapsedMillis)
-        // Derived load must be a real fraction, never negative or above one.
         vitals.load?.perCore?.forEach { assertTrue("load out of range: $it", it in 0f..1f) }
         vitals.memory?.let { assertTrue(it.usedBytes in 0..it.totalBytes) }
         vitals.battery?.let { assertTrue(it.percent in 0..100) }

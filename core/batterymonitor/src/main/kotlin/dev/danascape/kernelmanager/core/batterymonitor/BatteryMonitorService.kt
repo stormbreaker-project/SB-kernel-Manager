@@ -27,20 +27,9 @@ import kotlinx.coroutines.launch
 
 private const val NOTIFICATION_ID = 1001
 
-/** Coarse enough to be cheap, fine enough for a percent-per-hour rate. */
 private const val SAMPLE_INTERVAL_MILLIS = 60_000L
 
-/**
- * Accumulates battery statistics for as long as the user leaves it on.
- *
- * A foreground service is the only way to do this: nothing retroactive reports
- * battery level over time, screen transitions cannot be received by a manifest
- * receiver, and WorkManager's fifteen-minute floor is too coarse to attribute
- * drain to the right screen state.
- *
- * The cost is honest and visible — a permanent notification, and a little of
- * the battery being measured — which is why it is opt-in and off by default.
- */
+/** Accumulates battery statistics for as long as the user leaves it on. */
 class BatteryMonitorService : Service() {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private lateinit var sampler: BatterySampler
@@ -48,13 +37,6 @@ class BatteryMonitorService : Service() {
     private lateinit var notification: BatteryNotification
     private var loop: Job? = null
 
-    /**
-     * Screen and power transitions are sampled the moment they happen.
-     *
-     * The tracker attributes an interval to the state it began in, so without
-     * these a sixty-second window straddling a screen-off would be filed
-     * entirely as active.
-     */
     private val transitions =
         object : BroadcastReceiver() {
             override fun onReceive(
@@ -112,8 +94,6 @@ class BatteryMonitorService : Service() {
 
     private fun startInForeground() {
         val built = notification.build(null, applicationInfo.icon)
-        // Android 14 requires a declared type; battery accounting has no
-        // dedicated one, so specialUse is the honest fit.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             ServiceCompat.startForeground(
                 this,
@@ -126,11 +106,7 @@ class BatteryMonitorService : Service() {
         }
     }
 
-    /**
-     * A denied POST_NOTIFICATIONS silences the readout but not the service:
-     * accumulating the session is the point, and the stats are still there when
-     * the user opens the app.
-     */
+    /** A denied POST_NOTIFICATIONS silences the readout but not the service. */
     private suspend fun updateNotification() {
         if (!canPostNotifications()) return
         val session = store.session()
@@ -138,7 +114,6 @@ class BatteryMonitorService : Service() {
         try {
             NotificationManagerCompat.from(this).notify(NOTIFICATION_ID, built)
         } catch (_: SecurityException) {
-            // Revoked between the check above and here. Sampling continues.
         }
     }
 
@@ -158,19 +133,11 @@ class BatteryMonitorService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     companion object {
-        /**
-         * Same process as the app, so a plain flag answers "already running?"
-         * without ActivityManager's deprecated service enumeration.
-         */
         @Volatile
         var running: Boolean = false
             private set
 
-        /**
-         * @return false when the platform refused a background start, which it
-         *   may do outside an exemption. The caller decides whether that
-         *   matters; from a user tap it cannot happen.
-         */
+        /** @return false when the platform refused a background start. */
         fun start(context: Context): Boolean =
             try {
                 context.startForegroundService(Intent(context, BatteryMonitorService::class.java))

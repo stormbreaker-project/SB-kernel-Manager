@@ -14,17 +14,11 @@ class AndroidComposeConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) = with(target) {
         pluginManager.apply("org.jetbrains.kotlin.plugin.compose")
 
-        // Domain models are read-only snapshots, but Compose cannot infer that
-        // through the List properties they carry, so it treats them as unstable
-        // and skips no recomposition. Declared in a file rather than with
-        // @Immutable to keep Compose out of the pure-Kotlin modules.
         extensions.configure<ComposeCompilerGradlePluginExtension> {
             stabilityConfigurationFiles.add(
                 rootProject.layout.projectDirectory.file("config/compose/stability.conf"),
             )
 
-            // -PcomposeMetrics makes the compiler report what it actually
-            // inferred, so a stability claim can be checked instead of assumed.
             if (providers.gradleProperty("composeMetrics").isPresent) {
                 val dir = layout.buildDirectory.dir("compose-metrics")
                 metricsDestination.set(dir)

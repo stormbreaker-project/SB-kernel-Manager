@@ -20,10 +20,7 @@ class DeviceRepository(
     private val vitalsReader: SystemVitalsReader,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
-    /**
-     * Read once and cached. Shelling out to `getprop` and walking cpufreq is
-     * not something to repeat on every recomposition.
-     */
+    /** Read once and cached. */
     suspend fun profile(): DeviceProfile =
         cachedProfile ?: withContext(ioDispatcher) {
             profileReader.read().also { cachedProfile = it }
@@ -32,10 +29,7 @@ class DeviceRepository(
     @Volatile
     private var cachedProfile: DeviceProfile? = null
 
-    /**
-     * Utilisation needs two idle samples spaced in time, so this suspends for
-     * the sampling window rather than returning instantly.
-     */
+    /** Suspends for the sampling window: utilisation needs two spaced samples. */
     suspend fun vitals(): Vitals =
         withContext(ioDispatcher) {
             val first = CpuLoadReader.sample()

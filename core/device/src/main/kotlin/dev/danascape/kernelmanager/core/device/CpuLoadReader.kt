@@ -10,18 +10,7 @@ import java.util.concurrent.TimeUnit
 
 private const val CPU_ROOT = "/sys/devices/system/cpu"
 
-/**
- * Derives CPU utilisation from idle residency.
- *
- * /proc/stat is denied to unprivileged apps, but cpuidle is not: each core
- * reports how long it has spent in each idle state. Busy is what is left over
- * between two samples.
- *
- * Two things this gets wrong if done carelessly. Every idle state has to be
- * summed — counting only state0 ignores the deeper ones and reports a nearly
- * busy CPU on an idle device. And the elapsed time has to come from
- * System.nanoTime(), because /proc/uptime is denied as well.
- */
+/** Derives CPU utilisation from idle residency. */
 object CpuLoadReader {
     fun sample(): CpuIdleSample? {
         val cores =
@@ -37,13 +26,7 @@ object CpuLoadReader {
         return CpuIdleSample(elapsedNanos = System.nanoTime(), idleMicrosPerCore = idle)
     }
 
-    /**
-     * Busy fraction per core between two samples.
-     *
-     * An offline core reports no idle movement and would look fully busy, so a
-     * core whose idle delta exceeds the window is clamped to idle rather than
-     * reported as saturated.
-     */
+    /** Busy fraction per core between two samples. */
     fun load(
         first: CpuIdleSample,
         second: CpuIdleSample,

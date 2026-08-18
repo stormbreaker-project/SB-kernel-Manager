@@ -48,8 +48,6 @@ class NewsViewModel(
 
     fun refresh() {
         viewModelScope.launch {
-            // Only blank the screen when there is nothing to keep showing;
-            // a retry over existing posts should not flash empty.
             if (_state.value !is NewsUiState.Ready) {
                 _state.value = NewsUiState.Loading
             }

@@ -38,16 +38,9 @@ import java.time.format.DateTimeFormatter
 
 private val DateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
 
-/** Matches the outer radius of the grouped rows on More. */
 private val CardRadius = 24.dp
 
-/**
- * One post, laid out like the website's news card: a mono meta line, the
- * headline, the summary, then a read affordance.
- *
- * A filled surface rather than an outlined box, on the same shape and motion
- * vocabulary as the grouped rows on More.
- */
+/** One post, laid out like the website's news card. */
 @Composable
 fun NewsCard(
     post: NewsPost,
@@ -77,7 +70,6 @@ fun NewsCard(
         if (showCover && post.coverUrl != null) {
             AsyncImage(
                 model = post.coverUrl,
-                // Decorative: the headline below carries the meaning.
                 contentDescription = null,
                 modifier =
                     Modifier

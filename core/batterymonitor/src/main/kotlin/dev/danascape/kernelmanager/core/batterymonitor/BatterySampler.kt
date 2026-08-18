@@ -14,12 +14,7 @@ import dev.danascape.kernelmanager.core.battery.BatterySample
 
 private const val TENTHS_PER_DEGREE = 10f
 
-/**
- * Takes one reading of the battery and both clocks.
- *
- * /sys/class/power_supply is denied to unprivileged apps, so everything here
- * comes from the framework.
- */
+/** Takes one reading of the battery and both clocks. */
 class BatterySampler(
     context: Context,
 ) {
@@ -42,7 +37,6 @@ class BatterySampler(
         val tenthsC = intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, Int.MIN_VALUE)
         val milliVolts = intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1)
 
-        // Both clocks in one read: their difference is the suspended time.
         return BatterySample(
             elapsedMillis = SystemClock.elapsedRealtime(),
             awakeMillis = SystemClock.uptimeMillis(),

@@ -3,16 +3,7 @@
 
 package dev.danascape.kernelmanager.core.device
 
-/**
- * Android system properties.
- *
- * There is no public API for these. `android.os.SystemProperties` is hidden and
- * on the unsupported list, so this shells out to `getprop` once and caches the
- * result — around 1100 entries, read in a single spawn rather than one per key.
- *
- * `Build` already covers most `ro.build.*` and `ro.product.*` values; this is
- * for the rest, notably `ro.boot.*`, which has no framework equivalent.
- */
+/** Android system properties. */
 class SystemProperties private constructor(
     private val values: Map<String, String>,
 ) {
@@ -26,7 +17,6 @@ class SystemProperties private constructor(
     val size: Int get() = values.size
 
     companion object {
-        // getprop prints one entry per line as: [key]: [value]
         private val LINE = Regex("""^\[(.+?)]: \[(.*)]$""")
 
         fun read(): SystemProperties =

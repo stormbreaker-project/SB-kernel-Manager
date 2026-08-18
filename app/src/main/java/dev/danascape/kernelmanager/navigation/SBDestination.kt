@@ -13,16 +13,7 @@ import dev.danascape.kernelmanager.feature.builds.BuildsRoute
 import dev.danascape.kernelmanager.feature.discover.DiscoverRoute
 import dev.danascape.kernelmanager.feature.tune.TuneRoute
 
-/**
- * Top-level destinations, in nav bar order.
- *
- * Ordinal is the tab index, so this order is the on-screen order; nothing else
- * may depend on it. Routes are owned by the feature modules.
- *
- * News and Devices are deliberately absent: both are browsing destinations
- * reached from More, not places the user returns to constantly. They sit
- * inside More's nested graph, so viewing one keeps More selected.
- */
+/** Top-level destinations, in nav bar order. */
 enum class SBDestination(
     val route: Any,
     @param:DrawableRes val iconRes: Int,
@@ -63,13 +54,7 @@ enum class SBDestination(
     ),
 }
 
-/**
- * The top-level destination this entry sits under.
- *
- * Walks the hierarchy, so a screen pushed inside a tab still resolves to it.
- * Detail destinations reached from More sit inside its graph, so they resolve
- * to More rather than to nothing.
- */
+/** The top-level destination this entry sits under. */
 fun NavDestination?.topLevelDestination(): SBDestination? {
     val hierarchy = this?.hierarchy ?: return null
     return SBDestination.entries.firstOrNull { destination ->

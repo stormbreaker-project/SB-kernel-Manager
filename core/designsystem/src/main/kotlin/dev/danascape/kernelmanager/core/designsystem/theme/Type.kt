@@ -15,19 +15,6 @@ import androidx.compose.ui.text.googlefonts.GoogleFont
 import androidx.compose.ui.unit.sp
 import dev.danascape.kernelmanager.core.designsystem.R
 
-/*
- * Type is resolved through the Google Fonts provider, so the two brand faces
- * add nothing to the APK.
- *
- * The provider is a GMS content provider, and a meaningful share of this
- * audience runs de-Googled ROMs where it is simply not installed. Compose's
- * own failure mode there is to fall back to the platform default sans — which
- * would quietly render codenames, kernel versions and stat readouts in a
- * proportional face, the one place this design cannot afford it. So provider
- * availability is checked up front and the fallback is chosen explicitly:
- * monospace stays monospace.
- */
-
 private const val FONTS_AUTHORITY = "com.google.android.gms.fonts"
 
 private val GoogleFontsProvider =
@@ -37,12 +24,7 @@ private val GoogleFontsProvider =
         certificates = R.array.com_google_android_gms_fonts_certs,
     )
 
-/**
- * Whether the Google Fonts provider is installed and visible to us.
- *
- * Package-visibility filtering applies from API 30, so this only answers
- * truthfully because the manifest declares a matching `<queries>` entry.
- */
+/** Whether the Google Fonts provider is installed and visible to us. */
 private fun isFontProviderAvailable(context: Context): Boolean {
     val pm = context.packageManager
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -72,11 +54,7 @@ private fun displayFamily(available: Boolean): FontFamily =
         FontFamily.SansSerif
     }
 
-/**
- * Monospace is a first-class face here, not a code-block afterthought: it
- * carries codenames, kernel versions, dates, and stat readouts. It is what
- * makes the product read as engineer-built — hence the monospace fallback.
- */
+/** Monospace is a first-class face here, not a code-block afterthought. */
 private fun monoFamily(available: Boolean): FontFamily =
     if (available) {
         googleFontFamily(
@@ -87,12 +65,6 @@ private fun monoFamily(available: Boolean): FontFamily =
         FontFamily.Monospace
     }
 
-/*
- * Body copy stays on the platform sans in both cases. The site uses Inter, but
- * at body sizes the platform grotesque is near-indistinguishable, and keeping
- * body text local means the bulk of the UI renders identically whether or not
- * the provider answered.
- */
 private val Body = FontFamily.SansSerif
 
 internal fun sbTypography(context: Context): Typography {
@@ -202,7 +174,6 @@ internal fun sbTypography(
                 lineHeight = 16.sp,
                 letterSpacing = 0.2.sp,
             ),
-        // Label styles are the mono channel: kickers, codenames, versions, stats.
         labelLarge =
             TextStyle(
                 fontFamily = mono,

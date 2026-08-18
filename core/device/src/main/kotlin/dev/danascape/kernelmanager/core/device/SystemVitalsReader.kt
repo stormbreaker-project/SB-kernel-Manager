@@ -15,22 +15,14 @@ import dev.danascape.kernelmanager.core.model.Vitals
 
 private const val TENTHS_PER_DEGREE = 10f
 
-/**
- * Samples live state.
- *
- * Memory and battery come from framework APIs rather than /proc and
- * /sys/class/power_supply, both of which are denied.
- */
+/** Samples live state. */
 class SystemVitalsReader(
     context: Context,
 ) {
     private val appContext = context.applicationContext
     private val platform = PlatformVitalsReader(appContext)
 
-    /**
-     * @param load supplied by the caller, since utilisation needs two samples
-     *   spaced in time and this call is a single point.
-     */
+    /** @param load supplied by the caller, which owns the two spaced samples. */
     fun read(load: dev.danascape.kernelmanager.core.model.CpuLoad? = null): Vitals =
         Vitals(
             cpu = CpuReader.read(),

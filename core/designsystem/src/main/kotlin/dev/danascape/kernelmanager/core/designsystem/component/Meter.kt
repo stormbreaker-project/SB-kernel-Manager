@@ -16,12 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
-/**
- * A single ratio against a limit.
- *
- * The right form for used-of-total, where a line over time would imply movement
- * that isn't the point.
- */
+/** A single ratio against a limit. */
 @Composable
 fun SBMeter(
     fraction: Float,

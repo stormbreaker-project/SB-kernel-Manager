@@ -23,14 +23,7 @@ private val LineWidth = 2.dp
 private val EndDotRadius = 4.dp
 private val SurfaceRing = 2.dp
 
-/**
- * A single series over time, drawn without axes or labels.
- *
- * [domain] is fixed rather than fitted to the data on purpose. Auto-scaling a
- * metric that moved between 11% and 13% fills the whole height and reads as a
- * dramatic swing, which is the most common way a sparkline lies. Pass null only
- * for series with no natural range.
- */
+/** A single series over time, drawn without axes or labels. */
 @Composable
 fun SBSparkline(
     values: List<Float>,
@@ -65,7 +58,6 @@ fun SBSparkline(
                 points.drop(1).forEach { lineTo(it.x, it.y) }
             }
 
-        // A wash, never a saturated block.
         val fill =
             Path().apply {
                 addPath(line)
@@ -92,7 +84,6 @@ fun SBSparkline(
                 ),
         )
 
-        // The end dot marks "now"; the ring keeps it legible over the line.
         val last = points.last()
         drawCircle(color = surface, radius = (EndDotRadius + SurfaceRing).toPx(), center = last)
         drawCircle(color = color, radius = EndDotRadius.toPx(), center = last)

@@ -9,13 +9,9 @@ import java.io.File
 private const val CPU_ROOT = "/sys/devices/system/cpu"
 private const val THERMAL_ROOT = "/sys/class/thermal"
 
-/** Thermal zones report thousandths of a degree. */
 private const val MILLI_DEGREES_PER_DEGREE = 1000f
 
-/**
- * cpufreq is one of the few kernel nodes still world-readable on a stock
- * device. Thermal zones are not, so a temperature here is the exception.
- */
+/** cpufreq is one of the few kernel nodes still world-readable on a stock device. */
 object CpuReader {
     fun read(): CpuVitals? {
         val cores = coreDirectories()
@@ -29,9 +25,6 @@ object CpuReader {
 
         return CpuVitals(
             perCoreKhz = frequencies,
-            // Across every core, not core 0. On a big.LITTLE SoC core 0 is a
-            // little core, and its ceiling is well below what a big core
-            // reports as its current frequency.
             maxKhz =
                 cores
                     .mapNotNull { it.resolve("cpufreq/cpuinfo_max_freq").readIntOrNull() }
@@ -47,11 +40,7 @@ object CpuReader {
             ?.sortedBy { it.name.removePrefix("cpu").toIntOrNull() ?: 0 }
             .orEmpty()
 
-    /**
-     * Normally null. Every thermal zone is SELinux-denied to an unprivileged
-     * app on Android 12+, which is the restriction a StormBreaker kernel node
-     * is meant to lift.
-     */
+    /** Normally null. */
     private fun cpuTemperatureC(): Float? {
         val zones =
             File(THERMAL_ROOT).listFiles { file -> file.name.startsWith("thermal_zone") }

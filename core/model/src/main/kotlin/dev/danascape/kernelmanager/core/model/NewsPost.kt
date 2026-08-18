@@ -14,7 +14,6 @@ data class NewsPost(
     val author: String?,
     val summary: String?,
     val coverUrl: String?,
-    /** Canonical article on the website. */
     val url: String,
     val readingMinutes: Int,
 )

@@ -28,7 +28,6 @@ class SettingsStore(
 
     val theme: Flow<ThemePreference> =
         dataStore.data
-            // A corrupt store must not take the UI down; the system default is safe.
             .catch { cause -> if (cause is IOException) emit(emptyPreferences()) else throw cause }
             .map { preferences ->
                 preferences[ThemeKey]

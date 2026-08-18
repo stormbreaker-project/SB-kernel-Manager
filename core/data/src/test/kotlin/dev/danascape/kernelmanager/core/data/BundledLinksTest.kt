@@ -10,11 +10,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.File
 
-/**
- * The bundled copy of links.json is the floor under the More screen: it is what
- * renders on first run with no network. If it stops parsing, that screen is
- * silently empty offline, and nothing else would catch it.
- */
+/** The bundled links.json is what renders on first run with no network. */
 class BundledLinksTest {
     private val asset = File("src/main/assets/links.json")
 

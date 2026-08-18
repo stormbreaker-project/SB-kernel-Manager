@@ -139,10 +139,7 @@ private fun NewsList(
     }
 }
 
-/**
- * The newest post carries its cover, matching the website's featured card;
- * the rest stay text-only so the list reads as a feed rather than a gallery.
- */
+/** Only the newest post carries its cover, matching the website. */
 private fun LazyListScope.newsItems(
     posts: List<NewsPost>,
     onPostClick: (NewsPost) -> Unit,
@@ -185,10 +182,7 @@ private fun Header() {
     }
 }
 
-/**
- * Says plainly that the list is a saved copy. Showing cached posts as though
- * they were live would be the kind of small lie this project avoids.
- */
+/** Says plainly that the list is a saved copy. */
 @Composable
 private fun OfflineNotice() {
     Text(

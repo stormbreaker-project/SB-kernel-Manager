@@ -27,12 +27,7 @@ private val SessionKey = stringPreferencesKey("session")
 private val PreviousSampleKey = stringPreferencesKey("previous_sample")
 private val EnabledKey = booleanPreferencesKey("enabled")
 
-/**
- * Persists the session so it survives process death and reboot.
- *
- * The previous sample is stored alongside it: without it the interval after a
- * restart cannot be attributed, and the accumulated totals would drift.
- */
+/** Persists the session so it survives process death and reboot. */
 class BatterySessionStore(
     context: Context,
 ) {

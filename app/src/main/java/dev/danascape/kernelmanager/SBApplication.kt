@@ -29,14 +29,7 @@ class SBApplication :
         restoreBatteryMonitor()
     }
 
-    /**
-     * Second line of defence behind the restart receiver.
-     *
-     * A background start can be refused depending on which exemption applies to
-     * the broadcast, and there is no notification to tell the user it did not
-     * come back. Opening the app is a foreground moment, where starting is
-     * always permitted, so anything the receiver missed recovers here.
-     */
+    /** Second line of defence behind the restart receiver. */
     private fun restoreBatteryMonitor() {
         CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
             if (BatteryMonitorService.running) return@launch

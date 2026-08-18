@@ -42,10 +42,6 @@ class DiscoverViewModel(
     }
 
     fun refresh() {
-        // These land at very different times — the profile shells out to
-        // getprop, vitals spends half a second sampling idle residency, news
-        // hits the network. update() is a compare-and-set loop, so a slow
-        // writer cannot overwrite a field a faster one already filled in.
         viewModelScope.launch {
             val profile = deviceRepository.profile()
             _state.update { it.copy(profile = profile) }
@@ -59,8 +55,6 @@ class DiscoverViewModel(
             if (result is DataResult.Success) {
                 _state.update { it.copy(headlines = result.data.take(HEADLINE_COUNT)) }
             }
-            // A failed news load leaves the section absent rather than putting an
-            // error on a screen whose job is the device in front of you.
         }
     }
 

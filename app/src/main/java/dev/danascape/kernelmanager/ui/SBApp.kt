@@ -19,16 +19,12 @@ import dev.danascape.kernelmanager.navigation.SBNavHost
 import dev.danascape.kernelmanager.navigation.navigateToTopLevel
 import dev.danascape.kernelmanager.navigation.topLevelDestination
 
-/**
- * The app shell: one nav bar over the top-level destinations.
- */
+/** The app shell: one nav bar over the top-level destinations. */
 @Composable
 fun SBApp(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
 
-    // Before the first entry settles, the start destination is what is on
-    // screen — reflect that rather than leaving the bar unselected.
     val current = backStackEntry?.destination.topLevelDestination() ?: SBDestination.DISCOVER
 
     val tabs =

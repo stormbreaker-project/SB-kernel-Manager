@@ -3,13 +3,7 @@
 
 package dev.danascape.kernelmanager.core.model
 
-/**
- * Live system state.
- *
- * Every field is independently nullable: Android 12+ denies an unprivileged app
- * most of these sources, and which ones differ per device. Null means "no
- * readable source here", not "not loaded yet".
- */
+/** Live system state. */
 data class Vitals(
     val cpu: CpuVitals?,
     val load: CpuLoad?,
@@ -23,14 +17,9 @@ data class Vitals(
 )
 
 data class CpuVitals(
-    /** Current frequency per core, in kHz. Empty when cpufreq is not readable. */
     val perCoreKhz: List<Int>,
     val maxKhz: Int?,
     val governor: String?,
-    /**
-     * Normally null: thermal zones are denied to unprivileged apps, which is
-     * the restriction a StormBreaker kernel node is meant to lift.
-     */
     val temperatureC: Float?,
 )
 
@@ -45,9 +34,7 @@ data class BatteryVitals(
     val percent: Int,
     val temperatureC: Float?,
     val charging: Boolean,
-    /** Instantaneous draw in microamps; negative while discharging on most devices. */
     val currentMicroAmps: Int?,
-    /** Remaining charge in microamp-hours. */
     val chargeCounterMicroAmpHours: Int?,
     val health: String?,
     val technology: String?,

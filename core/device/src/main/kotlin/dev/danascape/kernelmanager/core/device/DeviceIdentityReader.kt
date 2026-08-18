@@ -26,11 +26,6 @@ object DeviceIdentityReader {
         )
     }
 
-    /**
-     * `os.version` is uname's release field.
-     *
-     * There is no /proc/version fallback: it is denied to unprivileged apps on
-     * modern Android, so reading it would only ever produce a permission error.
-     */
+    /** `os.version` is uname's release field. */
     private fun kernelRelease(): String = System.getProperty("os.version")?.takeIf { it.isNotBlank() } ?: UNKNOWN
 }

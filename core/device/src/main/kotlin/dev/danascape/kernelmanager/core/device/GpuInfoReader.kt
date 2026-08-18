@@ -11,16 +11,7 @@ import android.opengl.EGLSurface
 import android.opengl.GLES20
 import dev.danascape.kernelmanager.core.model.GpuInfo
 
-/**
- * Names the GPU by asking OpenGL rather than sysfs.
- *
- * Every vendor GPU node — kgsl, devfreq, mali — is denied or absent to an
- * unprivileged app, but GL_RENDERER is public and identifies the hardware
- * exactly. It needs a current EGL context, so this stands one up off-screen,
- * reads three strings and tears it down.
- *
- * Identification only. Usage and clocks are not exposed this way.
- */
+/** Names the GPU by asking OpenGL rather than sysfs. */
 object GpuInfoReader {
     // Setting up EGL is a sequence of steps that can each fail, and an early
     // return per step reads better than the nesting that avoids them.

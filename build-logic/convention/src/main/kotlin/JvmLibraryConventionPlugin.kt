@@ -20,7 +20,6 @@ class JvmLibraryConventionPlugin : Plugin<Project> {
             targetCompatibility = JavaVersion.VERSION_11
         }
 
-        // Kotlin otherwise follows the daemon toolchain and disagrees with Java.
         extensions.configure<KotlinJvmProjectExtension> {
             compilerOptions { jvmTarget.set(JvmTarget.JVM_11) }
         }

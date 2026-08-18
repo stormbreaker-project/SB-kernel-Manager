@@ -21,16 +21,9 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerializationException
 import java.io.IOException
 
-/**
- * The newsroom, read from the site's static feed.
- *
- * No database: the feed is a small file behind an ETag, so the HTTP cache is
- * the persistence layer.
- */
+/** The newsroom, read from the site's static feed. */
 class NewsRepository(
     private val client: HttpClient,
-    // Taken as a parameter so a test can substitute it; a dispatcher chosen
-    // inside the function could not be replaced.
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
     // The final catch is deliberately broad: anything Ktor or the platform

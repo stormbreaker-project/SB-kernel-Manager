@@ -16,16 +16,7 @@ import dev.danascape.kernelmanager.core.device.SystemVitalsReader
 import dev.danascape.kernelmanager.core.network.createHttpClient
 import io.ktor.client.HttpClient
 
-/**
- * Hand-rolled dependency container.
- *
- * The graph is a handful of singletons with no scoping, which Hilt would not
- * simplify — it would only add KSP to the build. Everything is lazy so a cold
- * start pays for nothing it does not use.
- *
- * It lives here rather than in :app because features resolve their
- * dependencies from it and cannot depend on the application module.
- */
+/** Hand-rolled dependency container. */
 class AppContainer(
     context: Context,
 ) {

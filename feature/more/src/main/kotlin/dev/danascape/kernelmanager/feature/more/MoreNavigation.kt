@@ -15,10 +15,7 @@ data object MoreRoute
 
 fun NavController.navigateToMore(navOptions: NavOptions? = null) = navigate(MoreRoute, navOptions)
 
-/**
- * Cross-feature destinations arrive as callbacks, supplied by :app. Features
- * never navigate to each other directly.
- */
+/** Cross-feature destinations arrive as callbacks, supplied by :app. */
 fun NavGraphBuilder.moreScreen(
     contentPadding: PaddingValues,
     onOpenDevices: () -> Unit,

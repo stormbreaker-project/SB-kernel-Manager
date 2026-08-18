@@ -25,13 +25,7 @@ import com.prauga.pvot.designsystem.modifier.pvotPressScale
 import com.prauga.pvot.designsystem.modifier.pvotReveal
 import dev.danascape.kernelmanager.core.designsystem.theme.SBTheme
 
-/**
- * A stat tile: what a metric reads right now, with its recent shape.
- *
- * The headline value is the point and wears the display face; the sparkline is
- * context underneath it. No axes, no legend — one series, and the title says
- * what it is.
- */
+/** A stat tile: what a metric reads right now, with its recent shape. */
 @Composable
 fun MetricCard(
     title: String,
@@ -112,7 +106,6 @@ fun MetricLine(
             style = MaterialTheme.typography.bodyMedium,
             color = SBTheme.colors.muted,
         )
-        // Readouts sit in the mono channel; text never wears the series colour.
         Text(
             text = value,
             style = MaterialTheme.typography.labelMedium,

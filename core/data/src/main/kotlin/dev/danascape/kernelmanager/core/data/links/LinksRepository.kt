@@ -19,13 +19,7 @@ import kotlinx.coroutines.withContext
 
 internal const val BUNDLED_LINKS_ASSET = "links.json"
 
-/**
- * Community and project links, published by the site with a copy bundled here.
- *
- * The bundled copy is the floor: it makes More work on first run with no
- * network, and is allowed to go stale because the remote copy wins whenever it
- * is reachable. There is deliberately no failure path.
- */
+/** Community and project links, published by the site with a copy bundled here. */
 class LinksRepository(
     private val client: HttpClient,
     private val assets: AssetManager,
@@ -55,8 +49,6 @@ class LinksRepository(
                 SBJson.decodeFromString<LinksDto>(reader.readText()).toDomain()
             }
         } catch (_: Exception) {
-            // Only reachable if the shipped asset is missing or malformed, which is
-            // a build error rather than a runtime condition.
             emptyList()
         }
 }

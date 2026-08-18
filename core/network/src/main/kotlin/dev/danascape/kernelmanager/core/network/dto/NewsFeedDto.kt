@@ -9,12 +9,7 @@ import kotlinx.serialization.Serializable
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
 
-/**
- * Wire shape of `/api/v1/news.json`.
- *
- * Everything the site marks optional is nullable with a default here, so a post
- * that omits a field decodes rather than throwing.
- */
+/** Wire shape of `/api/v1/news.json`. */
 @Serializable
 data class NewsFeedDto(
     val schema: Int = 0,
@@ -25,7 +20,6 @@ data class NewsFeedDto(
 data class NewsPostDto(
     val id: String,
     val title: String,
-    /** ISO date, no time component — e.g. `2026-08-11`. */
     val date: String,
     val tag: String? = null,
     val author: String? = null,
@@ -35,11 +29,7 @@ data class NewsPostDto(
     @SerialName("reading_minutes") val readingMinutes: Int = 1,
 )
 
-/**
- * Maps the feed to domain posts, dropping any entry that cannot be represented.
- *
- * One malformed date should cost the reader that post, not the whole newsroom.
- */
+/** Maps the feed to domain posts, dropping any entry that cannot be represented. */
 fun NewsFeedDto.toDomain(): List<NewsPost> = posts.mapNotNull { it.toDomainOrNull() }
 
 private fun NewsPostDto.toDomainOrNull(): NewsPost? {

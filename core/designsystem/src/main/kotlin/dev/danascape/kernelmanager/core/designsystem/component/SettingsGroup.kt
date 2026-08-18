@@ -30,16 +30,6 @@ import com.prauga.pvot.designsystem.modifier.pvotPressScale
 import com.prauga.pvot.designsystem.modifier.pvotReveal
 import dev.danascape.kernelmanager.core.designsystem.theme.SBTheme
 
-/*
- * Grouped rows in the Material 3 expressive idiom: every row is its own filled
- * shape rather than a line in a bordered table. The group's outer corners are
- * generous and the corners where rows meet are tight, so a group reads as one
- * object while each row still reads as its own tappable thing.
- *
- * Fills instead of hairline outlines. An outlined table of identical rectangles
- * is a wireframe; a tonal fill gives each row weight.
- */
-
 private val OuterRadius = 24.dp
 private val InnerRadius = 6.dp
 private val RowGap = 3.dp
@@ -69,7 +59,6 @@ fun SettingsGroup(
             text = title,
             style = MaterialTheme.typography.labelSmall,
             color = SBTheme.colors.accent,
-            // Leads the cascade its rows follow, so the group arrives as one.
             modifier =
                 Modifier
                     .pvotReveal(0)
@@ -83,13 +72,7 @@ fun SettingsGroup(
     }
 }
 
-/**
- * One row of a group.
- *
- * Presses scale the row slightly on a spring rather than flashing a ripple —
- * the shape itself is the feedback, which is what keeps a list of these feeling
- * physical instead of tabular.
- */
+/** One row of a group. */
 @Composable
 private fun GroupedRow(
     index: Int,
@@ -161,18 +144,12 @@ fun ValueRow(
     }
 }
 
-/**
- * A tappable row. [enabled] is false for things announced but not published,
- * which stay visible with their [trailing] note rather than disappearing — the
- * website lists them the same way.
- */
+/** A tappable row. */
 @Composable
 fun ActionRow(
     label: String,
     index: Int,
     count: Int,
-    // Ahead of the modifier because it is required, and out of trailing
-    // position because a trailing lambda reads as a content slot, not a click.
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     description: String? = null,

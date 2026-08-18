@@ -20,7 +20,6 @@ class CpuLoadReaderTest {
 
     @Test
     fun `a fully idle core reads as zero busy`() {
-        // One second of wall time, one second of idle.
         val load = CpuLoadReader.load(sampleAt(0, 0), sampleAt(1, 1_000_000))!!
         assertEquals(0f, load.perCore.single(), 0.001f)
     }
@@ -39,8 +38,6 @@ class CpuLoadReaderTest {
 
     @Test
     fun `idle exceeding the window clamps to idle rather than going negative`() {
-        // Sampling overhead makes the real window longer than intended, so idle
-        // deltas can exceed it; that must not read as a negative or wrapped load.
         val load = CpuLoadReader.load(sampleAt(0, 0), sampleAt(1, 1_200_000))!!
         assertEquals(0f, load.perCore.single(), 0.001f)
     }

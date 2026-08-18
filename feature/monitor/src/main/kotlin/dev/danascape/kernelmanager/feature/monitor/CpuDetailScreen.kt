@@ -85,9 +85,6 @@ fun CpuDetailScreen(
             }
         }
 
-        // One chart per core rather than eight series on one axis: small
-        // multiples stay readable where an eight-line chart becomes a scribble,
-        // and every core shares the same 0-100% scale so they are comparable.
         val perCore = state.history.perCoreLoad
         itemsIndexed(perCore) { core, values ->
             CoreChart(
@@ -146,8 +143,6 @@ private fun CoreChart(
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurface,
             )
-            // The reading for "now" is labelled once, at the end of the series;
-            // the chart carries the rest.
             Text(
                 text =
                     buildString {

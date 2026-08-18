@@ -11,10 +11,7 @@ sealed interface DataResult<out T> {
         val stale: Boolean = false,
     ) : DataResult<T>
 
-    /**
-     * @param cause the original failure. Carried rather than discarded: [error]
-     *   is what the UI acts on, the cause is what a bug report needs.
-     */
+    /** @param cause the original failure. */
     data class Failure(
         val error: LoadError,
         val cause: Throwable? = null,
@@ -23,12 +20,9 @@ sealed interface DataResult<out T> {
 
 /** Why a read failed, as a type; turning it into words is the UI's job. */
 enum class LoadError {
-    /** No usable network and nothing cached to fall back on. */
     OFFLINE,
 
-    /** Reached the host, but it did not return a usable response. */
     SERVER,
 
-    /** Got a response we could not parse. */
     MALFORMED,
 }

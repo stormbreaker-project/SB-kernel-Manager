@@ -10,12 +10,7 @@ import java.io.File
 private const val CPU_ROOT = "/sys/devices/system/cpu"
 private const val CPUINFO = "/proc/cpuinfo"
 
-/**
- * Reads the cpufreq policy groups.
- *
- * Enumeration works here but not under /sys/class, where listing is denied even
- * though individual files read fine.
- */
+/** Reads the cpufreq policy groups. */
 object CpuTopologyReader {
     fun read(): CpuTopology? {
         val policies =

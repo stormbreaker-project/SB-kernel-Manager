@@ -17,9 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.danascape.kernelmanager.core.designsystem.theme.SBTheme
 
-/**
- * Stand-in for a destination whose content has not been built yet.
- */
+/** Stand-in for a destination whose content has not been built yet. */
 @Composable
 fun SectionPlaceholder(
     kicker: String,

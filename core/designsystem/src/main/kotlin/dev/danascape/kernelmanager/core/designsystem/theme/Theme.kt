@@ -16,15 +16,7 @@ import com.prauga.pvot.designsystem.components.navigation.PvotNavBarColors
 import com.prauga.pvot.designsystem.components.navigation.PvotNavBarSizes
 import com.prauga.pvot.designsystem.theme.PvotAppTheme
 
-/**
- * The app's theme: StormBreaker's brand palette and type carried on the Pvot
- * design system.
- *
- * Material You is deliberately off. The kernel and the site are one product
- * with one identity, and a wallpaper-derived palette would break the match —
- * and would put unreviewed colors behind readouts where color means something
- * (a thermal reading, a failed flash).
- */
+/** The app's theme: StormBreaker's brand palette and type carried on the Pvot design system. */
 @Composable
 fun SBTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -33,8 +25,6 @@ fun SBTheme(
     val colorScheme = if (darkTheme) SBDarkColorScheme else SBLightColorScheme
     val extendedColors = if (darkTheme) SBDarkExtendedColors else SBLightExtendedColors
 
-    // Resolving the font families touches PackageManager, so do it once per
-    // context rather than on every recomposition.
     val context = LocalContext.current
     val typography = remember(context) { sbTypography(context) }
 
@@ -44,9 +34,6 @@ fun SBTheme(
             dynamicColor = false,
             colorScheme = colorScheme,
             typography = typography,
-            // Flat by default: a solid brand fill for the selected pill and no
-            // chip behind unselected ones. Pvot's gradient is a Brush, so a
-            // SolidColor is how "no gradient" is expressed.
             navBarColors =
                 PvotNavBarColors(
                     gradient = SolidColor(colorScheme.primary),
@@ -55,18 +42,6 @@ fun SBTheme(
                     iconSelectedColor = colorScheme.onPrimary,
                     iconUnselectedColor = extendedColors.muted,
                 ),
-            // barWidth/expandedWidth are left unset so the bar measures
-            // intrinsically. A fixed 367dp bar plus 22dp padding a side needs
-            // a 411dp viewport and would clip on the 360dp-wide devices a lot
-            // of this fleet still runs.
-            //
-            // labelFontSize drops from the 16sp default because the label text
-            // style here is monospace, which sets appreciably wider.
-            // Sized for five tabs on a 360dp screen, which is the tightest
-            // case this fleet still runs. The expanded pill is the variable:
-            // icon + 8dp gap + label + 32dp padding, and the label is
-            // monospace, which sets wider than a proportional face. "Discover"
-            // at 12sp is the worst case and lands the bar around 350dp.
             navBarSizes =
                 PvotNavBarSizes(
                     barHeight = 68.dp,

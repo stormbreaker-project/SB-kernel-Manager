@@ -18,13 +18,7 @@ import dev.danascape.kernelmanager.core.model.StorageVitals
 import dev.danascape.kernelmanager.core.model.ThermalStatus
 import java.io.File
 
-/**
- * The parts the framework gives up without a permission.
- *
- * Everything here has a sysfs or /proc equivalent that is denied — thermal
- * zones, /sys/class/power_supply, /proc/net, /proc/diskstats, /proc/uptime —
- * so these APIs are the only route to the same facts.
- */
+/** The parts the framework gives up without a permission. */
 class PlatformVitalsReader(
     context: Context,
 ) {
@@ -33,10 +27,7 @@ class PlatformVitalsReader(
     /** Milliseconds since boot, replacing the denied /proc/uptime. */
     fun uptimeMillis(): Long = SystemClock.elapsedRealtime()
 
-    /**
-     * Deep sleep versus awake, from the gap between the two clocks:
-     * elapsedRealtime counts time spent suspended, uptimeMillis does not.
-     */
+    /** Deep sleep versus awake, from the gap between the two clocks. */
     fun sleepStats(): SleepStats =
         SleepStats(
             elapsedMillis = SystemClock.elapsedRealtime(),
@@ -75,10 +66,7 @@ class PlatformVitalsReader(
             null
         }
 
-    /**
-     * Byte counters since boot. Device-wide totals need no permission; per-UID
-     * detail would.
-     */
+    /** Byte counters since boot. */
     fun network(): NetworkVitals? {
         val rx = TrafficStats.getTotalRxBytes()
         val tx = TrafficStats.getTotalTxBytes()
@@ -101,12 +89,7 @@ class PlatformVitalsReader(
             null
         }
 
-    /**
-     * Whether a `su` binary is present.
-     *
-     * A file-existence check only — it says root is likely available, not that
-     * this app has been granted it. Phase 1 asks libsu for the real answer.
-     */
+    /** Whether a `su` binary is present. */
     fun suBinaryPresent(): Boolean =
         SU_PATHS.any { path ->
             try {

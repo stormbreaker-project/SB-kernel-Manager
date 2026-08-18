@@ -19,15 +19,10 @@ import java.io.File
 object SBEndpoints {
     const val BASE_URL: String = BuildConfig.API_BASE_URL
 
-    /** Versioned: installed apps are not updated in step with the site. */
     const val NEWS: String = "$BASE_URL/api/v1/news.json"
     const val LINKS: String = "$BASE_URL/api/v1/links.json"
 }
 
-/**
- * Unknown keys are ignored so the site can add fields to a v1 payload without
- * breaking installs already in the field.
- */
 val SBJson: Json =
     Json {
         ignoreUnknownKeys = true
@@ -38,11 +33,7 @@ private const val HTTP_CACHE_BYTES = 8L * 1024 * 1024
 private const val CONNECT_TIMEOUT_MS = 15_000L
 private const val REQUEST_TIMEOUT_MS = 30_000L
 
-/**
- * The endpoints are static files behind an ETag, so OkHttp's disk cache is the
- * whole persistence story: repeat opens revalidate cheaply, and offline reads
- * come from here rather than failing.
- */
+/** Static files behind an ETag, so OkHttp's disk cache is the persistence. */
 fun createHttpClient(cacheDir: File): HttpClient =
     HttpClient(OkHttp) {
         expectSuccess = true

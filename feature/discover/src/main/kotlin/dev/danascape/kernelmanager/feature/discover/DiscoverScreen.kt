@@ -80,12 +80,7 @@ fun DiscoverScreen(
     )
 }
 
-/**
- * My device → what's happening → what's new.
- *
- * Identity owns the kernel string; the update section owns only the delta, so
- * the version is not stated twice.
- */
+/** My device → what's happening → what's new. */
 @Composable
 private fun DiscoverContent(
     state: DiscoverUiState,
@@ -195,12 +190,7 @@ private fun StatusLine(identity: DeviceIdentity) {
     }
 }
 
-/**
- * Deliberately a placeholder rather than a fake "up to date".
- *
- * Claiming a device is current without a manifest to check against would be a
- * lie about the one thing this app exists to get right.
- */
+/** Deliberately a placeholder rather than a fake "up to date". */
 @Composable
 private fun UpdateGroup() {
     SettingsGroup(title = stringResource(R.string.discover_update)) {

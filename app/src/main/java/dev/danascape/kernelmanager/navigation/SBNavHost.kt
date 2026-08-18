@@ -30,36 +30,15 @@ import dev.danascape.kernelmanager.feature.news.newsScreen
 import dev.danascape.kernelmanager.feature.tune.tuneScreen
 import kotlinx.serialization.Serializable
 
-/**
- * More's nested graph.
- *
- * The graph route is what the nav bar tracks, so anything reached from More —
- * News, Devices, Licenses — keeps More selected instead of dropping the bar
- * back to the start destination. It also gives the tab its own back stack, so
- * leaving and returning lands where the user left off.
- *
- * Owned by :app because grouping several features is a composition concern;
- * the features themselves still only know their own routes.
- */
+/** More's nested graph. */
 @Serializable
 data object MoreGraphRoute
 
-/**
- * Monitor's nested graph, for the same reason as More's: the CPU detail screen
- * has to keep Monitor selected in the bar rather than dropping to the start
- * destination.
- */
+/** Monitor's nested graph, so the CPU detail screen keeps Monitor selected. */
 @Serializable
 data object MonitorGraphRoute
 
-/**
- * Composes the feature graphs.
- *
- * Features never depend on each other, so anything cross-feature is wired here.
- *
- * @param contentPadding window insets including the floating nav bar. Screens
- *   apply these to their own content so scrolled content passes under the bar.
- */
+/** Composes the feature graphs. */
 @Composable
 fun SBNavHost(
     navController: NavHostController,
@@ -100,12 +79,7 @@ fun SBNavHost(
     }
 }
 
-/**
- * Switches top-level tabs.
- *
- * Tabs are siblings, not a stack: re-selecting must not pile up entries, and
- * returning to a tab restores where the user left it.
- */
+/** Switches top-level tabs. */
 fun NavHostController.navigateToTopLevel(destination: SBDestination) {
     navigate(
         destination.route,

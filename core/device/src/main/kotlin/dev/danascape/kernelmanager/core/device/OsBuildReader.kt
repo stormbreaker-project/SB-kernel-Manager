@@ -9,13 +9,6 @@ import dev.danascape.kernelmanager.core.model.CustomRom
 import dev.danascape.kernelmanager.core.model.OsBuild
 import dev.danascape.kernelmanager.core.model.SocInfo
 
-/**
- * ROMs that advertise themselves with a version property.
- *
- * The first three are the ones StormBreaker ships as stock in; the rest are
- * common enough on the devices it supports to be worth naming rather than
- * reporting as an unidentified custom build.
- */
 private val KNOWN_ROMS =
     listOf(
         "ro.lineage.version" to "LineageOS",
@@ -54,7 +47,6 @@ class OsBuildReader(
 
     fun readBootState(): BootState =
         BootState(
-            // "1" means locked, so the flashable answer is the inverse.
             bootloaderUnlocked = properties["ro.boot.flash.locked"]?.let { it == "0" },
             verifiedBootState = properties["ro.boot.verifiedbootstate"],
             encryption = properties["ro.crypto.type"],

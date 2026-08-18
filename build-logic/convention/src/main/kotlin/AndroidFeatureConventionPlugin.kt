@@ -5,12 +5,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
 
-/**
- * A UI feature: Compose plus the pieces every screen needs.
- *
- * Features depend on core, never on each other; cross-feature navigation is
- * passed in from :app as callbacks.
- */
+/** A UI feature: Compose plus the pieces every screen needs. */
 class AndroidFeatureConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) = with(target) {
         pluginManager.apply("sbkm.android.library")

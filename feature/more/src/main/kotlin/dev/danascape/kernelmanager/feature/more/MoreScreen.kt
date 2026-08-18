@@ -59,8 +59,6 @@ fun MoreScreen(
     val context = LocalContext.current
     val toolbarColor = MaterialTheme.colorScheme.surface.toArgb()
 
-    // The service accumulates either way; the permission only decides whether
-    // the readout is visible, so the result is not acted on.
     val notificationPermission =
         rememberLauncherForActivityResult(
             ActivityResultContracts.RequestPermission(),
@@ -142,10 +140,7 @@ private fun MoreContent(
     }
 }
 
-/**
- * Off by default, and says why up front: nothing reports discharge history
- * retroactively, so the figures only start when the user opts in.
- */
+/** Off by default: no discharge history exists before the user opts in. */
 @Composable
 private fun BatteryMonitorGroup(
     enabled: Boolean,
@@ -221,8 +216,6 @@ private fun LinkGroup(
                 index = index,
                 count = section.items.size,
                 description = item.description,
-                // Only "soon" earns a trailing note; it is the one case where
-                // tapping does nothing and the row needs to explain itself.
                 trailing = stringResource(R.string.more_soon).takeIf { item.soon },
                 enabled = item.openable,
                 onClick = { onLinkClick(item) },

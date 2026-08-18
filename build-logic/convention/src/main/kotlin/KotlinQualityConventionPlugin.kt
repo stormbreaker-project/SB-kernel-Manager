@@ -10,14 +10,7 @@ import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.withType
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
-/**
- * Formatting and static analysis, applied to every module from one place.
- *
- * ktlint owns layout — it is mechanical, so it is also auto-fixable. detekt
- * owns the things a formatter cannot see, and carries the Compose rule set,
- * which catches the mistakes this codebase is actually made of: unstable
- * parameters, missing modifiers, state hoisted the wrong way.
- */
+/** Formatting and static analysis, applied to every module from one place. */
 class KotlinQualityConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) = with(target) {
         pluginManager.apply("org.jlleitschuh.gradle.ktlint")
@@ -25,7 +18,6 @@ class KotlinQualityConventionPlugin : Plugin<Project> {
 
         extensions.configure<KtlintExtension> {
             version.set(libs.findVersion("ktlintEngine").get().requiredVersion)
-            // Generated sources are not ours to format.
             filter {
                 exclude { it.file.path.contains("/build/") }
             }
@@ -38,8 +30,6 @@ class KotlinQualityConventionPlugin : Plugin<Project> {
             if (moduleBaseline.exists()) baseline.set(moduleBaseline)
         }
 
-        // Type resolution is off: it needs per-variant classpaths, roughly
-        // triples the runtime, and none of the rules enabled here require it.
         tasks.withType<Detekt>().configureEach {
             reports {
                 html.required.set(true)

@@ -36,8 +36,6 @@ class MoreViewModel(
     val state: StateFlow<MoreUiState> = _state.asStateFlow()
 
     init {
-        // Same reason as Discover: the links load and the theme flow write
-        // concurrently, and read-modify-write on .value loses one of them.
         viewModelScope.launch {
             val sections = linksRepository.links()
             _state.update { it.copy(sections = sections) }

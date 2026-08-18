@@ -3,14 +3,7 @@
 
 package dev.danascape.kernelmanager.feature.licenses
 
-/**
- * Third-party notices.
- *
- * Curated by hand rather than generated. A generator (AboutLibraries and the
- * like) would add a plugin and a build step to restate what is a short, slow
- * moving list; the tradeoff is that adding a dependency means adding a line
- * here. Every entry below ships inside the APK.
- */
+/** Third-party notices. */
 data class License(
     val name: String,
     val holder: String,

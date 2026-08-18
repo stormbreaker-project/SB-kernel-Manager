@@ -25,16 +25,9 @@ import kotlin.math.abs
 private const val MICROAMPS_PER_MILLIAMP = 1000f
 private const val MILLIS_PER_SECOND = 1000f
 
-/** Roughly thirty seconds at the sampling rate the idle window imposes. */
 private const val WINDOW = 60
 
-/**
- * Recent history, kept only while the screen is open.
- *
- * Nothing is persisted and nothing is sampled in the background: a monitor
- * nobody is looking at is a battery cost. The consequence is that graphs fill
- * as you watch rather than showing history from before you arrived.
- */
+/** Recent history, kept only while the screen is open. */
 data class MetricHistory(
     val totalLoad: List<Float> = emptyList(),
     val perCoreLoad: List<List<Float>> = emptyList(),
@@ -66,11 +59,7 @@ class MonitorViewModel(
         }
     }
 
-    /**
-     * Each pass already spends half a second measuring idle residency, so this
-     * polls continuously rather than on a timer — the measurement window is the
-     * interval.
-     */
+    /** Polls continuously: the idle-residency measurement window is the interval. */
     fun startSampling() {
         if (sampling?.isActive == true) return
         sampling =
@@ -104,7 +93,6 @@ class MonitorViewModel(
                     }
                 },
             memoryUsed = memoryUsed.append(vitals.memory?.usedFraction),
-            // Sign convention for draw varies by vendor; magnitude is the signal.
             batteryDrawMilliAmps =
                 batteryDrawMilliAmps
                     .append(vitals.battery?.currentMicroAmps?.let { abs(it) / MICROAMPS_PER_MILLIAMP }),

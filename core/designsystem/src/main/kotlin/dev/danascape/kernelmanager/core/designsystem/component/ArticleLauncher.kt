@@ -10,17 +10,7 @@ import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
 
-/**
- * Opens an article on the website in a Custom Tab.
- *
- * The post bodies are not in the feed, so the website renders them — which also
- * means the article looks exactly as it does on the web, with no second
- * Markdown pipeline to drift out of sync. The toolbar is painted with the app's
- * own surface colours so the handoff still reads as one product.
- *
- * Falls back to an ordinary view intent when no Custom Tabs provider exists,
- * and does nothing at all when the device has no browser, rather than crashing.
- */
+/** Opens an article on the website in a Custom Tab. */
 fun Context.openArticle(
     url: String,
     toolbarColor: Int,
@@ -46,7 +36,6 @@ fun Context.openArticle(
         try {
             startActivity(Intent(Intent.ACTION_VIEW, uri))
         } catch (_: ActivityNotFoundException) {
-            // No browser on the device. Nothing sensible left to do.
         }
     }
 }

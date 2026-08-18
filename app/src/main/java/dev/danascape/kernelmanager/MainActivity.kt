@@ -31,10 +31,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-/**
- * Seeded from the system so the first frame — before DataStore has read from
- * disk — matches what the launch window already painted.
- */
+/** Seeded from the system so the first frame matches the launch window. */
 @Composable
 private fun isDarkTheme(repository: ThemeRepository): Boolean {
     val systemDark = isSystemInDarkTheme()

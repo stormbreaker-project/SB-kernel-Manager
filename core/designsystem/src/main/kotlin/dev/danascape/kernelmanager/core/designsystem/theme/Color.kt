@@ -9,44 +9,33 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
-/*
- * Brand palette, mirroring the website's src/styles/tokens.css.
- *
- * Token names below match the CSS custom properties one-for-one so that a
- * change on either side is traceable to the other; the app and the site are
- * meant to read as one product. Dark is the primary theme in both.
- */
+private val DarkBg = Color(0xFF08080F)
+private val DarkBg2 = Color(0xFF0D0D1A)
+private val DarkSurface = Color(0xFF12121F)
+private val DarkSurface2 = Color(0xFF16162A)
+private val DarkBorder = Color(0xFF22223A)
+private val DarkBorder2 = Color(0xFF30304E)
+private val DarkText = Color(0xFFECECF5)
+private val DarkMuted = Color(0xFF9A9AB5)
+private val DarkFaint = Color(0xFF6B6B85)
+private val DarkBrand = Color(0xFFC7E7FF)
+private val DarkBrand2 = Color(0xFF4D8DFF)
+private val DarkAccent = Color(0xFF35E0D4)
+private val DarkBrandText = Color(0xFF0A1020)
 
-// --- dark tokens ---------------------------------------------------------
-private val DarkBg = Color(0xFF08080F) // --bg
-private val DarkBg2 = Color(0xFF0D0D1A) // --bg-2
-private val DarkSurface = Color(0xFF12121F) // --surface
-private val DarkSurface2 = Color(0xFF16162A) // --surface-2
-private val DarkBorder = Color(0xFF22223A) // --border
-private val DarkBorder2 = Color(0xFF30304E) // --border-2
-private val DarkText = Color(0xFFECECF5) // --text
-private val DarkMuted = Color(0xFF9A9AB5) // --muted
-private val DarkFaint = Color(0xFF6B6B85) // --faint
-private val DarkBrand = Color(0xFFC7E7FF) // --brand
-private val DarkBrand2 = Color(0xFF4D8DFF) // --brand-2
-private val DarkAccent = Color(0xFF35E0D4) // --accent
-private val DarkBrandText = Color(0xFF0A1020) // --brand-text
+private val LightBg = Color(0xFFF6F7FB)
+private val LightBg2 = Color(0xFFEEF0F7)
+private val LightSurface = Color(0xFFFFFFFF)
+private val LightSurface2 = Color(0xFFF2F3FA)
+private val LightBorder = Color(0xFFE3E4EF)
+private val LightBorder2 = Color(0xFFD3D5E5)
+private val LightText = Color(0xFF14142A)
+private val LightMuted = Color(0xFF55566F)
+private val LightFaint = Color(0xFF8687A0)
+private val LightBrand = Color(0xFF2F6FE0)
+private val LightAccent = Color(0xFF0F766E)
+private val LightBrandText = Color(0xFFFFFFFF)
 
-// --- light tokens --------------------------------------------------------
-private val LightBg = Color(0xFFF6F7FB) // --bg
-private val LightBg2 = Color(0xFFEEF0F7) // --bg-2
-private val LightSurface = Color(0xFFFFFFFF) // --surface
-private val LightSurface2 = Color(0xFFF2F3FA) // --surface-2
-private val LightBorder = Color(0xFFE3E4EF) // --border
-private val LightBorder2 = Color(0xFFD3D5E5) // --border-2
-private val LightText = Color(0xFF14142A) // --text
-private val LightMuted = Color(0xFF55566F) // --muted
-private val LightFaint = Color(0xFF8687A0) // --faint
-private val LightBrand = Color(0xFF2F6FE0) // --brand
-private val LightAccent = Color(0xFF0F766E) // --accent
-private val LightBrandText = Color(0xFFFFFFFF) // --brand-text
-
-/** --ink: the near-black terminal surface, identical in both themes. */
 private val Ink = Color(0xFF0A0A12)
 
 internal val SBDarkColorScheme =
@@ -123,29 +112,15 @@ internal val SBLightColorScheme =
         scrim = Color(0xFF000000),
     )
 
-/**
- * Brand tokens that Material 3 has no slot for.
- *
- * Material's scheme covers roles, not the editorial distinctions this design
- * leans on — the three-step text ramp (onSurface / muted / faint) and the
- * hairline rules that carry the flat, terminal-influenced look. Reach for
- * these through [dev.danascape.kernelmanager.core.designsystem.theme.SBTheme].
- */
+/** Brand tokens that Material 3 has no slot for. */
 @Immutable
 data class SBExtendedColors(
-    /** --brand-2: the saturated blue, for links and secondary emphasis. */
     val brandSecondary: Color,
-    /** --accent: teal, reserved for "live"/active signals. */
     val accent: Color,
-    /** --muted: secondary body text. */
     val muted: Color,
-    /** --faint: tertiary text — timestamps, counts, disabled states. */
     val faint: Color,
-    /** --border: default hairline. */
     val hairline: Color,
-    /** --border-2: stronger hairline, for dividers that need to read. */
     val hairlineStrong: Color,
-    /** --ink: near-black terminal surface, identical in both themes. */
     val ink: Color,
 )
 

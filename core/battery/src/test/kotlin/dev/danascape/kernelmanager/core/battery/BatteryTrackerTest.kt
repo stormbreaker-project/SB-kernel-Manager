@@ -59,8 +59,6 @@ class BatteryTrackerTest {
 
     @Test
     fun `the state at the start of an interval owns it`() {
-        // Screen was on when the interval began, so the whole interval is active
-        // even though the sample arrives with the screen off.
         val first = sample(0, level = 100, screenOn = true)
         val second = sample(HOUR, level = 95, screenOn = false)
 
@@ -72,7 +70,6 @@ class BatteryTrackerTest {
 
     @Test
     fun `deep sleep is only counted while the screen is off`() {
-        // One hour elapsed, fifteen minutes of it awake.
         val first = sample(0, awake = 0, screenOn = false)
         val second = sample(HOUR, awake = 900_000, screenOn = false)
 
@@ -112,7 +109,6 @@ class BatteryTrackerTest {
     fun `a reboot restarts rather than reporting a negative interval`() {
         val before = sample(10 * HOUR, level = 50)
         var session = BatteryTracker.start(before)
-        // elapsedRealtime resets to near zero after a reboot.
         session = BatteryTracker.fold(session, before, sample(1_000, level = 50))
 
         assertEquals(1_000L, session.startedAtElapsedMillis)
@@ -158,7 +154,6 @@ class BatteryTrackerTest {
 
     @Test
     fun `a window too short to be meaningful yields no rate`() {
-        // A one percent step over ten seconds extrapolates to 360%/h.
         val first = sample(0, level = 100, screenOn = true)
         val session =
             BatteryTracker.fold(
@@ -173,7 +168,6 @@ class BatteryTrackerTest {
     fun `watts come from current and voltage`() {
         val first = sample(0, current = -956_000, voltage = 3766, screenOn = true)
         val session = BatteryTracker.start(first)
-        // 0.956 A × 3.766 V ≈ 3.6 W
         assertEquals(3.6f, session.watts!!, 0.05f)
     }
 
@@ -186,7 +180,6 @@ class BatteryTrackerTest {
                 first,
                 sample(HOUR, level = 40, screenOn = true),
             )
-        // 40% left at 10%/h is four hours.
         val remaining = session.estimatedMillisRemaining!!
         assertTrue("got ${remaining / HOUR}h", remaining in (3.5 * HOUR).toLong()..(4.5 * HOUR).toLong())
     }
