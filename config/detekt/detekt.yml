@@ -4,9 +4,6 @@
 # Layered on detekt's defaults (buildUponDefaultConfig), so this file holds only
 # what we change — not a copy of the whole rule set that silently drifts.
 
-build:
-  maxIssues: 0
-
 complexity:
   LongMethod:
     # Declarative UI is not judged by the line count that suits imperative
@@ -20,9 +17,9 @@ complexity:
     # A defaulted parameter is not a burden at the call site.
     ignoreDefaultParameters: true
   TooManyFunctions:
-    ignoreAnnotated: ['Composable']
-    thresholdInFiles: 20
-    thresholdInClasses: 20
+    ignoreAnnotatedFunctions: ['Composable']
+    allowedFunctionsPerFile: 20
+    allowedFunctionsPerClass: 20
 
 coroutines:
   InjectDispatcher:
@@ -81,7 +78,7 @@ style:
     # Guard clauses read better than the nesting that avoids them.
     max: 4
     excludeGuardClauses: true
-  UnusedPrivateMember:
+  UnusedPrivateFunction:
     # A preview exists to be found by tooling, not called.
     ignoreAnnotated: ['Preview']
 
@@ -96,6 +93,8 @@ Compose:
   ComposableAnnotationNaming:
     active: true
   ComposableNaming:
+    active: true
+  ComposableNestingDepth:
     active: true
   ComposableParamOrder:
     active: true
@@ -141,11 +140,17 @@ Compose:
     active: true
   RememberMissing:
     active: true
+  StateParam:
+    active: true
+  UnnecessaryComposable:
+    active: true
   UnstableCollections:
     # Revisit after a deliberate stability audit of the UI-state models. Do not
     # wrap the model layer in ImmutableList to satisfy a linter; optimise
     # stability at the Compose boundaries where recomposition actually costs.
     active: false
+  VarsWithoutStateBacking:
+    active: true
   ViewModelForwarding:
     active: true
   ViewModelInjection:

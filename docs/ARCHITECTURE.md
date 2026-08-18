@@ -112,6 +112,41 @@ would derive the same `versionCode`, so the release could not be installed over
 the beta. A malformed or out-of-range version fails the build with the reason
 rather than producing a wrong code.
 
+## Quality gates
+
+| Tool | Owns |
+|---|---|
+| ktlint | formatting, from `.editorconfig` |
+| detekt | Kotlin static analysis, `config/detekt/detekt.yml` |
+| compose-rules | Compose conventions, as a detekt ruleset |
+| Android Lint | platform correctness, via `build` |
+| REUSE | licensing, `REUSE.toml` |
+
+detekt runs on 2.0 (`dev.detekt`), which requires Kotlin 2.4. The two versions
+are coupled and must move together:
+
+```toml
+detekt        = "2.0.0-alpha.6"   # dev.detekt namespace
+detektCompose = "0.6.4"           # built against detekt 2.0.0-alpha.6
+```
+
+**compose-rules must match the detekt major version.** Releases before 0.5.9
+target detekt 1.x; from 0.5.9 they target `dev.detekt` 2.x. A mismatched pair
+does not fail — it loads far enough to validate rule ids in config and then
+never executes a rule, which reads as "clean" and is not. When changing either
+version, verify by planting a violation:
+
+```kotlin
+@Composable
+fun Probe(label: String) { Text(label) }   // ModifierMissing
+```
+
+If detekt does not report it, the ruleset is not running.
+
+Module boundaries are still enforced by the compiler and the dependency graph
+rather than by a rule: `:app` cannot see Ktor, and no feature can see
+`:core:network`. Nothing yet stops one feature depending on another.
+
 ## Backend
 
 There is no server. The website publishes static JSON with its own deploy and

@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2026 Saalim Quadri <danascape@gmail.com>
 // SPDX-License-Identifier: Apache-2.0
 
-import io.gitlab.arturbosch.detekt.Detekt
-import io.gitlab.arturbosch.detekt.extensions.DetektExtension
+import dev.detekt.gradle.Detekt
+import dev.detekt.gradle.extensions.DetektExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -21,7 +21,7 @@ import org.jlleitschuh.gradle.ktlint.KtlintExtension
 class KotlinQualityConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) = with(target) {
         pluginManager.apply("org.jlleitschuh.gradle.ktlint")
-        pluginManager.apply("io.gitlab.arturbosch.detekt")
+        pluginManager.apply("dev.detekt")
 
         extensions.configure<KtlintExtension> {
             version.set(libs.findVersion("ktlintEngine").get().requiredVersion)
@@ -32,11 +32,10 @@ class KotlinQualityConventionPlugin : Plugin<Project> {
         }
 
         extensions.configure<DetektExtension> {
-            parallel = true
-            buildUponDefaultConfig = true
+            buildUponDefaultConfig.set(true)
             config.setFrom(rootProject.file("config/detekt/detekt.yml"))
             val moduleBaseline = file("detekt-baseline.xml")
-            if (moduleBaseline.exists()) baseline = moduleBaseline
+            if (moduleBaseline.exists()) baseline.set(moduleBaseline)
         }
 
         // Type resolution is off: it needs per-variant classpaths, roughly
@@ -44,9 +43,9 @@ class KotlinQualityConventionPlugin : Plugin<Project> {
         tasks.withType<Detekt>().configureEach {
             reports {
                 html.required.set(true)
-                xml.required.set(false)
+                checkstyle.required.set(false)
                 sarif.required.set(false)
-                md.required.set(false)
+                markdown.required.set(false)
             }
         }
 
