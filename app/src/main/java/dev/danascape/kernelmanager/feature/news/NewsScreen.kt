@@ -33,11 +33,13 @@ import dev.danascape.kernelmanager.R
 import dev.danascape.kernelmanager.core.designsystem.theme.SBTheme
 import dev.danascape.kernelmanager.core.model.LoadError
 import dev.danascape.kernelmanager.core.model.NewsPost
+import dev.danascape.kernelmanager.core.ui.expandedBy
 import dev.danascape.kernelmanager.core.ui.openArticle
 import java.time.LocalDate
 
 @Composable
 fun NewsScreen(
+    contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
     viewModel: NewsViewModel = viewModel(factory = NewsViewModel.Factory),
 ) {
@@ -47,6 +49,7 @@ fun NewsScreen(
 
     NewsContent(
         state = state,
+        contentPadding = contentPadding,
         onPostClick = { post -> context.openArticle(post.url, toolbarColor) },
         onRetry = viewModel::refresh,
         modifier = modifier,
@@ -57,16 +60,17 @@ fun NewsScreen(
 @Composable
 private fun NewsContent(
     state: NewsUiState,
+    contentPadding: PaddingValues,
     onPostClick: (NewsPost) -> Unit,
     onRetry: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (state) {
-        NewsUiState.Loading -> Centered(modifier) {
+        NewsUiState.Loading -> Centered(modifier, contentPadding) {
             CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
         }
 
-        NewsUiState.Empty -> Centered(modifier) {
+        NewsUiState.Empty -> Centered(modifier, contentPadding) {
             Text(
                 text = stringResource(R.string.news_empty),
                 style = MaterialTheme.typography.bodyMedium,
@@ -75,13 +79,14 @@ private fun NewsContent(
             )
         }
 
-        is NewsUiState.Failed -> Centered(modifier) {
+        is NewsUiState.Failed -> Centered(modifier, contentPadding) {
             LoadFailure(error = state.error, onRetry = onRetry)
         }
 
         is NewsUiState.Ready -> NewsList(
             posts = state.posts,
             stale = state.stale,
+            contentPadding = contentPadding,
             onPostClick = onPostClick,
             modifier = modifier,
         )
@@ -92,12 +97,13 @@ private fun NewsContent(
 private fun NewsList(
     posts: List<NewsPost>,
     stale: Boolean,
+    contentPadding: PaddingValues,
     onPostClick: (NewsPost) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 24.dp),
+        contentPadding = contentPadding.expandedBy(horizontal = 16.dp, top = 24.dp, bottom = 24.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         item(key = "header") { Header() }
@@ -213,9 +219,15 @@ private fun LoadFailure(error: LoadError, onRetry: () -> Unit) {
 }
 
 @Composable
-private fun Centered(modifier: Modifier, content: @Composable () -> Unit) {
+private fun Centered(
+    modifier: Modifier,
+    contentPadding: PaddingValues,
+    content: @Composable () -> Unit,
+) {
     Box(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(contentPadding),
         contentAlignment = Alignment.Center,
         content = { content() },
     )
@@ -253,6 +265,7 @@ private fun NewsReadyPreview() {
     SBTheme {
         NewsContent(
             state = NewsUiState.Ready(PreviewPosts, stale = false),
+            contentPadding = PaddingValues(),
             onPostClick = {},
             onRetry = {},
         )
@@ -265,6 +278,7 @@ private fun NewsOfflinePreview() {
     SBTheme {
         NewsContent(
             state = NewsUiState.Ready(PreviewPosts, stale = true),
+            contentPadding = PaddingValues(),
             onPostClick = {},
             onRetry = {},
         )
@@ -277,6 +291,7 @@ private fun NewsFailedPreview() {
     SBTheme {
         NewsContent(
             state = NewsUiState.Failed(LoadError.OFFLINE),
+            contentPadding = PaddingValues(),
             onPostClick = {},
             onRetry = {},
         )
