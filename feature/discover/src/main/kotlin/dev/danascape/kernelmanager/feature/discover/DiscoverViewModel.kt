@@ -16,6 +16,7 @@ import dev.danascape.kernelmanager.core.model.Vitals
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 private const val HEADLINE_COUNT = 3
@@ -39,16 +40,22 @@ class DiscoverViewModel(
     }
 
     fun refresh() {
+        // These land at very different times — the profile shells out to
+        // getprop, vitals spends half a second sampling idle residency, news
+        // hits the network. update() is a compare-and-set loop, so a slow
+        // writer cannot overwrite a field a faster one already filled in.
         viewModelScope.launch {
-            _state.value = _state.value.copy(profile = deviceRepository.profile())
+            val profile = deviceRepository.profile()
+            _state.update { it.copy(profile = profile) }
         }
         viewModelScope.launch {
-            _state.value = _state.value.copy(vitals = deviceRepository.vitals())
+            val vitals = deviceRepository.vitals()
+            _state.update { it.copy(vitals = vitals) }
         }
         viewModelScope.launch {
             val result = newsRepository.news()
             if (result is DataResult.Success) {
-                _state.value = _state.value.copy(headlines = result.data.take(HEADLINE_COUNT))
+                _state.update { it.copy(headlines = result.data.take(HEADLINE_COUNT)) }
             }
             // A failed news load leaves the section absent rather than putting an
             // error on a screen whose job is the device in front of you.

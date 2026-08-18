@@ -14,6 +14,7 @@ import dev.danascape.kernelmanager.core.model.LinkSection
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class MoreUiState(
@@ -30,12 +31,15 @@ class MoreViewModel(
     val state: StateFlow<MoreUiState> = _state.asStateFlow()
 
     init {
+        // Same reason as Discover: the links load and the theme flow write
+        // concurrently, and read-modify-write on .value loses one of them.
         viewModelScope.launch {
-            _state.value = _state.value.copy(sections = linksRepository.links())
+            val sections = linksRepository.links()
+            _state.update { it.copy(sections = sections) }
         }
         viewModelScope.launch {
             themeRepository.theme.collect { theme ->
-                _state.value = _state.value.copy(theme = theme)
+                _state.update { it.copy(theme = theme) }
             }
         }
     }
