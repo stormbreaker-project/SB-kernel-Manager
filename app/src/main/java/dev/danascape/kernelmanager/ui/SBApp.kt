@@ -26,7 +26,7 @@ fun SBApp() {
 
     // Before the first entry settles, the start destination is what is on
     // screen — reflect that rather than leaving the bar unselected.
-    val current = backStackEntry?.destination.topLevelDestination() ?: SBDestination.NEWS
+    val current = backStackEntry?.destination.topLevelDestination() ?: SBDestination.DISCOVER
 
     val tabs = remember {
         SBDestination.entries.map {

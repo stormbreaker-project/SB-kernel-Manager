@@ -6,17 +6,21 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import dev.danascape.kernelmanager.R
-import dev.danascape.kernelmanager.feature.devices.DevicesRoute
-import dev.danascape.kernelmanager.feature.downloads.DownloadsRoute
+import dev.danascape.kernelmanager.feature.builds.BuildsRoute
+import dev.danascape.kernelmanager.feature.discover.DiscoverRoute
+import dev.danascape.kernelmanager.feature.monitor.MonitorRoute
 import dev.danascape.kernelmanager.feature.more.MoreRoute
-import dev.danascape.kernelmanager.feature.news.NewsRoute
+import dev.danascape.kernelmanager.feature.tune.TuneRoute
 import kotlin.reflect.KClass
 
 /**
  * Top-level destinations, in nav bar order.
  *
  * Ordinal is the tab index, so this order is the on-screen order; nothing else
- * may depend on it. Routes themselves are owned by the feature modules.
+ * may depend on it. Routes are owned by the feature modules.
+ *
+ * News and Devices are deliberately absent: both are browsing destinations
+ * reached from More, not places the user returns to constantly.
  */
 enum class SBDestination(
     val route: KClass<*>,
@@ -26,23 +30,29 @@ enum class SBDestination(
     @param:DrawableRes val expandedIconRes: Int? = null,
     @param:StringRes val expandedLabelRes: Int? = null,
 ) {
-    NEWS(
-        route = NewsRoute::class,
-        iconRes = R.drawable.ic_tab_news,
-        labelRes = R.string.tab_news,
-        contentDescriptionRes = R.string.tab_news_description,
+    DISCOVER(
+        route = DiscoverRoute::class,
+        iconRes = R.drawable.ic_tab_discover,
+        labelRes = R.string.tab_discover,
+        contentDescriptionRes = R.string.tab_discover_description,
     ),
-    DEVICES(
-        route = DevicesRoute::class,
-        iconRes = R.drawable.ic_tab_devices,
-        labelRes = R.string.tab_devices,
-        contentDescriptionRes = R.string.tab_devices_description,
+    TUNE(
+        route = TuneRoute::class,
+        iconRes = R.drawable.ic_tab_tune,
+        labelRes = R.string.tab_tune,
+        contentDescriptionRes = R.string.tab_tune_description,
     ),
-    DOWNLOADS(
-        route = DownloadsRoute::class,
-        iconRes = R.drawable.ic_tab_downloads,
-        labelRes = R.string.tab_downloads,
-        contentDescriptionRes = R.string.tab_downloads_description,
+    MONITOR(
+        route = MonitorRoute::class,
+        iconRes = R.drawable.ic_tab_monitor,
+        labelRes = R.string.tab_monitor,
+        contentDescriptionRes = R.string.tab_monitor_description,
+    ),
+    BUILDS(
+        route = BuildsRoute::class,
+        iconRes = R.drawable.ic_tab_builds,
+        labelRes = R.string.tab_builds,
+        contentDescriptionRes = R.string.tab_builds_description,
     ),
     MORE(
         route = MoreRoute::class,
@@ -56,6 +66,8 @@ enum class SBDestination(
  * The top-level destination this entry sits under.
  *
  * Walks the hierarchy, so a screen pushed inside a tab still resolves to it.
+ * Detail destinations reached from More — News, Devices, Licenses — resolve to
+ * nothing, which leaves the bar showing More.
  */
 fun NavDestination?.topLevelDestination(): SBDestination? {
     val hierarchy = this?.hierarchy ?: return null

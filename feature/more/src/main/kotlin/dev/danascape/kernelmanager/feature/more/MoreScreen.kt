@@ -39,6 +39,8 @@ import dev.danascape.kernelmanager.core.designsystem.component.openArticle
 @Composable
 fun MoreScreen(
     contentPadding: PaddingValues,
+    onOpenDevices: () -> Unit,
+    onOpenNews: () -> Unit,
     onOpenLicenses: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MoreViewModel = viewModel(factory = MoreViewModel.Factory),
@@ -52,6 +54,8 @@ fun MoreScreen(
         contentPadding = contentPadding,
         onLinkClick = { item -> item.url?.let { context.openArticle(it, toolbarColor) } },
         onThemeChange = viewModel::setTheme,
+        onOpenDevices = onOpenDevices,
+        onOpenNews = onOpenNews,
         onOpenLicenses = onOpenLicenses,
         modifier = modifier,
     )
@@ -63,6 +67,8 @@ private fun MoreContent(
     contentPadding: PaddingValues,
     onLinkClick: (LinkItem) -> Unit,
     onThemeChange: (ThemePreference) -> Unit,
+    onOpenDevices: () -> Unit,
+    onOpenNews: () -> Unit,
     onOpenLicenses: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -72,6 +78,10 @@ private fun MoreContent(
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         item(key = "header") { Header() }
+
+        item(key = "browse") {
+            BrowseGroup(onOpenDevices = onOpenDevices, onOpenNews = onOpenNews)
+        }
 
         item(key = "appearance") {
             SettingsGroup(title = stringResource(R.string.more_appearance)) {
@@ -84,6 +94,27 @@ private fun MoreContent(
         }
 
         item(key = "about") { AboutGroup(onOpenLicenses = onOpenLicenses) }
+    }
+}
+
+/** Destinations that lost their tab in favour of the kernel-facing ones. */
+@Composable
+private fun BrowseGroup(onOpenDevices: () -> Unit, onOpenNews: () -> Unit) {
+    SettingsGroup(title = stringResource(R.string.more_browse)) {
+        ActionRow(
+            label = stringResource(R.string.more_browse_devices),
+            index = 0,
+            count = 2,
+            description = stringResource(R.string.more_browse_devices_description),
+            onClick = onOpenDevices,
+        )
+        ActionRow(
+            label = stringResource(R.string.more_browse_news),
+            index = 1,
+            count = 2,
+            description = stringResource(R.string.more_browse_news_description),
+            onClick = onOpenNews,
+        )
     }
 }
 
@@ -207,6 +238,8 @@ private fun MorePreview() {
             contentPadding = PaddingValues(),
             onLinkClick = {},
             onThemeChange = {},
+            onOpenDevices = {},
+            onOpenNews = {},
             onOpenLicenses = {},
         )
     }

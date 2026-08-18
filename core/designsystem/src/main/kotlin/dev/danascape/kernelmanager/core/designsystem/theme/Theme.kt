@@ -58,18 +58,23 @@ fun SBTheme(
             //
             // labelFontSize drops from the 16sp default because the label text
             // style here is monospace, which sets appreciably wider.
+            // Sized for five tabs on a 360dp screen, which is the tightest
+            // case this fleet still runs. The expanded pill is the variable:
+            // icon + 8dp gap + label + 32dp padding, and the label is
+            // monospace, which sets wider than a proportional face. "Discover"
+            // at 12sp is the worst case and lands the bar around 350dp.
             navBarSizes = PvotNavBarSizes(
-                barHeight = 72.dp,
-                collapsedItemSize = 56.dp,
+                barHeight = 68.dp,
+                collapsedItemSize = 46.dp,
                 cornerRadius = 100.dp,
-                itemCornerRadius = 28.dp,
-                collapsedIconSize = 22.dp,
-                expandedIconSize = 22.dp,
-                labelFontSize = 14.sp,
-                maxExpandedWidth = 180.dp,
-                horizontalPadding = 22.dp,
-                contentPaddingHorizontal = 9.dp,
-                itemSpacing = 4.dp,
+                itemCornerRadius = 26.dp,
+                collapsedIconSize = 20.dp,
+                expandedIconSize = 20.dp,
+                labelFontSize = 12.sp,
+                maxExpandedWidth = 150.dp,
+                horizontalPadding = 10.dp,
+                contentPaddingHorizontal = 8.dp,
+                itemSpacing = 3.dp,
             ),
             content = content,
         )

@@ -1,0 +1,5 @@
+<resources>
+    <string name="discover_kicker">discover</string>
+    <string name="discover_title">Discover</string>
+    <string name="discover_description">Your device at a glance: update status, latest releases and news. Coming with the OTA updater.</string>
+</resources>

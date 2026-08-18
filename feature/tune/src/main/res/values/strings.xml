@@ -1,0 +1,5 @@
+<resources>
+    <string name="tune_kicker">tune</string>
+    <string name="tune_title">Tune</string>
+    <string name="tune_description">Governors, frequency caps, I/O scheduler, TCP congestion control and thermal profiles. Needs root.</string>
+</resources>

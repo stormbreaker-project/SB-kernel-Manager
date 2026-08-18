@@ -2,6 +2,12 @@
     <string name="more_kicker">more</string>
     <string name="more_title">Project &amp; community</string>
     <string name="more_soon">soon</string>
+    <string name="more_browse">Browse</string>
+    <string name="more_browse_devices">Devices</string>
+    <string name="more_browse_devices_description">Every device Team StormBreaker builds for</string>
+    <string name="more_browse_news">News archive</string>
+    <string name="more_browse_news_description">Releases and project updates</string>
+
     <string name="more_appearance">Appearance</string>
     <string name="more_theme">Theme</string>
     <string name="more_theme_system">System</string>

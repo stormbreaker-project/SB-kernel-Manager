@@ -13,14 +13,21 @@ data object MoreRoute
 fun NavController.navigateToMore(navOptions: NavOptions? = null) = navigate(MoreRoute, navOptions)
 
 /**
- * @param onOpenLicenses supplied by :app. Features never navigate to each
- *   other directly, so cross-feature destinations arrive as callbacks.
+ * Cross-feature destinations arrive as callbacks, supplied by :app. Features
+ * never navigate to each other directly.
  */
 fun NavGraphBuilder.moreScreen(
     contentPadding: PaddingValues,
+    onOpenDevices: () -> Unit,
+    onOpenNews: () -> Unit,
     onOpenLicenses: () -> Unit,
 ) {
     composable<MoreRoute> {
-        MoreScreen(contentPadding = contentPadding, onOpenLicenses = onOpenLicenses)
+        MoreScreen(
+            contentPadding = contentPadding,
+            onOpenDevices = onOpenDevices,
+            onOpenNews = onOpenNews,
+            onOpenLicenses = onOpenLicenses,
+        )
     }
 }

@@ -1,0 +1,5 @@
+<resources>
+    <string name="monitor_kicker">monitor</string>
+    <string name="monitor_title">Monitor</string>
+    <string name="monitor_description">Live per-core frequencies, load, temperatures, GPU busy and battery draw.</string>
+</resources>

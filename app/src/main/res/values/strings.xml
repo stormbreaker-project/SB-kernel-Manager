@@ -1,14 +1,16 @@
 <resources>
     <string name="app_name">SB Kernel Manager</string>
 
-    <!-- Nav bar. Labels sit inside the pill so they stay short; content
-         descriptions carry the full meaning. -->
-    <string name="tab_news">News</string>
-    <string name="tab_news_description">News</string>
-    <string name="tab_devices">Devices</string>
-    <string name="tab_devices_description">Supported devices</string>
-    <string name="tab_downloads">Builds</string>
-    <string name="tab_downloads_description">Kernel builds and changelogs</string>
+    <!-- Nav bar. Labels sit inside the pill, so they stay one short word;
+         content descriptions carry the full meaning. -->
+    <string name="tab_discover">Discover</string>
+    <string name="tab_discover_description">Your device at a glance</string>
+    <string name="tab_tune">Tune</string>
+    <string name="tab_tune_description">Kernel controls</string>
+    <string name="tab_monitor">Monitor</string>
+    <string name="tab_monitor_description">Live kernel metrics</string>
+    <string name="tab_builds">Builds</string>
+    <string name="tab_builds_description">Kernel releases and changelogs</string>
     <string name="tab_more">More</string>
-    <string name="tab_more_description">Community, contributing, and about</string>
+    <string name="tab_more_description">Devices, news, settings and about</string>
 </resources>

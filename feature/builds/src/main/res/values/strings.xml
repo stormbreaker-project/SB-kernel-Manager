@@ -1,0 +1,5 @@
+<resources>
+    <string name="builds_kicker">builds</string>
+    <string name="builds_title">Builds</string>
+    <string name="builds_description">Kernel releases and changelogs, with checksums, for your device. Install history and boot image backups will live here too.</string>
+</resources>
