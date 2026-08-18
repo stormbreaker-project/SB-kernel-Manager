@@ -6,10 +6,8 @@ package dev.danascape.kernelmanager.core.designsystem.theme
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.prauga.pvot.designsystem.components.navigation.PvotNavBarColors
@@ -25,15 +23,12 @@ fun SBTheme(
     val colorScheme = if (darkTheme) SBDarkColorScheme else SBLightColorScheme
     val extendedColors = if (darkTheme) SBDarkExtendedColors else SBLightExtendedColors
 
-    val context = LocalContext.current
-    val typography = remember(context) { sbTypography(context) }
-
     CompositionLocalProvider(LocalSBExtendedColors provides extendedColors) {
         PvotAppTheme(
             darkTheme = darkTheme,
             dynamicColor = false,
             colorScheme = colorScheme,
-            typography = typography,
+            typography = SBTypography,
             navBarColors =
                 PvotNavBarColors(
                     gradient = SolidColor(colorScheme.primary),

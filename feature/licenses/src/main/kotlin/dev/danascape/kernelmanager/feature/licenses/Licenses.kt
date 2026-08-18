@@ -49,16 +49,4 @@ val THIRD_PARTY_LICENSES: List<License> =
             "Apache-2.0",
             "https://github.com/PVOT-OSS/PvotLib",
         ),
-        License(
-            "JetBrains Mono",
-            "The JetBrains Mono Project Authors",
-            "SIL OFL 1.1",
-            "https://github.com/JetBrains/JetBrainsMono",
-        ),
-        License(
-            "Space Grotesk",
-            "The Space Grotesk Project Authors",
-            "SIL OFL 1.1",
-            "https://github.com/floriankarsten/space-grotesk",
-        ),
     )

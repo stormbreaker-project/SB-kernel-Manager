@@ -3,77 +3,23 @@
 
 package dev.danascape.kernelmanager.core.designsystem.theme
 
-import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.googlefonts.Font
-import androidx.compose.ui.text.googlefonts.GoogleFont
 import androidx.compose.ui.unit.sp
-import dev.danascape.kernelmanager.core.designsystem.R
 
-private const val FONTS_AUTHORITY = "com.google.android.gms.fonts"
-
-private val GoogleFontsProvider =
-    GoogleFont.Provider(
-        providerAuthority = FONTS_AUTHORITY,
-        providerPackage = "com.google.android.gms",
-        certificates = R.array.com_google_android_gms_fonts_certs,
-    )
-
-/** Whether the Google Fonts provider is installed and visible to us. */
-private fun isFontProviderAvailable(context: Context): Boolean {
-    val pm = context.packageManager
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        pm.resolveContentProvider(FONTS_AUTHORITY, PackageManager.ComponentInfoFlags.of(0L))
-    } else {
-        @Suppress("DEPRECATION")
-        pm.resolveContentProvider(FONTS_AUTHORITY, 0)
-    } != null
-}
-
-private fun googleFontFamily(
-    name: String,
-    weights: List<FontWeight>,
-): FontFamily {
-    val font = GoogleFont(name)
-    return FontFamily(weights.map { Font(googleFont = font, fontProvider = GoogleFontsProvider, weight = it) })
-}
-
-/** Headings. Matches `h1, h2, h3, .brand-name` on the website. */
-private fun displayFamily(available: Boolean): FontFamily =
-    if (available) {
-        googleFontFamily(
-            "Space Grotesk",
-            listOf(FontWeight.Normal, FontWeight.Medium, FontWeight.SemiBold, FontWeight.Bold),
-        )
-    } else {
-        FontFamily.SansSerif
-    }
+private val Display = FontFamily.SansSerif
 
 /** Monospace is a first-class face here, not a code-block afterthought. */
-private fun monoFamily(available: Boolean): FontFamily =
-    if (available) {
-        googleFontFamily(
-            "JetBrains Mono",
-            listOf(FontWeight.Normal, FontWeight.Medium, FontWeight.Bold),
-        )
-    } else {
-        FontFamily.Monospace
-    }
+private val Mono = FontFamily.Monospace
 
 private val Body = FontFamily.SansSerif
 
-internal fun sbTypography(context: Context): Typography {
-    val available = isFontProviderAvailable(context)
-    return sbTypography(display = displayFamily(available), mono = monoFamily(available))
-}
+/** The app's type scale, on the platform's own faces. */
+internal val SBTypography: Typography = sbTypography(display = Display, mono = Mono)
 
-// One entry per Material type role. Splitting a table to satisfy a line
-// count would scatter it across functions that each say less.
+// One entry per Material type role.
 @Suppress("LongMethod")
 internal fun sbTypography(
     display: FontFamily,

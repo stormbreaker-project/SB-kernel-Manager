@@ -14,5 +14,4 @@ dependencies {
     api(project(":design-system"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.browser)
-    implementation(libs.androidx.compose.ui.text.google.fonts)
 }

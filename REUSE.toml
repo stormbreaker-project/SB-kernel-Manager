@@ -28,9 +28,3 @@ path = [
 precedence = "override"
 SPDX-FileCopyrightText = "Gradle Inc."
 SPDX-License-Identifier = "Apache-2.0"
-
-[[annotations]]
-path = ["core/designsystem/src/main/res/values/font_certs.xml"]
-precedence = "override"
-SPDX-FileCopyrightText = "2022 The Android Open Source Project"
-SPDX-License-Identifier = "Apache-2.0"
