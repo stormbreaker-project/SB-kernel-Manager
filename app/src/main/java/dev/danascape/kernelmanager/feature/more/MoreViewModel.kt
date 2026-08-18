@@ -8,7 +8,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import dev.danascape.kernelmanager.SBApplication
 import dev.danascape.kernelmanager.core.data.links.LinksRepository
-import dev.danascape.kernelmanager.core.data.settings.ThemePreference
+import dev.danascape.kernelmanager.core.model.ThemePreference
 import dev.danascape.kernelmanager.core.data.settings.ThemeRepository
 import dev.danascape.kernelmanager.core.model.LinkSection
 import kotlinx.coroutines.flow.MutableStateFlow

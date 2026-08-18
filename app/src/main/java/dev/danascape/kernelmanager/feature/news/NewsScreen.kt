@@ -32,7 +32,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.danascape.kernelmanager.R
 import dev.danascape.kernelmanager.core.designsystem.component.revealModifier
 import dev.danascape.kernelmanager.core.designsystem.theme.SBTheme
-import dev.danascape.kernelmanager.core.model.LoadError
+import dev.danascape.kernelmanager.core.common.LoadError
 import dev.danascape.kernelmanager.core.model.NewsPost
 import dev.danascape.kernelmanager.core.ui.expandedBy
 import dev.danascape.kernelmanager.core.ui.openArticle

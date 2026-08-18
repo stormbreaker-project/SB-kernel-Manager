@@ -1,6 +1,6 @@
 package dev.danascape.kernelmanager.core.data.news
 
-import dev.danascape.kernelmanager.core.model.LoadError
+import dev.danascape.kernelmanager.core.common.LoadError
 import dev.danascape.kernelmanager.core.model.NewsPost
 import dev.danascape.kernelmanager.core.network.SBEndpoints
 import dev.danascape.kernelmanager.core.network.dto.NewsFeedDto

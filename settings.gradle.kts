@@ -1,4 +1,5 @@
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google {
             content {
@@ -24,6 +25,8 @@ dependencyResolutionManagement {
 
 rootProject.name = "SB Kernel Manager"
 include(":app")
+include(":core:common")
+include(":core:model")
 
 include(":design-system")
 project(":design-system").projectDir = file("PvotLib/design-system")

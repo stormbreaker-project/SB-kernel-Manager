@@ -4,6 +4,8 @@
 /.idea
 .DS_Store
 /build
+# Build output in any module, not just the root.
+build/
 /captures
 .externalNativeBuild
 .cxx

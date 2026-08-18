@@ -7,17 +7,11 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import dev.danascape.kernelmanager.core.model.ThemePreference
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import java.io.IOException
-
-/** Mirrors the website's theme toggle, which persists a choice in `sb-theme`. */
-enum class ThemePreference {
-    SYSTEM,
-    LIGHT,
-    DARK,
-}
 
 private val Context.settingsDataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 

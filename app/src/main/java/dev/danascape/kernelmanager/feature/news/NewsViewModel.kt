@@ -9,7 +9,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import dev.danascape.kernelmanager.SBApplication
 import dev.danascape.kernelmanager.core.data.news.NewsRepository
 import dev.danascape.kernelmanager.core.data.news.NewsResult
-import dev.danascape.kernelmanager.core.model.LoadError
+import dev.danascape.kernelmanager.core.common.LoadError
 import dev.danascape.kernelmanager.core.model.NewsPost
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -25,7 +25,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.danascape.kernelmanager.BuildConfig
 import dev.danascape.kernelmanager.R
-import dev.danascape.kernelmanager.core.data.settings.ThemePreference
+import dev.danascape.kernelmanager.core.model.ThemePreference
 import dev.danascape.kernelmanager.core.designsystem.component.ActionRow
 import dev.danascape.kernelmanager.core.designsystem.component.SettingsGroup
 import dev.danascape.kernelmanager.core.designsystem.component.revealModifier

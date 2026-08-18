@@ -8,7 +8,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import dev.danascape.kernelmanager.core.data.settings.ThemePreference
+import dev.danascape.kernelmanager.core.model.ThemePreference
 import dev.danascape.kernelmanager.core.data.settings.ThemeRepository
 import dev.danascape.kernelmanager.core.designsystem.theme.SBTheme
 import dev.danascape.kernelmanager.ui.SBApp

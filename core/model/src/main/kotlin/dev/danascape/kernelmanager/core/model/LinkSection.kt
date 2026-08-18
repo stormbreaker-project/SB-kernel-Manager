@@ -13,9 +13,8 @@ data class LinkItem(
     val description: String?,
     /** Null when there is nothing to open yet — see [soon]. */
     val url: String?,
-    /** True when the target leaves stormbreaker.squadri.me. */
     val external: Boolean,
-    /** Announced but not published; shown, not tappable. */
+    /** Announced but not published: shown, not tappable. */
     val soon: Boolean,
 ) {
     val openable: Boolean get() = url != null && !soon
