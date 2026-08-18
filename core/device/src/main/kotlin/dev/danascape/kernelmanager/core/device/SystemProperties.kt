@@ -13,13 +13,15 @@ package dev.danascape.kernelmanager.core.device
  * `Build` already covers most `ro.build.*` and `ro.product.*` values; this is
  * for the rest, notably `ro.boot.*`, which has no framework equivalent.
  */
-class SystemProperties private constructor(private val values: Map<String, String>) {
-
+class SystemProperties private constructor(
+    private val values: Map<String, String>,
+) {
     operator fun get(key: String): String? = values[key]?.takeIf { it.isNotBlank() }
 
-    fun firstOf(vararg keys: String): Pair<String, String>? = keys.firstNotNullOfOrNull { key ->
-        get(key)?.let { key to it }
-    }
+    fun firstOf(vararg keys: String): Pair<String, String>? =
+        keys.firstNotNullOfOrNull { key ->
+            get(key)?.let { key to it }
+        }
 
     val size: Int get() = values.size
 
@@ -27,24 +29,26 @@ class SystemProperties private constructor(private val values: Map<String, Strin
         // getprop prints one entry per line as: [key]: [value]
         private val LINE = Regex("""^\[(.+?)]: \[(.*)]$""")
 
-        fun read(): SystemProperties = SystemProperties(
-            try {
-                ProcessBuilder("getprop")
-                    .redirectErrorStream(true)
-                    .start()
-                    .inputStream
-                    .bufferedReader()
-                    .useLines { lines ->
-                        lines.mapNotNull { line ->
-                            LINE.matchEntire(line.trim())?.let { match ->
-                                match.groupValues[1] to match.groupValues[2]
-                            }
-                        }.toMap()
-                    }
-            } catch (_: Exception) {
-                emptyMap()
-            },
-        )
+        fun read(): SystemProperties =
+            SystemProperties(
+                try {
+                    ProcessBuilder("getprop")
+                        .redirectErrorStream(true)
+                        .start()
+                        .inputStream
+                        .bufferedReader()
+                        .useLines { lines ->
+                            lines
+                                .mapNotNull { line ->
+                                    LINE.matchEntire(line.trim())?.let { match ->
+                                        match.groupValues[1] to match.groupValues[2]
+                                    }
+                                }.toMap()
+                        }
+                } catch (_: Exception) {
+                    emptyMap()
+                },
+            )
 
         fun of(values: Map<String, String>): SystemProperties = SystemProperties(values)
     }

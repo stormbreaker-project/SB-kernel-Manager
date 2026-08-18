@@ -47,13 +47,14 @@ fun SBTheme(
             // Flat by default: a solid brand fill for the selected pill and no
             // chip behind unselected ones. Pvot's gradient is a Brush, so a
             // SolidColor is how "no gradient" is expressed.
-            navBarColors = PvotNavBarColors(
-                gradient = SolidColor(colorScheme.primary),
-                collapsedChipColor = Color.Transparent,
-                containerColor = colorScheme.surface,
-                iconSelectedColor = colorScheme.onPrimary,
-                iconUnselectedColor = extendedColors.muted,
-            ),
+            navBarColors =
+                PvotNavBarColors(
+                    gradient = SolidColor(colorScheme.primary),
+                    collapsedChipColor = Color.Transparent,
+                    containerColor = colorScheme.surface,
+                    iconSelectedColor = colorScheme.onPrimary,
+                    iconUnselectedColor = extendedColors.muted,
+                ),
             // barWidth/expandedWidth are left unset so the bar measures
             // intrinsically. A fixed 367dp bar plus 22dp padding a side needs
             // a 411dp viewport and would clip on the 360dp-wide devices a lot
@@ -66,19 +67,20 @@ fun SBTheme(
             // icon + 8dp gap + label + 32dp padding, and the label is
             // monospace, which sets wider than a proportional face. "Discover"
             // at 12sp is the worst case and lands the bar around 350dp.
-            navBarSizes = PvotNavBarSizes(
-                barHeight = 68.dp,
-                collapsedItemSize = 46.dp,
-                cornerRadius = 100.dp,
-                itemCornerRadius = 26.dp,
-                collapsedIconSize = 20.dp,
-                expandedIconSize = 20.dp,
-                labelFontSize = 12.sp,
-                maxExpandedWidth = 150.dp,
-                horizontalPadding = 10.dp,
-                contentPaddingHorizontal = 8.dp,
-                itemSpacing = 3.dp,
-            ),
+            navBarSizes =
+                PvotNavBarSizes(
+                    barHeight = 68.dp,
+                    collapsedItemSize = 46.dp,
+                    cornerRadius = 100.dp,
+                    itemCornerRadius = 26.dp,
+                    collapsedIconSize = 20.dp,
+                    expandedIconSize = 20.dp,
+                    labelFontSize = 12.sp,
+                    maxExpandedWidth = 150.dp,
+                    horizontalPadding = 10.dp,
+                    contentPaddingHorizontal = 8.dp,
+                    itemSpacing = 3.dp,
+                ),
             content = content,
         )
     }

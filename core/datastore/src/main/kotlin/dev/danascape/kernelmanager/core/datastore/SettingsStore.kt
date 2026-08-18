@@ -21,18 +21,20 @@ private val Context.settingsDataStore: DataStore<Preferences> by preferencesData
 private val ThemeKey = stringPreferencesKey("theme")
 
 /** Persisted user settings. */
-class SettingsStore(context: Context) {
-
+class SettingsStore(
+    context: Context,
+) {
     private val dataStore = context.applicationContext.settingsDataStore
 
-    val theme: Flow<ThemePreference> = dataStore.data
-        // A corrupt store must not take the UI down; the system default is safe.
-        .catch { cause -> if (cause is IOException) emit(emptyPreferences()) else throw cause }
-        .map { preferences ->
-            preferences[ThemeKey]
-                ?.let { stored -> ThemePreference.entries.firstOrNull { it.name == stored } }
-                ?: ThemePreference.SYSTEM
-        }
+    val theme: Flow<ThemePreference> =
+        dataStore.data
+            // A corrupt store must not take the UI down; the system default is safe.
+            .catch { cause -> if (cause is IOException) emit(emptyPreferences()) else throw cause }
+            .map { preferences ->
+                preferences[ThemeKey]
+                    ?.let { stored -> ThemePreference.entries.firstOrNull { it.name == stored } }
+                    ?: ThemePreference.SYSTEM
+            }
 
     suspend fun setTheme(preference: ThemePreference) {
         dataStore.edit { it[ThemeKey] = preference.name }

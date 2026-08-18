@@ -93,15 +93,17 @@ private fun DiscoverContent(
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(top = contentPadding.topInset()),
-        contentPadding = contentPadding.expandedBy(
-            horizontal = 16.dp,
-            top = 24.dp,
-            bottom = 24.dp,
-            includeTopInset = false,
-        ),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(top = contentPadding.topInset()),
+        contentPadding =
+            contentPadding.expandedBy(
+                horizontal = 16.dp,
+                top = 24.dp,
+                bottom = 24.dp,
+                includeTopInset = false,
+            ),
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         state.profile?.let { profile ->
@@ -121,12 +123,13 @@ private fun DiscoverContent(
 @Composable
 private fun IdentityCard(identity: DeviceIdentity) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .then(pvotReveal(0))
-            .clip(RoundedCornerShape(24.dp))
-            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-            .padding(20.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .then(pvotReveal(0))
+                .clip(RoundedCornerShape(24.dp))
+                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
         Text(
@@ -152,11 +155,12 @@ private fun IdentityCard(identity: DeviceIdentity) {
         )
         StatusLine(identity)
         Text(
-            text = stringResource(
-                R.string.discover_android,
-                identity.androidRelease,
-                identity.sdkInt,
-            ),
+            text =
+                stringResource(
+                    R.string.discover_android,
+                    identity.androidRelease,
+                    identity.sdkInt,
+                ),
             style = MaterialTheme.typography.labelSmall,
             color = SBTheme.colors.faint,
         )
@@ -171,15 +175,17 @@ private fun StatusLine(identity: DeviceIdentity) {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
-            modifier = Modifier
-                .size(7.dp)
-                .clip(CircleShape)
-                .background(if (running) SBTheme.colors.accent else SBTheme.colors.faint),
+            modifier =
+                Modifier
+                    .size(7.dp)
+                    .clip(CircleShape)
+                    .background(if (running) SBTheme.colors.accent else SBTheme.colors.faint),
         )
         Text(
-            text = stringResource(
-                if (running) R.string.discover_kernel_running else R.string.discover_kernel_stock,
-            ),
+            text =
+                stringResource(
+                    if (running) R.string.discover_kernel_running else R.string.discover_kernel_stock,
+                ),
             style = MaterialTheme.typography.bodySmall,
             color = SBTheme.colors.muted,
         )
@@ -207,26 +213,30 @@ private fun UpdateGroup() {
 }
 
 @Composable
-private fun VitalsGroup(vitals: Vitals?, onOpenMonitoring: () -> Unit) {
+private fun VitalsGroup(
+    vitals: Vitals?,
+    onOpenMonitoring: () -> Unit,
+) {
     SettingsGroup(title = stringResource(R.string.discover_vitals)) {
-        val rows = buildList<@Composable (Int, Int) -> Unit> {
-            vitals?.battery?.let { battery -> add { i, n -> BatteryRow(battery, i, n) } }
-            vitals?.memory?.let { memory -> add { i, n -> MemoryRow(memory, i, n) } }
-            vitals?.cpu?.let { cpu ->
-                add { i, n -> CpuRow(cpu, i, n) }
-                cpu.governor?.let { governor ->
-                    add { i, n -> ValueRow(stringResource(R.string.discover_governor), governor, i, n) }
+        val rows =
+            buildList<@Composable (Int, Int) -> Unit> {
+                vitals?.battery?.let { battery -> add { i, n -> BatteryRow(battery, i, n) } }
+                vitals?.memory?.let { memory -> add { i, n -> MemoryRow(memory, i, n) } }
+                vitals?.cpu?.let { cpu ->
+                    add { i, n -> CpuRow(cpu, i, n) }
+                    cpu.governor?.let { governor ->
+                        add { i, n -> ValueRow(stringResource(R.string.discover_governor), governor, i, n) }
+                    }
+                }
+                add { i, n ->
+                    ActionRow(
+                        label = stringResource(R.string.discover_view_monitoring),
+                        index = i,
+                        count = n,
+                        onClick = onOpenMonitoring,
+                    )
                 }
             }
-            add { i, n ->
-                ActionRow(
-                    label = stringResource(R.string.discover_view_monitoring),
-                    index = i,
-                    count = n,
-                    onClick = onOpenMonitoring,
-                )
-            }
-        }
         rows.forEachIndexed { index, row -> row(index, rows.size) }
     }
 
@@ -241,45 +251,69 @@ private fun VitalsGroup(vitals: Vitals?, onOpenMonitoring: () -> Unit) {
 }
 
 @Composable
-private fun BatteryRow(battery: BatteryVitals, index: Int, count: Int) {
-    val value = if (battery.charging) {
-        stringResource(R.string.discover_battery_charging, battery.percent)
-    } else {
-        stringResource(R.string.discover_percent, battery.percent)
-    }
-    val withTemp = battery.temperatureC
-        ?.let { "$value · " + stringResource(R.string.discover_celsius, it) }
-        ?: value
+private fun BatteryRow(
+    battery: BatteryVitals,
+    index: Int,
+    count: Int,
+) {
+    val value =
+        if (battery.charging) {
+            stringResource(R.string.discover_battery_charging, battery.percent)
+        } else {
+            stringResource(R.string.discover_percent, battery.percent)
+        }
+    val withTemp =
+        battery.temperatureC
+            ?.let { "$value · " + stringResource(R.string.discover_celsius, it) }
+            ?: value
     ValueRow(stringResource(R.string.discover_battery), withTemp, index, count)
 }
 
 @Composable
-private fun MemoryRow(memory: MemoryVitals, index: Int, count: Int) {
+private fun MemoryRow(
+    memory: MemoryVitals,
+    index: Int,
+    count: Int,
+) {
     ValueRow(
         label = stringResource(R.string.discover_memory),
-        value = stringResource(
-            R.string.discover_memory_value,
-            formatGigabytes(memory.usedBytes),
-            formatGigabytes(memory.totalBytes),
-        ),
+        value =
+            stringResource(
+                R.string.discover_memory_value,
+                formatGigabytes(memory.usedBytes),
+                formatGigabytes(memory.totalBytes),
+            ),
         index = index,
         count = count,
     )
 }
 
 @Composable
-private fun CpuRow(cpu: CpuVitals, index: Int, count: Int) {
+private fun CpuRow(
+    cpu: CpuVitals,
+    index: Int,
+    count: Int,
+) {
     val current = cpu.perCoreKhz.maxOrNull()
     val max = cpu.maxKhz
-    val value = when {
-        current == null -> "—"
-        max != null -> stringResource(
-            R.string.discover_cpu_value,
-            stringResource(R.string.discover_ghz, current / 1_000_000f),
-            stringResource(R.string.discover_ghz, max / 1_000_000f),
-        )
-        else -> stringResource(R.string.discover_ghz, current / 1_000_000f)
-    }
+    val value =
+        when {
+            current == null -> {
+                "—"
+            }
+
+            max != null -> {
+                stringResource(
+                    R.string.discover_cpu_value,
+                    stringResource(R.string.discover_ghz, current / 1_000_000f),
+                    stringResource(R.string.discover_ghz, max / 1_000_000f),
+                )
+            }
+
+            else -> {
+                stringResource(R.string.discover_ghz, current / 1_000_000f)
+            }
+        }
     ValueRow(stringResource(R.string.discover_cpu), value, index, count)
 }
 
@@ -309,58 +343,63 @@ private fun NewsGroup(
     }
 }
 
-private fun formatGigabytes(bytes: Long): String =
-    String.format(Locale.getDefault(), "%.1f GB", bytes / 1_073_741_824f)
+private fun formatGigabytes(bytes: Long): String = String.format(Locale.getDefault(), "%.1f GB", bytes / 1_073_741_824f)
 
 @Preview
 @Composable
 private fun DiscoverPreview() {
-    val identity = DeviceIdentity(
-        codename = "billie",
-        model = "BE2029",
-        manufacturer = "OnePlus",
-        androidRelease = "14",
-        sdkInt = 34,
-        kernelRelease = "4.19.322-StormBreaker",
-        isStormBreakerKernel = true,
-    )
+    val identity =
+        DeviceIdentity(
+            codename = "billie",
+            model = "BE2029",
+            manufacturer = "OnePlus",
+            androidRelease = "14",
+            sdkInt = 34,
+            kernelRelease = "4.19.322-StormBreaker",
+            isStormBreakerKernel = true,
+        )
     SBTheme {
         DiscoverContent(
-            state = DiscoverUiState(
-                profile = DeviceProfile(
-                    identity = identity,
-                    os = OsBuild(
-                        androidRelease = "14",
-                        sdkInt = 34,
-                        securityPatch = "2026-08-05",
-                        buildId = "UP1A.231005.007",
-                        fingerprint = null,
-                        tags = "release-keys",
-                        type = "user",
-                        rom = CustomRom("LineageOS", "21.0"),
-                    ),
-                    boot = BootState(
-                        bootloaderUnlocked = true,
-                        verifiedBootState = "orange",
-                        encryption = "file",
-                    ),
-                    soc = SocInfo("lito", "qcom", "Qualcomm", "SM7225", listOf("arm64-v8a")),
-                    cpu = null,
-                    gpu = null,
-                    suBinaryPresent = true,
+            state =
+                DiscoverUiState(
+                    profile =
+                        DeviceProfile(
+                            identity = identity,
+                            os =
+                                OsBuild(
+                                    androidRelease = "14",
+                                    sdkInt = 34,
+                                    securityPatch = "2026-08-05",
+                                    buildId = "UP1A.231005.007",
+                                    fingerprint = null,
+                                    tags = "release-keys",
+                                    type = "user",
+                                    rom = CustomRom("LineageOS", "21.0"),
+                                ),
+                            boot =
+                                BootState(
+                                    bootloaderUnlocked = true,
+                                    verifiedBootState = "orange",
+                                    encryption = "file",
+                                ),
+                            soc = SocInfo("lito", "qcom", "Qualcomm", "SM7225", listOf("arm64-v8a")),
+                            cpu = null,
+                            gpu = null,
+                            suBinaryPresent = true,
+                        ),
+                    vitals =
+                        Vitals(
+                            cpu = CpuVitals(listOf(1_804_800, 820_000), 2_208_000, "schedutil", null),
+                            load = null,
+                            memory = MemoryVitals(6_600_000_000, 12_000_000_000),
+                            battery = BatteryVitals(72, 31.4f, false, -420_000, 3_100_000, "Good", "Li-ion"),
+                            storage = StorageVitals(84_000_000_000, 128_000_000_000, "f2fs"),
+                            network = NetworkVitals(1_200_000_000, 240_000_000),
+                            thermal = ThermalStatus.NONE,
+                            uptimeMillis = 9_000_000,
+                            sleep = SleepStats(9_000_000, 3_400_000),
+                        ),
                 ),
-                vitals = Vitals(
-                    cpu = CpuVitals(listOf(1_804_800, 820_000), 2_208_000, "schedutil", null),
-                    load = null,
-                    memory = MemoryVitals(6_600_000_000, 12_000_000_000),
-                    battery = BatteryVitals(72, 31.4f, false, -420_000, 3_100_000, "Good", "Li-ion"),
-                    storage = StorageVitals(84_000_000_000, 128_000_000_000, "f2fs"),
-                    network = NetworkVitals(1_200_000_000, 240_000_000),
-                    thermal = ThermalStatus.NONE,
-                    uptimeMillis = 9_000_000,
-                    sleep = SleepStats(9_000_000, 3_400_000),
-                ),
-            ),
             contentPadding = PaddingValues(),
             onOpenMonitoring = {},
             onOpenNews = {},

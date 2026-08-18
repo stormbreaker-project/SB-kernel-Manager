@@ -29,26 +29,32 @@ class LinksRepository(
     private val client: HttpClient,
     private val assets: AssetManager,
 ) {
-
-    suspend fun links(): List<LinkSection> = withContext(Dispatchers.IO) {
-        remote() ?: bundled()
-    }
-
-    private suspend fun remote(): List<LinkSection>? = try {
-        client.get(SBEndpoints.LINKS).body<LinksDto>().toDomain().takeIf { it.isNotEmpty() }
-    } catch (cancellation: CancellationException) {
-        throw cancellation
-    } catch (_: Exception) {
-        null
-    }
-
-    private fun bundled(): List<LinkSection> = try {
-        assets.open(BUNDLED_LINKS_ASSET).bufferedReader().use { reader ->
-            SBJson.decodeFromString<LinksDto>(reader.readText()).toDomain()
+    suspend fun links(): List<LinkSection> =
+        withContext(Dispatchers.IO) {
+            remote() ?: bundled()
         }
-    } catch (_: Exception) {
-        // Only reachable if the shipped asset is missing or malformed, which is
-        // a build error rather than a runtime condition.
-        emptyList()
-    }
+
+    private suspend fun remote(): List<LinkSection>? =
+        try {
+            client
+                .get(SBEndpoints.LINKS)
+                .body<LinksDto>()
+                .toDomain()
+                .takeIf { it.isNotEmpty() }
+        } catch (cancellation: CancellationException) {
+            throw cancellation
+        } catch (_: Exception) {
+            null
+        }
+
+    private fun bundled(): List<LinkSection> =
+        try {
+            assets.open(BUNDLED_LINKS_ASSET).bufferedReader().use { reader ->
+                SBJson.decodeFromString<LinksDto>(reader.readText()).toDomain()
+            }
+        } catch (_: Exception) {
+            // Only reachable if the shipped asset is missing or malformed, which is
+            // a build error rather than a runtime condition.
+            emptyList()
+        }
 }

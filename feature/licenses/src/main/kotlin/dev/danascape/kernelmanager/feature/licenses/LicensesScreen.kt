@@ -35,15 +35,17 @@ fun LicensesScreen(
     val toolbarColor = MaterialTheme.colorScheme.surface.toArgb()
 
     LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(top = contentPadding.topInset()),
-        contentPadding = contentPadding.expandedBy(
-            horizontal = 16.dp,
-            top = 24.dp,
-            bottom = 24.dp,
-            includeTopInset = false,
-        ),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(top = contentPadding.topInset()),
+        contentPadding =
+            contentPadding.expandedBy(
+                horizontal = 16.dp,
+                top = 24.dp,
+                bottom = 24.dp,
+                includeTopInset = false,
+            ),
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         item(key = "header") {

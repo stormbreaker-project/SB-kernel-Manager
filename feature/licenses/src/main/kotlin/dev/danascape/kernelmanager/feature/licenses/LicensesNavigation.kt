@@ -13,8 +13,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data object LicensesRoute
 
-fun NavController.navigateToLicenses(navOptions: NavOptions? = null) =
-    navigate(LicensesRoute, navOptions)
+fun NavController.navigateToLicenses(navOptions: NavOptions? = null) = navigate(LicensesRoute, navOptions)
 
 fun NavGraphBuilder.licensesScreen(contentPadding: PaddingValues) {
     composable<LicensesRoute> { LicensesScreen(contentPadding = contentPadding) }

@@ -25,8 +25,9 @@ import java.io.File
  * zones, /sys/class/power_supply, /proc/net, /proc/diskstats, /proc/uptime —
  * so these APIs are the only route to the same facts.
  */
-class PlatformVitalsReader(context: Context) {
-
+class PlatformVitalsReader(
+    context: Context,
+) {
     private val appContext = context.applicationContext
 
     /** Milliseconds since boot, replacing the denied /proc/uptime. */
@@ -36,15 +37,17 @@ class PlatformVitalsReader(context: Context) {
      * Deep sleep versus awake, from the gap between the two clocks:
      * elapsedRealtime counts time spent suspended, uptimeMillis does not.
      */
-    fun sleepStats(): SleepStats = SleepStats(
-        elapsedMillis = SystemClock.elapsedRealtime(),
-        awakeMillis = SystemClock.uptimeMillis(),
-    )
+    fun sleepStats(): SleepStats =
+        SleepStats(
+            elapsedMillis = SystemClock.elapsedRealtime(),
+            awakeMillis = SystemClock.uptimeMillis(),
+        )
 
     /** Remaining charge in microamp-hours; scales to a capacity estimate by level. */
     fun chargeCounterMicroAmpHours(): Int? {
         val manager = appContext.getSystemService<BatteryManager>() ?: return null
-        return manager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CHARGE_COUNTER)
+        return manager
+            .getIntProperty(BatteryManager.BATTERY_PROPERTY_CHARGE_COUNTER)
             .takeIf { it != Int.MIN_VALUE && it > 0 }
     }
 
@@ -62,14 +65,15 @@ class PlatformVitalsReader(context: Context) {
         }
     }
 
-    fun storage(): StorageVitals? = try {
-        val stat = StatFs(Environment.getDataDirectory().absolutePath)
-        val total = stat.blockCountLong * stat.blockSizeLong
-        val free = stat.availableBlocksLong * stat.blockSizeLong
-        if (total <= 0) null else StorageVitals(total - free, total, dataFileSystem())
-    } catch (_: Exception) {
-        null
-    }
+    fun storage(): StorageVitals? =
+        try {
+            val stat = StatFs(Environment.getDataDirectory().absolutePath)
+            val total = stat.blockCountLong * stat.blockSizeLong
+            val free = stat.availableBlocksLong * stat.blockSizeLong
+            if (total <= 0) null else StorageVitals(total - free, total, dataFileSystem())
+        } catch (_: Exception) {
+            null
+        }
 
     /**
      * Byte counters since boot. Device-wide totals need no permission; per-UID
@@ -85,15 +89,17 @@ class PlatformVitalsReader(context: Context) {
     }
 
     /** /proc/mounts is one of the few /proc files still readable. */
-    private fun dataFileSystem(): String? = try {
-        File("/proc/mounts").useLines { lines ->
-            lines.map { it.split(' ') }
-                .firstOrNull { it.size > 2 && it[1] == "/data" }
-                ?.get(2)
+    private fun dataFileSystem(): String? =
+        try {
+            File("/proc/mounts").useLines { lines ->
+                lines
+                    .map { it.split(' ') }
+                    .firstOrNull { it.size > 2 && it[1] == "/data" }
+                    ?.get(2)
+            }
+        } catch (_: Exception) {
+            null
         }
-    } catch (_: Exception) {
-        null
-    }
 
     /**
      * Whether a `su` binary is present.
@@ -101,22 +107,24 @@ class PlatformVitalsReader(context: Context) {
      * A file-existence check only — it says root is likely available, not that
      * this app has been granted it. Phase 1 asks libsu for the real answer.
      */
-    fun suBinaryPresent(): Boolean = SU_PATHS.any { path ->
-        try {
-            File(path).exists()
-        } catch (_: Exception) {
-            false
+    fun suBinaryPresent(): Boolean =
+        SU_PATHS.any { path ->
+            try {
+                File(path).exists()
+            } catch (_: Exception) {
+                false
+            }
         }
-    }
 
     private companion object {
-        val SU_PATHS = listOf(
-            "/system/bin/su",
-            "/system/xbin/su",
-            "/sbin/su",
-            "/su/bin/su",
-            "/debug_ramdisk/su",
-            "/vendor/bin/su",
-        )
+        val SU_PATHS =
+            listOf(
+                "/system/bin/su",
+                "/system/xbin/su",
+                "/sbin/su",
+                "/su/bin/su",
+                "/debug_ramdisk/su",
+                "/vendor/bin/su",
+            )
     }
 }

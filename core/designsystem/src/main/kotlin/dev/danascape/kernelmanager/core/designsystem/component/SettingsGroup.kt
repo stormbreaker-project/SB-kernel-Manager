@@ -46,7 +46,10 @@ private val RowGap = 3.dp
 private val MinRowHeight = 56.dp
 
 /** Corners for a row at [index] of [count]: rounded outside, tight inside. */
-fun groupShape(index: Int, count: Int): Shape {
+fun groupShape(
+    index: Int,
+    count: Int,
+): Shape {
     val top = if (index == 0) OuterRadius else InnerRadius
     val bottom = if (index == count - 1) OuterRadius else InnerRadius
     return RoundedCornerShape(topStart = top, topEnd = top, bottomStart = bottom, bottomEnd = bottom)
@@ -67,9 +70,10 @@ fun SettingsGroup(
             style = MaterialTheme.typography.labelSmall,
             color = SBTheme.colors.accent,
             // Leads the cascade its rows follow, so the group arrives as one.
-            modifier = Modifier
-                .then(pvotReveal(0))
-                .padding(start = 4.dp),
+            modifier =
+                Modifier
+                    .then(pvotReveal(0))
+                    .padding(start = 4.dp),
         )
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -99,25 +103,25 @@ private fun GroupedRow(
     val shape = groupShape(index, count)
 
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .then(pvotReveal(revealIndex))
-            .then(pvotPressScale(interactionSource))
-            .clip(shape)
-            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-            .then(
-                if (onClick != null) {
-                    Modifier.clickable(
-                        interactionSource = interactionSource,
-                        indication = null,
-                        onClick = onClick,
-                    )
-                } else {
-                    Modifier
-                },
-            )
-            .heightIn(min = MinRowHeight)
-            .padding(horizontal = 18.dp, vertical = 14.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .then(pvotReveal(revealIndex))
+                .then(pvotPressScale(interactionSource))
+                .clip(shape)
+                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                .then(
+                    if (onClick != null) {
+                        Modifier.clickable(
+                            interactionSource = interactionSource,
+                            indication = null,
+                            onClick = onClick,
+                        )
+                    } else {
+                        Modifier
+                    },
+                ).heightIn(min = MinRowHeight)
+                .padding(horizontal = 18.dp, vertical = 14.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {

@@ -11,7 +11,6 @@ import org.junit.Test
 private const val HOUR = 3_600_000L
 
 class BatteryTrackerTest {
-
     private fun sample(
         elapsed: Long,
         awake: Long = elapsed,
@@ -123,11 +122,12 @@ class BatteryTrackerTest {
     @Test
     fun `charging never contributes to a drain rate`() {
         val first = sample(0, level = 50, charging = true)
-        val session = BatteryTracker.fold(
-            BatteryTracker.start(first),
-            first,
-            sample(HOUR, level = 70, charging = true),
-        )
+        val session =
+            BatteryTracker.fold(
+                BatteryTracker.start(first),
+                first,
+                sample(HOUR, level = 70, charging = true),
+            )
         assertNull(session.activeDrainPerHour)
         assertNull(session.idleDrainPerHour)
     }
@@ -135,22 +135,24 @@ class BatteryTrackerTest {
     @Test
     fun `a charge counter that rises is not counted as negative drain`() {
         val first = sample(0, level = 90, charge = 3_000_000, screenOn = true)
-        val session = BatteryTracker.fold(
-            BatteryTracker.start(first),
-            first,
-            sample(HOUR, level = 90, charge = 3_100_000, screenOn = true),
-        )
+        val session =
+            BatteryTracker.fold(
+                BatteryTracker.start(first),
+                first,
+                sample(HOUR, level = 90, charge = 3_100_000, screenOn = true),
+            )
         assertEquals(0L, session.screenOnDrainedMicroAmpHours)
     }
 
     @Test
     fun `mAh drained accumulates from the charge counter`() {
         val first = sample(0, level = 90, charge = 3_000_000, screenOn = true)
-        val session = BatteryTracker.fold(
-            BatteryTracker.start(first),
-            first,
-            sample(HOUR, level = 80, charge = 2_600_000, screenOn = true),
-        )
+        val session =
+            BatteryTracker.fold(
+                BatteryTracker.start(first),
+                first,
+                sample(HOUR, level = 80, charge = 2_600_000, screenOn = true),
+            )
         assertEquals(400_000L, session.screenOnDrainedMicroAmpHours)
     }
 
@@ -158,11 +160,12 @@ class BatteryTrackerTest {
     fun `a window too short to be meaningful yields no rate`() {
         // A one percent step over ten seconds extrapolates to 360%/h.
         val first = sample(0, level = 100, screenOn = true)
-        val session = BatteryTracker.fold(
-            BatteryTracker.start(first),
-            first,
-            sample(10_000, level = 99, screenOn = true),
-        )
+        val session =
+            BatteryTracker.fold(
+                BatteryTracker.start(first),
+                first,
+                sample(10_000, level = 99, screenOn = true),
+            )
         assertNull(session.activeDrainPerHour)
     }
 
@@ -177,11 +180,12 @@ class BatteryTrackerTest {
     @Test
     fun `time remaining follows the rate of the current screen state`() {
         val first = sample(0, level = 50, screenOn = true)
-        val session = BatteryTracker.fold(
-            BatteryTracker.start(first),
-            first,
-            sample(HOUR, level = 40, screenOn = true),
-        )
+        val session =
+            BatteryTracker.fold(
+                BatteryTracker.start(first),
+                first,
+                sample(HOUR, level = 40, screenOn = true),
+            )
         // 40% left at 10%/h is four hours.
         val remaining = session.estimatedMillisRemaining!!
         assertTrue("got ${remaining / HOUR}h", remaining in (3.5 * HOUR).toLong()..(4.5 * HOUR).toLong())

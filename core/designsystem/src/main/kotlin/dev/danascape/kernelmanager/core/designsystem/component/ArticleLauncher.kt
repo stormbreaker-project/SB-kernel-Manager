@@ -21,17 +21,24 @@ import androidx.core.net.toUri
  * Falls back to an ordinary view intent when no Custom Tabs provider exists,
  * and does nothing at all when the device has no browser, rather than crashing.
  */
-fun Context.openArticle(url: String, toolbarColor: Int) {
+fun Context.openArticle(
+    url: String,
+    toolbarColor: Int,
+) {
     val uri = url.toUri()
-    val colors = CustomTabColorSchemeParams.Builder()
-        .setToolbarColor(toolbarColor)
-        .build()
+    val colors =
+        CustomTabColorSchemeParams
+            .Builder()
+            .setToolbarColor(toolbarColor)
+            .build()
 
-    val customTab = CustomTabsIntent.Builder()
-        .setDefaultColorSchemeParams(colors)
-        .setShowTitle(true)
-        .setUrlBarHidingEnabled(true)
-        .build()
+    val customTab =
+        CustomTabsIntent
+            .Builder()
+            .setDefaultColorSchemeParams(colors)
+            .setShowTitle(true)
+            .setUrlBarHidingEnabled(true)
+            .build()
 
     try {
         customTab.launchUrl(this, uri)

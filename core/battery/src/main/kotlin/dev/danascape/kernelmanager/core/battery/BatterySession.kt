@@ -20,21 +20,16 @@ data class BatterySession(
     val startedAtElapsedMillis: Long,
     val startedAtLevelPercent: Int,
     val startedAtChargeMicroAmpHours: Int?,
-
     val screenOnMillis: Long = 0,
     val screenOffMillis: Long = 0,
-
     /** Tenths of a percent, to survive accumulation without rounding to nothing. */
     val screenOnDrainedTenths: Int = 0,
     val screenOffDrainedTenths: Int = 0,
-
     val screenOnDrainedMicroAmpHours: Long = 0,
     val screenOffDrainedMicroAmpHours: Long = 0,
-
     /** Suspended and awake time, counted only while the screen was off. */
     val screenOffDeepSleepMillis: Long = 0,
     val screenOffAwakeMillis: Long = 0,
-
     val latest: BatterySample? = null,
 ) {
     val screenOnDrainedPercent: Float get() = screenOnDrainedTenths / 10f
@@ -48,8 +43,9 @@ data class BatterySession(
 
     /** How long this discharge has been running. */
     val sessionMillis: Long
-        get() = ((latest?.elapsedMillis ?: startedAtElapsedMillis) - startedAtElapsedMillis)
-            .coerceAtLeast(0)
+        get() =
+            ((latest?.elapsedMillis ?: startedAtElapsedMillis) - startedAtElapsedMillis)
+                .coerceAtLeast(0)
 
     val screenOffDeepSleepFraction: Float
         get() = if (screenOffMillis > 0) screenOffDeepSleepMillis.toFloat() / screenOffMillis else 0f
@@ -79,7 +75,10 @@ data class BatterySession(
         /** Below this the rate is noise: one percent step over a few seconds extrapolates absurdly. */
         const val MIN_WINDOW_MILLIS = 120_000L
 
-        fun ratePerHour(drainedPercent: Float, windowMillis: Long): Float? {
+        fun ratePerHour(
+            drainedPercent: Float,
+            windowMillis: Long,
+        ): Float? {
             if (windowMillis < MIN_WINDOW_MILLIS || drainedPercent <= 0f) return null
             return drainedPercent / (windowMillis / 3_600_000f)
         }

@@ -46,8 +46,9 @@ data class MonitorUiState(
     val history: MetricHistory = MetricHistory(),
 )
 
-class MonitorViewModel(private val deviceRepository: DeviceRepository) : ViewModel() {
-
+class MonitorViewModel(
+    private val deviceRepository: DeviceRepository,
+) : ViewModel() {
     private val _state = MutableStateFlow(MonitorUiState())
     val state: StateFlow<MonitorUiState> = _state.asStateFlow()
 
@@ -69,14 +70,15 @@ class MonitorViewModel(private val deviceRepository: DeviceRepository) : ViewMod
      */
     fun startSampling() {
         if (sampling?.isActive == true) return
-        sampling = viewModelScope.launch {
-            while (isActive) {
-                val vitals = deviceRepository.vitals()
-                _state.update { current ->
-                    current.copy(vitals = vitals, history = current.history.plus(vitals))
+        sampling =
+            viewModelScope.launch {
+                while (isActive) {
+                    val vitals = deviceRepository.vitals()
+                    _state.update { current ->
+                        current.copy(vitals = vitals, history = current.history.plus(vitals))
+                    }
                 }
             }
-        }
     }
 
     fun stopSampling() {
@@ -90,17 +92,19 @@ class MonitorViewModel(private val deviceRepository: DeviceRepository) : ViewMod
         val cores = vitals.load?.perCore.orEmpty()
         return copy(
             totalLoad = totalLoad.append(vitals.load?.average),
-            perCoreLoad = if (cores.isEmpty()) {
-                perCoreLoad
-            } else {
-                List(cores.size) { core ->
-                    perCoreLoad.getOrNull(core).orEmpty().append(cores[core])
-                }
-            },
+            perCoreLoad =
+                if (cores.isEmpty()) {
+                    perCoreLoad
+                } else {
+                    List(cores.size) { core ->
+                        perCoreLoad.getOrNull(core).orEmpty().append(cores[core])
+                    }
+                },
             memoryUsed = memoryUsed.append(vitals.memory?.usedFraction),
             // Sign convention for draw varies by vendor; magnitude is the signal.
-            batteryDrawMilliAmps = batteryDrawMilliAmps
-                .append(vitals.battery?.currentMicroAmps?.let { abs(it) / 1000f }),
+            batteryDrawMilliAmps =
+                batteryDrawMilliAmps
+                    .append(vitals.battery?.currentMicroAmps?.let { abs(it) / 1000f }),
             networkBytesPerSecond = networkBytesPerSecond.append(networkRate(vitals)),
         )
     }
@@ -127,11 +131,12 @@ class MonitorViewModel(private val deviceRepository: DeviceRepository) : ViewMod
     }
 
     companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val container = checkNotNull(this[APPLICATION_KEY]).appContainer()
-                MonitorViewModel(container.deviceRepository)
+        val Factory: ViewModelProvider.Factory =
+            viewModelFactory {
+                initializer {
+                    val container = checkNotNull(this[APPLICATION_KEY]).appContainer()
+                    MonitorViewModel(container.deviceRepository)
+                }
             }
-        }
     }
 }

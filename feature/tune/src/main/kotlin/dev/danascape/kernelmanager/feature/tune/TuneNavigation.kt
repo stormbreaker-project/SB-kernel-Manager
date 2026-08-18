@@ -13,8 +13,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data object TuneRoute
 
-fun NavController.navigateToTune(navOptions: NavOptions? = null) =
-    navigate(TuneRoute, navOptions)
+fun NavController.navigateToTune(navOptions: NavOptions? = null) = navigate(TuneRoute, navOptions)
 
 fun NavGraphBuilder.tuneScreen(contentPadding: PaddingValues) {
     composable<TuneRoute> { TuneScreen(contentPadding = contentPadding) }

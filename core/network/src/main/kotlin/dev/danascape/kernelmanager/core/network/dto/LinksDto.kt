@@ -32,23 +32,24 @@ data class LinkItemDto(
 )
 
 /** Drops items with nothing to show and sections left empty by that. */
-fun LinksDto.toDomain(): List<LinkSection> = sections
-    .map { section ->
-        LinkSection(
-            id = section.id,
-            title = section.title,
-            items = section.items
-                .filter { it.url != null || it.soon }
-                .map {
-                    LinkItem(
-                        id = it.id,
-                        label = it.label,
-                        description = it.description,
-                        url = it.url,
-                        external = it.external,
-                        soon = it.soon,
-                    )
-                },
-        )
-    }
-    .filter { it.items.isNotEmpty() }
+fun LinksDto.toDomain(): List<LinkSection> =
+    sections
+        .map { section ->
+            LinkSection(
+                id = section.id,
+                title = section.title,
+                items =
+                    section.items
+                        .filter { it.url != null || it.soon }
+                        .map {
+                            LinkItem(
+                                id = it.id,
+                                label = it.label,
+                                description = it.description,
+                                url = it.url,
+                                external = it.external,
+                                soon = it.soon,
+                            )
+                        },
+            )
+        }.filter { it.items.isNotEmpty() }

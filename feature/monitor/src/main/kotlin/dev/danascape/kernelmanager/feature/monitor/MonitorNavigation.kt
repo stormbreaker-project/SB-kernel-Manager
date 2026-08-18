@@ -17,11 +17,9 @@ data object MonitorRoute
 @Serializable
 data object CpuDetailRoute
 
-fun NavController.navigateToMonitor(navOptions: NavOptions? = null) =
-    navigate(MonitorRoute, navOptions)
+fun NavController.navigateToMonitor(navOptions: NavOptions? = null) = navigate(MonitorRoute, navOptions)
 
-fun NavController.navigateToCpuDetail(navOptions: NavOptions? = null) =
-    navigate(CpuDetailRoute, navOptions)
+fun NavController.navigateToCpuDetail(navOptions: NavOptions? = null) = navigate(CpuDetailRoute, navOptions)
 
 fun NavGraphBuilder.monitorScreen(
     contentPadding: PaddingValues,

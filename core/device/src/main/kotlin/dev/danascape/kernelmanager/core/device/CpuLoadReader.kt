@@ -23,11 +23,12 @@ private const val CPU_ROOT = "/sys/devices/system/cpu"
  * System.nanoTime(), because /proc/uptime is denied as well.
  */
 object CpuLoadReader {
-
     fun sample(): CpuIdleSample? {
-        val cores = File(CPU_ROOT).listFiles { file -> file.name.matches(Regex("cpu\\d+")) }
-            ?.sortedBy { it.name.removePrefix("cpu").toIntOrNull() ?: 0 }
-            ?: return null
+        val cores =
+            File(CPU_ROOT)
+                .listFiles { file -> file.name.matches(Regex("cpu\\d+")) }
+                ?.sortedBy { it.name.removePrefix("cpu").toIntOrNull() ?: 0 }
+                ?: return null
         if (cores.isEmpty()) return null
 
         val idle = cores.map { core -> summedIdleMicros(core) }
@@ -43,23 +44,28 @@ object CpuLoadReader {
      * core whose idle delta exceeds the window is clamped to idle rather than
      * reported as saturated.
      */
-    fun load(first: CpuIdleSample, second: CpuIdleSample): CpuLoad? {
+    fun load(
+        first: CpuIdleSample,
+        second: CpuIdleSample,
+    ): CpuLoad? {
         val windowMicros = TimeUnit.NANOSECONDS.toMicros(second.elapsedNanos - first.elapsedNanos)
         if (windowMicros <= 0) return null
         if (first.idleMicrosPerCore.size != second.idleMicrosPerCore.size) return null
 
-        val perCore = first.idleMicrosPerCore.indices.map { index ->
-            val idleDelta = second.idleMicrosPerCore[index] - first.idleMicrosPerCore[index]
-            val busy = 1f - (idleDelta.toFloat() / windowMicros)
-            busy.coerceIn(0f, 1f)
-        }
+        val perCore =
+            first.idleMicrosPerCore.indices.map { index ->
+                val idleDelta = second.idleMicrosPerCore[index] - first.idleMicrosPerCore[index]
+                val busy = 1f - (idleDelta.toFloat() / windowMicros)
+                busy.coerceIn(0f, 1f)
+            }
         return CpuLoad(perCore)
     }
 
     private fun summedIdleMicros(core: File): Long {
-        val states = core.resolve("cpuidle").listFiles { file ->
-            file.name.startsWith("state")
-        } ?: return 0L
+        val states =
+            core.resolve("cpuidle").listFiles { file ->
+                file.name.startsWith("state")
+            } ?: return 0L
         return states.sumOf { state -> state.resolve("time").readTextOrNull()?.toLongOrNull() ?: 0L }
     }
 }

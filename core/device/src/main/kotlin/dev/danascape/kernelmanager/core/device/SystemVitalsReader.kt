@@ -19,8 +19,9 @@ import dev.danascape.kernelmanager.core.model.Vitals
  * Memory and battery come from framework APIs rather than /proc and
  * /sys/class/power_supply, both of which are denied.
  */
-class SystemVitalsReader(context: Context) {
-
+class SystemVitalsReader(
+    context: Context,
+) {
     private val appContext = context.applicationContext
     private val platform = PlatformVitalsReader(appContext)
 
@@ -28,17 +29,18 @@ class SystemVitalsReader(context: Context) {
      * @param load supplied by the caller, since utilisation needs two samples
      *   spaced in time and this call is a single point.
      */
-    fun read(load: dev.danascape.kernelmanager.core.model.CpuLoad? = null): Vitals = Vitals(
-        cpu = CpuReader.read(),
-        load = load,
-        memory = readMemory(),
-        battery = readBattery(),
-        storage = platform.storage(),
-        network = platform.network(),
-        thermal = platform.thermalStatus(),
-        uptimeMillis = platform.uptimeMillis(),
-        sleep = platform.sleepStats(),
-    )
+    fun read(load: dev.danascape.kernelmanager.core.model.CpuLoad? = null): Vitals =
+        Vitals(
+            cpu = CpuReader.read(),
+            load = load,
+            memory = readMemory(),
+            battery = readBattery(),
+            storage = platform.storage(),
+            network = platform.network(),
+            thermal = platform.thermalStatus(),
+            uptimeMillis = platform.uptimeMillis(),
+            sleep = platform.sleepStats(),
+        )
 
     private fun readMemory(): MemoryVitals? {
         val manager = appContext.getSystemService<ActivityManager>() ?: return null
@@ -53,10 +55,11 @@ class SystemVitalsReader(context: Context) {
 
     /** The battery broadcast is sticky, so a null receiver returns it immediately. */
     private fun readBattery(): BatteryVitals? {
-        val intent = appContext.registerReceiver(
-            null,
-            IntentFilter(Intent.ACTION_BATTERY_CHANGED),
-        ) ?: return null
+        val intent =
+            appContext.registerReceiver(
+                null,
+                IntentFilter(Intent.ACTION_BATTERY_CHANGED),
+            ) ?: return null
 
         val level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
         val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
@@ -68,8 +71,9 @@ class SystemVitalsReader(context: Context) {
         return BatteryVitals(
             percent = (level * 100) / scale,
             temperatureC = tenthsC.takeIf { it != Int.MIN_VALUE }?.let { it / 10f },
-            charging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
-                status == BatteryManager.BATTERY_STATUS_FULL,
+            charging =
+                status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                    status == BatteryManager.BATTERY_STATUS_FULL,
             currentMicroAmps = readCurrentMicroAmps(),
             chargeCounterMicroAmpHours = platform.chargeCounterMicroAmpHours(),
             health = intent.getIntExtra(BatteryManager.EXTRA_HEALTH, -1).toHealthName(),
@@ -80,17 +84,19 @@ class SystemVitalsReader(context: Context) {
     /** /sys/class/power_supply is denied, so this is the only route to draw. */
     private fun readCurrentMicroAmps(): Int? {
         val manager = appContext.getSystemService<BatteryManager>() ?: return null
-        return manager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW)
+        return manager
+            .getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW)
             .takeIf { it != Int.MIN_VALUE && it != 0 }
     }
 
-    private fun Int.toHealthName(): String? = when (this) {
-        BatteryManager.BATTERY_HEALTH_GOOD -> "Good"
-        BatteryManager.BATTERY_HEALTH_OVERHEAT -> "Overheating"
-        BatteryManager.BATTERY_HEALTH_DEAD -> "Dead"
-        BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE -> "Over voltage"
-        BatteryManager.BATTERY_HEALTH_COLD -> "Cold"
-        BatteryManager.BATTERY_HEALTH_UNSPECIFIED_FAILURE -> "Failing"
-        else -> null
-    }
+    private fun Int.toHealthName(): String? =
+        when (this) {
+            BatteryManager.BATTERY_HEALTH_GOOD -> "Good"
+            BatteryManager.BATTERY_HEALTH_OVERHEAT -> "Overheating"
+            BatteryManager.BATTERY_HEALTH_DEAD -> "Dead"
+            BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE -> "Over voltage"
+            BatteryManager.BATTERY_HEALTH_COLD -> "Cold"
+            BatteryManager.BATTERY_HEALTH_UNSPECIFIED_FAILURE -> "Failing"
+            else -> null
+        }
 }

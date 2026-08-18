@@ -8,11 +8,12 @@ import kotlin.math.roundToInt
 
 internal fun percent(fraction: Float): String = "${(fraction * 100).roundToInt()}%"
 
-internal fun frequency(khz: Int): String = if (khz >= 1_000_000) {
-    String.format(Locale.getDefault(), "%.2f GHz", khz / 1_000_000f)
-} else {
-    String.format(Locale.getDefault(), "%d MHz", khz / 1000)
-}
+internal fun frequency(khz: Int): String =
+    if (khz >= 1_000_000) {
+        String.format(Locale.getDefault(), "%.2f GHz", khz / 1_000_000f)
+    } else {
+        String.format(Locale.getDefault(), "%d MHz", khz / 1000)
+    }
 
 internal fun bytes(value: Long): String {
     val gb = value / 1_073_741_824f

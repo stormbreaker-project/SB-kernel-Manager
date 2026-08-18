@@ -13,8 +13,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data object BuildsRoute
 
-fun NavController.navigateToBuilds(navOptions: NavOptions? = null) =
-    navigate(BuildsRoute, navOptions)
+fun NavController.navigateToBuilds(navOptions: NavOptions? = null) = navigate(BuildsRoute, navOptions)
 
 fun NavGraphBuilder.buildsScreen(contentPadding: PaddingValues) {
     composable<BuildsRoute> { BuildsScreen(contentPadding = contentPadding) }

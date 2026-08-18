@@ -46,24 +46,24 @@ fun MetricCard(
     val shape = RoundedCornerShape(24.dp)
 
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .then(pvotReveal(revealIndex))
-            .then(if (onClick != null) pvotPressScale(interactionSource) else Modifier)
-            .clip(shape)
-            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-            .then(
-                if (onClick != null) {
-                    Modifier.clickable(
-                        interactionSource = interactionSource,
-                        indication = null,
-                        onClick = onClick,
-                    )
-                } else {
-                    Modifier
-                },
-            )
-            .padding(18.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .then(pvotReveal(revealIndex))
+                .then(if (onClick != null) pvotPressScale(interactionSource) else Modifier)
+                .clip(shape)
+                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                .then(
+                    if (onClick != null) {
+                        Modifier.clickable(
+                            interactionSource = interactionSource,
+                            indication = null,
+                            onClick = onClick,
+                        )
+                    } else {
+                        Modifier
+                    },
+                ).padding(18.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Row(
@@ -97,7 +97,10 @@ fun MetricCard(
 
 /** A label and its reading, for the secondary lines under a headline value. */
 @Composable
-fun MetricLine(label: String, value: String) {
+fun MetricLine(
+    label: String,
+    value: String,
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,

@@ -49,15 +49,17 @@ fun CpuDetailScreen(
     val topology = state.profile?.cpu
 
     LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(top = contentPadding.topInset()),
-        contentPadding = contentPadding.expandedBy(
-            horizontal = 16.dp,
-            top = 24.dp,
-            bottom = 24.dp,
-            includeTopInset = false,
-        ),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(top = contentPadding.topInset()),
+        contentPadding =
+            contentPadding.expandedBy(
+                horizontal = 16.dp,
+                top = 24.dp,
+                bottom = 24.dp,
+                includeTopInset = false,
+            ),
         verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
         item(key = "header") {
@@ -92,7 +94,11 @@ fun CpuDetailScreen(
                 core = core,
                 values = values,
                 clusterFor = { topology?.clusters?.firstOrNull { core in it.cores } },
-                currentKhz = state.vitals?.cpu?.perCoreKhz?.getOrNull(core),
+                currentKhz =
+                    state.vitals
+                        ?.cpu
+                        ?.perCoreKhz
+                        ?.getOrNull(core),
                 revealIndex = core + 1,
             )
         }
@@ -122,12 +128,13 @@ private fun CoreChart(
 ) {
     val cluster = clusterFor()
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .then(pvotReveal(revealIndex))
-            .clip(RoundedCornerShape(20.dp))
-            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-            .padding(16.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .then(pvotReveal(revealIndex))
+                .clip(RoundedCornerShape(20.dp))
+                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Row(
@@ -142,10 +149,11 @@ private fun CoreChart(
             // The reading for "now" is labelled once, at the end of the series;
             // the chart carries the rest.
             Text(
-                text = buildString {
-                    append(values.lastOrNull()?.let { percent(it) } ?: "—")
-                    currentKhz?.let { append(" · ${frequency(it)}") }
-                },
+                text =
+                    buildString {
+                        append(values.lastOrNull()?.let { percent(it) } ?: "—")
+                        currentKhz?.let { append(" · ${frequency(it)}") }
+                    },
                 style = MaterialTheme.typography.labelMedium,
                 color = SBTheme.colors.muted,
             )
@@ -153,8 +161,9 @@ private fun CoreChart(
         SBSparkline(values = values, domain = 0f..1f, height = 44.dp)
         cluster?.let {
             Text(
-                text = stringResource(R.string.monitor_cluster, it.id) +
-                    " · " + (it.hardwareMaxKhz?.let(::frequency) ?: "—"),
+                text =
+                    stringResource(R.string.monitor_cluster, it.id) +
+                        " · " + (it.hardwareMaxKhz?.let(::frequency) ?: "—"),
                 style = MaterialTheme.typography.labelSmall,
                 color = SBTheme.colors.faint,
             )
@@ -165,11 +174,12 @@ private fun CoreChart(
 @Composable
 private fun ClusterCard(cluster: CpuCluster) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(20.dp))
-            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-            .padding(16.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(20.dp))
+                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Text(

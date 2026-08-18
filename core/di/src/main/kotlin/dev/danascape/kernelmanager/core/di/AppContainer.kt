@@ -28,8 +28,9 @@ import io.ktor.client.HttpClient
  * It lives here rather than in :app because features resolve their
  * dependencies from it and cannot depend on the application module.
  */
-class AppContainer(context: Context) {
-
+class AppContainer(
+    context: Context,
+) {
     private val appContext: Context = context.applicationContext
 
     private val httpClient: HttpClient by lazy { createHttpClient(appContext.cacheDir) }
@@ -58,8 +59,7 @@ interface AppContainerOwner {
 }
 
 /** The container for the current context, for use in ViewModel factories. */
-fun Context.appContainer(): AppContainer =
-    (applicationContext as AppContainerOwner).appContainer
+fun Context.appContainer(): AppContainer = (applicationContext as AppContainerOwner).appContainer
 
 @Composable
 fun rememberAppContainer(): AppContainer = LocalContext.current.appContainer()

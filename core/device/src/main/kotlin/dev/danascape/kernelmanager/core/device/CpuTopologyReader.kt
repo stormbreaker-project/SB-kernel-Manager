@@ -17,40 +17,58 @@ private const val CPUINFO = "/proc/cpuinfo"
  * though individual files read fine.
  */
 object CpuTopologyReader {
-
     fun read(): CpuTopology? {
-        val policies = File("$CPU_ROOT/cpufreq").listFiles { file ->
-            file.name.startsWith("policy")
-        }?.sortedBy { it.name.removePrefix("policy").toIntOrNull() ?: 0 }
+        val policies =
+            File("$CPU_ROOT/cpufreq")
+                .listFiles { file ->
+                    file.name.startsWith("policy")
+                }?.sortedBy { it.name.removePrefix("policy").toIntOrNull() ?: 0 }
 
-        val coreIds = File(CPU_ROOT).listFiles { file -> file.name.matches(Regex("cpu\\d+")) }
-            ?.mapNotNull { it.name.removePrefix("cpu").toIntOrNull() }
-            ?.sorted()
-            .orEmpty()
+        val coreIds =
+            File(CPU_ROOT)
+                .listFiles { file -> file.name.matches(Regex("cpu\\d+")) }
+                ?.mapNotNull { it.name.removePrefix("cpu").toIntOrNull() }
+                ?.sorted()
+                .orEmpty()
 
         if (policies.isNullOrEmpty()) return null
 
         val parts = readCoreParts()
-        val clusters = policies.mapNotNull { policy ->
-            val id = policy.name.removePrefix("policy").toIntOrNull() ?: return@mapNotNull null
-            val cores = policy.resolve("related_cpus").readTextOrNull()
-                ?.split(' ')?.mapNotNull(String::toIntOrNull)
-                ?: listOf(id)
-            CpuCluster(
-                id = id,
-                cores = cores,
-                minKhz = policy.resolve("scaling_min_freq").readIntOrNull(),
-                maxKhz = policy.resolve("scaling_max_freq").readIntOrNull(),
-                hardwareMaxKhz = policy.resolve("cpuinfo_max_freq").readIntOrNull(),
-                availableKhz = policy.resolve("scaling_available_frequencies").readTextOrNull()
-                    ?.split(' ')?.mapNotNull(String::toIntOrNull).orEmpty(),
-                governor = policy.resolve("scaling_governor").readTextOrNull(),
-                availableGovernors = policy.resolve("scaling_available_governors").readTextOrNull()
-                    ?.split(' ')?.filter { it.isNotBlank() }.orEmpty(),
-                partId = parts[cores.firstOrNull()]?.first,
-                implementer = parts[cores.firstOrNull()]?.second,
-            )
-        }
+        val clusters =
+            policies.mapNotNull { policy ->
+                val id = policy.name.removePrefix("policy").toIntOrNull() ?: return@mapNotNull null
+                val cores =
+                    policy
+                        .resolve("related_cpus")
+                        .readTextOrNull()
+                        ?.split(' ')
+                        ?.mapNotNull(String::toIntOrNull)
+                        ?: listOf(id)
+                CpuCluster(
+                    id = id,
+                    cores = cores,
+                    minKhz = policy.resolve("scaling_min_freq").readIntOrNull(),
+                    maxKhz = policy.resolve("scaling_max_freq").readIntOrNull(),
+                    hardwareMaxKhz = policy.resolve("cpuinfo_max_freq").readIntOrNull(),
+                    availableKhz =
+                        policy
+                            .resolve("scaling_available_frequencies")
+                            .readTextOrNull()
+                            ?.split(' ')
+                            ?.mapNotNull(String::toIntOrNull)
+                            .orEmpty(),
+                    governor = policy.resolve("scaling_governor").readTextOrNull(),
+                    availableGovernors =
+                        policy
+                            .resolve("scaling_available_governors")
+                            .readTextOrNull()
+                            ?.split(' ')
+                            ?.filter { it.isNotBlank() }
+                            .orEmpty(),
+                    partId = parts[cores.firstOrNull()]?.first,
+                    implementer = parts[cores.firstOrNull()]?.second,
+                )
+            }
 
         return CpuTopology(
             clusters = clusters,
@@ -68,9 +86,10 @@ object CpuTopologyReader {
         var implementer: String? = null
 
         text.lineSequence().forEach { line ->
-            val (key, value) = line.split(':', limit = 2).map(String::trim).let {
-                if (it.size == 2) it[0] to it[1] else return@forEach
-            }
+            val (key, value) =
+                line.split(':', limit = 2).map(String::trim).let {
+                    if (it.size == 2) it[0] to it[1] else return@forEach
+                }
             when (key) {
                 "processor" -> {
                     core?.let { result[it] = part to implementer }
@@ -78,20 +97,28 @@ object CpuTopologyReader {
                     part = null
                     implementer = null
                 }
-                "CPU part" -> part = value
-                "CPU implementer" -> implementer = value
+
+                "CPU part" -> {
+                    part = value
+                }
+
+                "CPU implementer" -> {
+                    implementer = value
+                }
             }
         }
         core?.let { result[it] = part to implementer }
         return result
     }
 
-    private fun readFeatures(): List<String> = File(CPUINFO).readTextOrNull()
-        ?.lineSequence()
-        ?.firstOrNull { it.startsWith("Features") }
-        ?.substringAfter(':')
-        ?.trim()
-        ?.split(' ')
-        ?.filter { it.isNotBlank() }
-        .orEmpty()
+    private fun readFeatures(): List<String> =
+        File(CPUINFO)
+            .readTextOrNull()
+            ?.lineSequence()
+            ?.firstOrNull { it.startsWith("Features") }
+            ?.substringAfter(':')
+            ?.trim()
+            ?.split(' ')
+            ?.filter { it.isNotBlank() }
+            .orEmpty()
 }

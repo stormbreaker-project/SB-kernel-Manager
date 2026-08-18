@@ -11,7 +11,6 @@ package dev.danascape.kernelmanager.core.battery
  * testable — and that arithmetic is the whole feature, so it needs to be.
  */
 object BatteryTracker {
-
     /**
      * Attributes the interval between [previous] and [sample] to whichever
      * screen state it was spent in.
@@ -20,7 +19,11 @@ object BatteryTracker {
      * a discharge rate makes both meaningless. Reboots also restart it, since
      * elapsedRealtime resets and the interval would otherwise be negative.
      */
-    fun fold(session: BatterySession?, previous: BatterySample?, sample: BatterySample): BatterySession {
+    fun fold(
+        session: BatterySession?,
+        previous: BatterySample?,
+        sample: BatterySample,
+    ): BatterySession {
         val rebooted = previous != null && sample.elapsedMillis < previous.elapsedMillis
         val unplugged = previous != null && previous.charging && !sample.charging
 
@@ -61,15 +64,19 @@ object BatteryTracker {
         }
     }
 
-    fun start(sample: BatterySample): BatterySession = BatterySession(
-        startedAtElapsedMillis = sample.elapsedMillis,
-        startedAtLevelPercent = sample.levelPercent,
-        startedAtChargeMicroAmpHours = sample.chargeMicroAmpHours,
-        latest = sample,
-    )
+    fun start(sample: BatterySample): BatterySession =
+        BatterySession(
+            startedAtElapsedMillis = sample.elapsedMillis,
+            startedAtLevelPercent = sample.levelPercent,
+            startedAtChargeMicroAmpHours = sample.chargeMicroAmpHours,
+            latest = sample,
+        )
 
     /** Charge counters only go down while discharging; a rise means a top-up, not negative drain. */
-    private fun drainedMicroAmpHours(previous: BatterySample, sample: BatterySample): Long {
+    private fun drainedMicroAmpHours(
+        previous: BatterySample,
+        sample: BatterySample,
+    ): Long {
         val before = previous.chargeMicroAmpHours ?: return 0
         val after = sample.chargeMicroAmpHours ?: return 0
         return (before - after).toLong().coerceAtLeast(0)

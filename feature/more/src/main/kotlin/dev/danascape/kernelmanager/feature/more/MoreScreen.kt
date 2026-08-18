@@ -61,9 +61,10 @@ fun MoreScreen(
 
     // The service accumulates either way; the permission only decides whether
     // the readout is visible, so the result is not acted on.
-    val notificationPermission = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission(),
-    ) { }
+    val notificationPermission =
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.RequestPermission(),
+        ) { }
 
     MoreContent(
         state = state,
@@ -101,15 +102,17 @@ private fun MoreContent(
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(top = contentPadding.topInset()),
-        contentPadding = contentPadding.expandedBy(
-            horizontal = 16.dp,
-            top = 24.dp,
-            bottom = 24.dp,
-            includeTopInset = false,
-        ),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(top = contentPadding.topInset()),
+        contentPadding =
+            contentPadding.expandedBy(
+                horizontal = 16.dp,
+                top = 24.dp,
+                bottom = 24.dp,
+                includeTopInset = false,
+            ),
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         item(key = "header") { Header() }
@@ -144,16 +147,20 @@ private fun MoreContent(
  * retroactively, so the figures only start when the user opts in.
  */
 @Composable
-private fun BatteryMonitorGroup(enabled: Boolean, onToggle: (Boolean) -> Unit) {
+private fun BatteryMonitorGroup(
+    enabled: Boolean,
+    onToggle: (Boolean) -> Unit,
+) {
     SettingsGroup(title = stringResource(R.string.more_battery)) {
         ActionRow(
             label = stringResource(R.string.more_battery_toggle),
             index = 0,
             count = 1,
             description = stringResource(R.string.more_battery_description),
-            trailing = stringResource(
-                if (enabled) R.string.more_battery_on else R.string.more_battery_off,
-            ),
+            trailing =
+                stringResource(
+                    if (enabled) R.string.more_battery_on else R.string.more_battery_off,
+                ),
             onClick = { onToggle(!enabled) },
         )
     }
@@ -161,7 +168,10 @@ private fun BatteryMonitorGroup(enabled: Boolean, onToggle: (Boolean) -> Unit) {
 
 /** Destinations that lost their tab in favour of the kernel-facing ones. */
 @Composable
-private fun BrowseGroup(onOpenDevices: () -> Unit, onOpenNews: () -> Unit) {
+private fun BrowseGroup(
+    onOpenDevices: () -> Unit,
+    onOpenNews: () -> Unit,
+) {
     SettingsGroup(title = stringResource(R.string.more_browse)) {
         ActionRow(
             label = stringResource(R.string.more_browse_devices),
@@ -200,7 +210,10 @@ private fun Header() {
 }
 
 @Composable
-private fun LinkGroup(section: LinkSection, onLinkClick: (LinkItem) -> Unit) {
+private fun LinkGroup(
+    section: LinkSection,
+    onLinkClick: (LinkItem) -> Unit,
+) {
     SettingsGroup(title = section.title) {
         section.items.forEachIndexed { index, item ->
             ActionRow(
@@ -219,7 +232,10 @@ private fun LinkGroup(section: LinkSection, onLinkClick: (LinkItem) -> Unit) {
 }
 
 @Composable
-private fun ThemeRow(selected: ThemePreference, onSelect: (ThemePreference) -> Unit) {
+private fun ThemeRow(
+    selected: ThemePreference,
+    onSelect: (ThemePreference) -> Unit,
+) {
     var expanded by remember { mutableStateOf(false) }
 
     Box {
@@ -237,11 +253,12 @@ private fun ThemeRow(selected: ThemePreference, onSelect: (ThemePreference) -> U
                         Text(
                             text = stringResource(option.labelRes()),
                             style = MaterialTheme.typography.bodyLarge,
-                            color = if (option == selected) {
-                                MaterialTheme.colorScheme.primary
-                            } else {
-                                MaterialTheme.colorScheme.onSurface
-                            },
+                            color =
+                                if (option == selected) {
+                                    MaterialTheme.colorScheme.primary
+                                } else {
+                                    MaterialTheme.colorScheme.onSurface
+                                },
                         )
                     },
                     onClick = {
@@ -285,11 +302,12 @@ private fun rememberAppVersion(): String {
     )
 }
 
-private fun ThemePreference.labelRes(): Int = when (this) {
-    ThemePreference.SYSTEM -> R.string.more_theme_system
-    ThemePreference.LIGHT -> R.string.more_theme_light
-    ThemePreference.DARK -> R.string.more_theme_dark
-}
+private fun ThemePreference.labelRes(): Int =
+    when (this) {
+        ThemePreference.SYSTEM -> R.string.more_theme_system
+        ThemePreference.LIGHT -> R.string.more_theme_light
+        ThemePreference.DARK -> R.string.more_theme_dark
+    }
 
 @Preview
 @Composable

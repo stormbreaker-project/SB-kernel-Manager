@@ -21,7 +21,6 @@ private const val TAG = "DeviceReaders"
  */
 @RunWith(AndroidJUnit4::class)
 class DeviceReadersTest {
-
     private val context = InstrumentationRegistry.getInstrumentation().targetContext
 
     @Test
@@ -38,7 +37,10 @@ class DeviceReadersTest {
         Log.i(TAG, "rom=${profile.os.rom} stockSigned=${profile.os.isStockSigned}")
 
         Log.i(TAG, "=== BOOT ===")
-        Log.i(TAG, "unlocked=${profile.boot.bootloaderUnlocked} vbs=${profile.boot.verifiedBootState} crypto=${profile.boot.encryption}")
+        Log.i(
+            TAG,
+            "unlocked=${profile.boot.bootloaderUnlocked} vbs=${profile.boot.verifiedBootState} crypto=${profile.boot.encryption}",
+        )
         Log.i(TAG, "suBinary=${profile.suBinaryPresent}")
 
         Log.i(TAG, "=== SOC ===")

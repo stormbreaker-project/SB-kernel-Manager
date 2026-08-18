@@ -68,15 +68,17 @@ private fun MonitorContent(
     val history = state.history
 
     LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(top = contentPadding.topInset()),
-        contentPadding = contentPadding.expandedBy(
-            horizontal = 16.dp,
-            top = 24.dp,
-            bottom = 24.dp,
-            includeTopInset = false,
-        ),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(top = contentPadding.topInset()),
+        contentPadding =
+            contentPadding.expandedBy(
+                horizontal = 16.dp,
+                top = 24.dp,
+                bottom = 24.dp,
+                includeTopInset = false,
+            ),
         verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
         item(key = "header") { Header() }
@@ -161,7 +163,11 @@ private fun CpuCard(
 }
 
 @Composable
-private fun MemoryCard(memory: MemoryVitals, history: MetricHistory, revealIndex: Int) {
+private fun MemoryCard(
+    memory: MemoryVitals,
+    history: MetricHistory,
+    revealIndex: Int,
+) {
     MetricCard(
         title = stringResource(R.string.monitor_memory),
         value = percent(memory.usedFraction),
@@ -174,7 +180,11 @@ private fun MemoryCard(memory: MemoryVitals, history: MetricHistory, revealIndex
 }
 
 @Composable
-private fun BatteryCard(battery: BatteryVitals, history: MetricHistory, revealIndex: Int) {
+private fun BatteryCard(
+    battery: BatteryVitals,
+    history: MetricHistory,
+    revealIndex: Int,
+) {
     MetricCard(
         title = stringResource(R.string.monitor_battery),
         value = stringResource(R.string.monitor_percent, battery.percent),
@@ -201,14 +211,19 @@ private fun BatteryCard(battery: BatteryVitals, history: MetricHistory, revealIn
 }
 
 @Composable
-private fun NetworkCard(vitals: Vitals, history: MetricHistory, revealIndex: Int) {
+private fun NetworkCard(
+    vitals: Vitals,
+    history: MetricHistory,
+    revealIndex: Int,
+) {
     val network = vitals.network ?: return
     MetricCard(
         title = stringResource(R.string.monitor_network),
-        value = stringResource(
-            R.string.monitor_rate,
-            bytes(history.networkBytesPerSecond.lastOrNull()?.toLong() ?: 0L),
-        ),
+        value =
+            stringResource(
+                R.string.monitor_rate,
+                bytes(history.networkBytesPerSecond.lastOrNull()?.toLong() ?: 0L),
+            ),
         revealIndex = revealIndex,
     ) {
         SBSparkline(values = history.networkBytesPerSecond, domain = null)
@@ -219,7 +234,10 @@ private fun NetworkCard(vitals: Vitals, history: MetricHistory, revealIndex: Int
 
 /** Static, so a meter rather than a line implying movement. */
 @Composable
-private fun StorageCard(storage: StorageVitals, revealIndex: Int) {
+private fun StorageCard(
+    storage: StorageVitals,
+    revealIndex: Int,
+) {
     MetricCard(
         title = stringResource(R.string.monitor_storage),
         value = percent(storage.usedFraction),
@@ -234,7 +252,10 @@ private fun StorageCard(storage: StorageVitals, revealIndex: Int) {
 
 /** A ratio, not a series. */
 @Composable
-private fun UptimeCard(sleep: SleepStats, revealIndex: Int) {
+private fun UptimeCard(
+    sleep: SleepStats,
+    revealIndex: Int,
+) {
     MetricCard(
         title = stringResource(R.string.monitor_uptime),
         value = duration(sleep.elapsedMillis),
@@ -251,7 +272,10 @@ private fun UptimeCard(sleep: SleepStats, revealIndex: Int) {
 
 /** Identification only — there is no series to draw. */
 @Composable
-private fun GpuCard(gpu: GpuInfo, revealIndex: Int) {
+private fun GpuCard(
+    gpu: GpuInfo,
+    revealIndex: Int,
+) {
     MetricCard(
         title = stringResource(R.string.monitor_gpu),
         value = gpu.renderer ?: "—",
@@ -268,10 +292,16 @@ private fun GpuCard(gpu: GpuInfo, revealIndex: Int) {
 
 /** A discrete state, so a chip rather than a chart. */
 @Composable
-private fun ThermalCard(vitals: Vitals, revealIndex: Int) {
+private fun ThermalCard(
+    vitals: Vitals,
+    revealIndex: Int,
+) {
     MetricCard(
         title = stringResource(R.string.monitor_thermal),
-        value = vitals.thermal.name.lowercase().replaceFirstChar(Char::uppercase),
+        value =
+            vitals.thermal.name
+                .lowercase()
+                .replaceFirstChar(Char::uppercase),
         revealIndex = revealIndex,
     ) {
         Text(

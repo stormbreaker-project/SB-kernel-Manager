@@ -26,31 +26,36 @@ import java.io.IOException
  * No database: the feed is a small file behind an ETag, so the HTTP cache is
  * the persistence layer.
  */
-class NewsRepository(private val client: HttpClient) {
-
-    suspend fun news(): DataResult<List<NewsPost>> = withContext(Dispatchers.IO) {
-        try {
-            DataResult.Success(client.get(SBEndpoints.NEWS).body<NewsFeedDto>().toDomain())
-        } catch (cancellation: CancellationException) {
-            throw cancellation
-        } catch (io: IOException) {
-            cached() ?: DataResult.Failure(LoadError.OFFLINE)
-        } catch (malformed: SerializationException) {
-            DataResult.Failure(LoadError.MALFORMED)
-        } catch (other: Exception) {
-            DataResult.Failure(LoadError.SERVER)
+class NewsRepository(
+    private val client: HttpClient,
+) {
+    suspend fun news(): DataResult<List<NewsPost>> =
+        withContext(Dispatchers.IO) {
+            try {
+                DataResult.Success(client.get(SBEndpoints.NEWS).body<NewsFeedDto>().toDomain())
+            } catch (cancellation: CancellationException) {
+                throw cancellation
+            } catch (io: IOException) {
+                cached() ?: DataResult.Failure(LoadError.OFFLINE)
+            } catch (malformed: SerializationException) {
+                DataResult.Failure(LoadError.MALFORMED)
+            } catch (other: Exception) {
+                DataResult.Failure(LoadError.SERVER)
+            }
         }
-    }
 
     /** `only-if-cached` is answered from disk or refused; it never hits the network. */
-    private suspend fun cached(): DataResult.Success<List<NewsPost>>? = try {
-        val feed: NewsFeedDto = client.get(SBEndpoints.NEWS) {
-            header(HttpHeaders.CacheControl, "only-if-cached, max-stale=${Int.MAX_VALUE}")
-        }.body()
-        DataResult.Success(feed.toDomain(), stale = true)
-    } catch (cancellation: CancellationException) {
-        throw cancellation
-    } catch (_: Exception) {
-        null
-    }
+    private suspend fun cached(): DataResult.Success<List<NewsPost>>? =
+        try {
+            val feed: NewsFeedDto =
+                client
+                    .get(SBEndpoints.NEWS) {
+                        header(HttpHeaders.CacheControl, "only-if-cached, max-stale=${Int.MAX_VALUE}")
+                    }.body()
+            DataResult.Success(feed.toDomain(), stale = true)
+        } catch (cancellation: CancellationException) {
+            throw cancellation
+        } catch (_: Exception) {
+            null
+        }
 }

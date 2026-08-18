@@ -72,30 +72,38 @@ private fun NewsContent(
     modifier: Modifier = Modifier,
 ) {
     when (state) {
-        NewsUiState.Loading -> Centered(modifier, contentPadding) {
-            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+        NewsUiState.Loading -> {
+            Centered(modifier, contentPadding) {
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+            }
         }
 
-        NewsUiState.Empty -> Centered(modifier, contentPadding) {
-            Text(
-                text = stringResource(R.string.news_empty),
-                style = MaterialTheme.typography.bodyMedium,
-                color = SBTheme.colors.muted,
-                textAlign = TextAlign.Center,
+        NewsUiState.Empty -> {
+            Centered(modifier, contentPadding) {
+                Text(
+                    text = stringResource(R.string.news_empty),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = SBTheme.colors.muted,
+                    textAlign = TextAlign.Center,
+                )
+            }
+        }
+
+        is NewsUiState.Failed -> {
+            Centered(modifier, contentPadding) {
+                LoadFailure(error = state.error, onRetry = onRetry)
+            }
+        }
+
+        is NewsUiState.Ready -> {
+            NewsList(
+                posts = state.posts,
+                stale = state.stale,
+                contentPadding = contentPadding,
+                onPostClick = onPostClick,
+                modifier = modifier,
             )
         }
-
-        is NewsUiState.Failed -> Centered(modifier, contentPadding) {
-            LoadFailure(error = state.error, onRetry = onRetry)
-        }
-
-        is NewsUiState.Ready -> NewsList(
-            posts = state.posts,
-            stale = state.stale,
-            contentPadding = contentPadding,
-            onPostClick = onPostClick,
-            modifier = modifier,
-        )
     }
 }
 
@@ -108,15 +116,17 @@ private fun NewsList(
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(top = contentPadding.topInset()),
-        contentPadding = contentPadding.expandedBy(
-            horizontal = 16.dp,
-            top = 24.dp,
-            bottom = 24.dp,
-            includeTopInset = false,
-        ),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(top = contentPadding.topInset()),
+        contentPadding =
+            contentPadding.expandedBy(
+                horizontal = 16.dp,
+                top = 24.dp,
+                bottom = 24.dp,
+                includeTopInset = false,
+            ),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         item(key = "header") { Header() }
@@ -151,9 +161,10 @@ private fun LazyListScope.newsItems(
 @Composable
 private fun Header() {
     Column(
-        modifier = Modifier
-            .then(pvotReveal(0))
-            .padding(bottom = 4.dp),
+        modifier =
+            Modifier
+                .then(pvotReveal(0))
+                .padding(bottom = 4.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
         Text(
@@ -184,29 +195,37 @@ private fun OfflineNotice() {
         text = stringResource(R.string.news_offline_copy),
         style = MaterialTheme.typography.labelSmall,
         color = SBTheme.colors.faint,
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-            .padding(horizontal = 12.dp, vertical = 10.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp))
+                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                .padding(horizontal = 12.dp, vertical = 10.dp),
     )
 }
 
 @Composable
-private fun LoadFailure(error: LoadError, onRetry: () -> Unit) {
-    val (title, message) = when (error) {
-        LoadError.OFFLINE ->
-            stringResource(R.string.news_error_offline_title) to
-                stringResource(R.string.news_error_offline_message)
+private fun LoadFailure(
+    error: LoadError,
+    onRetry: () -> Unit,
+) {
+    val (title, message) =
+        when (error) {
+            LoadError.OFFLINE -> {
+                stringResource(R.string.news_error_offline_title) to
+                    stringResource(R.string.news_error_offline_message)
+            }
 
-        LoadError.SERVER ->
-            stringResource(R.string.news_error_server_title) to
-                stringResource(R.string.news_error_server_message)
+            LoadError.SERVER -> {
+                stringResource(R.string.news_error_server_title) to
+                    stringResource(R.string.news_error_server_message)
+            }
 
-        LoadError.MALFORMED ->
-            stringResource(R.string.news_error_malformed_title) to
-                stringResource(R.string.news_error_malformed_message)
-    }
+            LoadError.MALFORMED -> {
+                stringResource(R.string.news_error_malformed_title) to
+                    stringResource(R.string.news_error_malformed_message)
+            }
+        }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -241,39 +260,42 @@ private fun Centered(
     content: @Composable () -> Unit,
 ) {
     Box(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(contentPadding),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(contentPadding),
         contentAlignment = Alignment.Center,
         content = { content() },
     )
 }
 
-private val PreviewPosts = listOf(
-    NewsPost(
-        id = "2026-08-12-stormbreaker-clang-default",
-        title = "StormBreaker Clang is now our default toolchain",
-        date = LocalDate.of(2026, 8, 12),
-        tag = "Toolchain",
-        author = "Saalim Quadri",
-        summary = "Our in-house LLVM/Clang build is back, and from here on it " +
-            "compiles every StormBreaker kernel by default.",
-        coverUrl = null,
-        url = "https://stormbreaker.squadri.me/news/2026-08-12-stormbreaker-clang-default/",
-        readingMinutes = 2,
-    ),
-    NewsPost(
-        id = "2026-08-11-we-are-alive",
-        title = "We're alive, and we're building again",
-        date = LocalDate.of(2026, 8, 11),
-        tag = "Announcement",
-        author = "Saalim Quadri",
-        summary = "It went quiet for a while. It never went away.",
-        coverUrl = null,
-        url = "https://stormbreaker.squadri.me/news/2026-08-11-we-are-alive/",
-        readingMinutes = 3,
-    ),
-)
+private val PreviewPosts =
+    listOf(
+        NewsPost(
+            id = "2026-08-12-stormbreaker-clang-default",
+            title = "StormBreaker Clang is now our default toolchain",
+            date = LocalDate.of(2026, 8, 12),
+            tag = "Toolchain",
+            author = "Saalim Quadri",
+            summary =
+                "Our in-house LLVM/Clang build is back, and from here on it " +
+                    "compiles every StormBreaker kernel by default.",
+            coverUrl = null,
+            url = "https://stormbreaker.squadri.me/news/2026-08-12-stormbreaker-clang-default/",
+            readingMinutes = 2,
+        ),
+        NewsPost(
+            id = "2026-08-11-we-are-alive",
+            title = "We're alive, and we're building again",
+            date = LocalDate.of(2026, 8, 11),
+            tag = "Announcement",
+            author = "Saalim Quadri",
+            summary = "It went quiet for a while. It never went away.",
+            coverUrl = null,
+            url = "https://stormbreaker.squadri.me/news/2026-08-11-we-are-alive/",
+            readingMinutes = 3,
+        ),
+    )
 
 @Preview
 @Composable

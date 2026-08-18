@@ -42,30 +42,37 @@ private const val FIELD_SEPARATOR = "   ·   "
  * screen on and off against the session, deep sleep and awake against
  * screen-off.
  */
-internal class BatteryNotification(private val context: Context) {
-
+internal class BatteryNotification(
+    private val context: Context,
+) {
     fun ensureChannel() {
         val manager = context.getSystemService<NotificationManager>() ?: return
         // Silent and low: a readout, not an alert.
-        val channel = NotificationChannel(
-            CHANNEL_ID,
-            context.getString(R.string.battery_channel_name),
-            NotificationManager.IMPORTANCE_LOW,
-        ).apply {
-            description = context.getString(R.string.battery_channel_description)
-            setShowBadge(false)
-        }
+        val channel =
+            NotificationChannel(
+                CHANNEL_ID,
+                context.getString(R.string.battery_channel_name),
+                NotificationManager.IMPORTANCE_LOW,
+            ).apply {
+                description = context.getString(R.string.battery_channel_description)
+                setShowBadge(false)
+            }
         manager.createNotificationChannel(channel)
     }
 
-    fun build(session: BatterySession?, smallIcon: Int): Notification {
-        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(smallIcon)
-            .setOngoing(true)
-            .setSilent(true)
-            .setShowWhen(false)
-            .setCategory(NotificationCompat.CATEGORY_SERVICE)
-            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+    fun build(
+        session: BatterySession?,
+        smallIcon: Int,
+    ): Notification {
+        val builder =
+            NotificationCompat
+                .Builder(context, CHANNEL_ID)
+                .setSmallIcon(smallIcon)
+                .setOngoing(true)
+                .setSilent(true)
+                .setShowWhen(false)
+                .setCategory(NotificationCompat.CATEGORY_SERVICE)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 
         if (session?.latest == null) {
             return builder.setContentTitle(context.getString(R.string.battery_waiting)).build()
@@ -81,8 +88,7 @@ internal class BatteryNotification(private val context: Context) {
                     // when expanded, so a copy would just be a duplicate line.
                     detailLines(session).forEach(style::addLine)
                 },
-            )
-            .build()
+            ).build()
     }
 
     /** Level · temperature · charge state · current. */
@@ -135,8 +141,10 @@ internal class BatteryNotification(private val context: Context) {
         )
     }
 
-    private fun share(part: Long, whole: Long): Int =
-        if (whole <= 0) 0 else ((part.toFloat() / whole) * 100).roundToInt()
+    private fun share(
+        part: Long,
+        whole: Long,
+    ): Int = if (whole <= 0) 0 else ((part.toFloat() / whole) * 100).roundToInt()
 
     private fun rate(value: Float) = context.getString(R.string.battery_rate_value, value)
 

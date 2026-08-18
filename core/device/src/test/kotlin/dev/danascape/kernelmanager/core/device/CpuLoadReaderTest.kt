@@ -10,8 +10,10 @@ import org.junit.Test
 import java.util.concurrent.TimeUnit
 
 class CpuLoadReaderTest {
-
-    private fun sampleAt(seconds: Long, vararg idleMicros: Long) = CpuIdleSample(
+    private fun sampleAt(
+        seconds: Long,
+        vararg idleMicros: Long,
+    ) = CpuIdleSample(
         elapsedNanos = TimeUnit.SECONDS.toNanos(seconds),
         idleMicrosPerCore = idleMicros.toList(),
     )
@@ -45,10 +47,11 @@ class CpuLoadReaderTest {
 
     @Test
     fun `average spans all cores`() {
-        val load = CpuLoadReader.load(
-            sampleAt(0, 0, 0),
-            sampleAt(1, 1_000_000, 0),
-        )!!
+        val load =
+            CpuLoadReader.load(
+                sampleAt(0, 0, 0),
+                sampleAt(1, 1_000_000, 0),
+            )!!
         assertEquals(0.5f, load.average, 0.001f)
     }
 

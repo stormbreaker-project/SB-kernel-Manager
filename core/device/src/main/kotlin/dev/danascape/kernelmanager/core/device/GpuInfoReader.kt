@@ -22,7 +22,6 @@ import dev.danascape.kernelmanager.core.model.GpuInfo
  * Identification only. Usage and clocks are not exposed this way.
  */
 object GpuInfoReader {
-
     fun read(): GpuInfo? {
         var display: EGLDisplay? = null
         var context: EGLContext? = null
@@ -34,19 +33,21 @@ object GpuInfoReader {
 
             val config = chooseConfig(display) ?: return null
 
-            surface = EGL14.eglCreatePbufferSurface(
-                display,
-                config,
-                intArrayOf(EGL14.EGL_WIDTH, 1, EGL14.EGL_HEIGHT, 1, EGL14.EGL_NONE),
-                0,
-            )
-            context = EGL14.eglCreateContext(
-                display,
-                config,
-                EGL14.EGL_NO_CONTEXT,
-                intArrayOf(EGL14.EGL_CONTEXT_CLIENT_VERSION, 2, EGL14.EGL_NONE),
-                0,
-            )
+            surface =
+                EGL14.eglCreatePbufferSurface(
+                    display,
+                    config,
+                    intArrayOf(EGL14.EGL_WIDTH, 1, EGL14.EGL_HEIGHT, 1, EGL14.EGL_NONE),
+                    0,
+                )
+            context =
+                EGL14.eglCreateContext(
+                    display,
+                    config,
+                    EGL14.EGL_NO_CONTEXT,
+                    intArrayOf(EGL14.EGL_CONTEXT_CLIENT_VERSION, 2, EGL14.EGL_NONE),
+                    0,
+                )
             if (context == EGL14.EGL_NO_CONTEXT) return null
             if (!EGL14.eglMakeCurrent(display, surface, surface, context)) return null
 
@@ -75,11 +76,14 @@ object GpuInfoReader {
     private fun chooseConfig(display: EGLDisplay): EGLConfig? {
         val configs = arrayOfNulls<EGLConfig>(1)
         val count = IntArray(1)
-        val attributes = intArrayOf(
-            EGL14.EGL_RENDERABLE_TYPE, EGL14.EGL_OPENGL_ES2_BIT,
-            EGL14.EGL_SURFACE_TYPE, EGL14.EGL_PBUFFER_BIT,
-            EGL14.EGL_NONE,
-        )
+        val attributes =
+            intArrayOf(
+                EGL14.EGL_RENDERABLE_TYPE,
+                EGL14.EGL_OPENGL_ES2_BIT,
+                EGL14.EGL_SURFACE_TYPE,
+                EGL14.EGL_PBUFFER_BIT,
+                EGL14.EGL_NONE,
+            )
         if (!EGL14.eglChooseConfig(display, attributes, 0, configs, 0, 1, count, 0)) return null
         return configs.firstOrNull().takeIf { count[0] > 0 }
     }

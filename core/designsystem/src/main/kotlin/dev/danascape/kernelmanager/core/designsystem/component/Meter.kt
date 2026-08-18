@@ -30,18 +30,20 @@ fun SBMeter(
 ) {
     val shape = RoundedCornerShape(50)
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(6.dp)
-            .clip(shape)
-            .background(color.copy(alpha = 0.16f)),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .height(6.dp)
+                .clip(shape)
+                .background(color.copy(alpha = 0.16f)),
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxWidth(fraction.coerceIn(0f, 1f))
-                .fillMaxHeight()
-                .clip(shape)
-                .background(color),
+            modifier =
+                Modifier
+                    .fillMaxWidth(fraction.coerceIn(0f, 1f))
+                    .fillMaxHeight()
+                    .clip(shape)
+                    .background(color),
         )
     }
 }

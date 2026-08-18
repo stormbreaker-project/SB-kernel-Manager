@@ -61,28 +61,29 @@ fun NewsCard(
     val shape = RoundedCornerShape(CardRadius)
 
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .then(pvotReveal(revealIndex))
-            .then(pvotPressScale(interactionSource))
-            .clip(shape)
-            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-            .clickable(
-                interactionSource = interactionSource,
-                indication = null,
-                onClick = onClick,
-            )
-            .semantics { contentDescription = openLabel },
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .then(pvotReveal(revealIndex))
+                .then(pvotPressScale(interactionSource))
+                .clip(shape)
+                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                .clickable(
+                    interactionSource = interactionSource,
+                    indication = null,
+                    onClick = onClick,
+                ).semantics { contentDescription = openLabel },
     ) {
         if (showCover && post.coverUrl != null) {
             AsyncImage(
                 model = post.coverUrl,
                 // Decorative: the headline below carries the meaning.
                 contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(16f / 9f)
-                    .background(SBTheme.colors.ink),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(16f / 9f)
+                        .background(SBTheme.colors.ink),
                 contentScale = ContentScale.Crop,
             )
         }
@@ -158,18 +159,20 @@ private fun MetaText(text: String) {
 private fun NewsCardPreview() {
     SBTheme {
         NewsCard(
-            post = NewsPost(
-                id = "2026-08-11-we-are-alive",
-                title = "We're alive, and we're building again",
-                date = LocalDate.of(2026, 8, 11),
-                tag = "Announcement",
-                author = "Saalim Quadri",
-                summary = "It went quiet for a while. It never went away. " +
-                    "New home, revived charter, and the work is moving again.",
-                coverUrl = null,
-                url = "https://stormbreaker.squadri.me/news/2026-08-11-we-are-alive/",
-                readingMinutes = 3,
-            ),
+            post =
+                NewsPost(
+                    id = "2026-08-11-we-are-alive",
+                    title = "We're alive, and we're building again",
+                    date = LocalDate.of(2026, 8, 11),
+                    tag = "Announcement",
+                    author = "Saalim Quadri",
+                    summary =
+                        "It went quiet for a while. It never went away. " +
+                            "New home, revived charter, and the work is moving again.",
+                    coverUrl = null,
+                    url = "https://stormbreaker.squadri.me/news/2026-08-11-we-are-alive/",
+                    readingMinutes = 3,
+                ),
             onClick = {},
             modifier = Modifier.padding(16.dp),
         )

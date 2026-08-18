@@ -43,11 +43,12 @@ data class NewsPostDto(
 fun NewsFeedDto.toDomain(): List<NewsPost> = posts.mapNotNull { it.toDomainOrNull() }
 
 private fun NewsPostDto.toDomainOrNull(): NewsPost? {
-    val parsedDate = try {
-        LocalDate.parse(date)
-    } catch (_: DateTimeParseException) {
-        return null
-    }
+    val parsedDate =
+        try {
+            LocalDate.parse(date)
+        } catch (_: DateTimeParseException) {
+            return null
+        }
     return NewsPost(
         id = id,
         title = title,

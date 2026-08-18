@@ -20,7 +20,10 @@ data class OsBuild(
     val isStockSigned: Boolean get() = tags == "release-keys" && rom == null
 }
 
-data class CustomRom(val name: String, val version: String)
+data class CustomRom(
+    val name: String,
+    val version: String,
+)
 
 /**
  * Whether the device can take a custom kernel at all.

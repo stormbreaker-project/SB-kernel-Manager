@@ -32,7 +32,6 @@ class MoreViewModel(
     private val themeRepository: ThemeRepository,
     private val batteryStore: BatterySessionStore,
 ) : ViewModel() {
-
     private val _state = MutableStateFlow(MoreUiState())
     val state: StateFlow<MoreUiState> = _state.asStateFlow()
 
@@ -65,15 +64,16 @@ class MoreViewModel(
     }
 
     companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val container = checkNotNull(this[APPLICATION_KEY]).appContainer()
-                MoreViewModel(
-                    linksRepository = container.linksRepository,
-                    themeRepository = container.themeRepository,
-                    batteryStore = container.batterySessionStore,
-                )
+        val Factory: ViewModelProvider.Factory =
+            viewModelFactory {
+                initializer {
+                    val container = checkNotNull(this[APPLICATION_KEY]).appContainer()
+                    MoreViewModel(
+                        linksRepository = container.linksRepository,
+                        themeRepository = container.themeRepository,
+                        batteryStore = container.batterySessionStore,
+                    )
+                }
             }
-        }
     }
 }

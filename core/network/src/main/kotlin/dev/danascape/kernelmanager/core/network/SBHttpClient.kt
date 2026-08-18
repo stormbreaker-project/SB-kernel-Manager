@@ -28,10 +28,11 @@ object SBEndpoints {
  * Unknown keys are ignored so the site can add fields to a v1 payload without
  * breaking installs already in the field.
  */
-val SBJson: Json = Json {
-    ignoreUnknownKeys = true
-    explicitNulls = false
-}
+val SBJson: Json =
+    Json {
+        ignoreUnknownKeys = true
+        explicitNulls = false
+    }
 
 private const val HTTP_CACHE_BYTES = 8L * 1024 * 1024
 private const val CONNECT_TIMEOUT_MS = 15_000L
@@ -42,24 +43,25 @@ private const val REQUEST_TIMEOUT_MS = 30_000L
  * whole persistence story: repeat opens revalidate cheaply, and offline reads
  * come from here rather than failing.
  */
-fun createHttpClient(cacheDir: File): HttpClient = HttpClient(OkHttp) {
-    expectSuccess = true
+fun createHttpClient(cacheDir: File): HttpClient =
+    HttpClient(OkHttp) {
+        expectSuccess = true
 
-    engine {
-        config {
-            cache(Cache(File(cacheDir, "http"), HTTP_CACHE_BYTES))
-            retryOnConnectionFailure(true)
+        engine {
+            config {
+                cache(Cache(File(cacheDir, "http"), HTTP_CACHE_BYTES))
+                retryOnConnectionFailure(true)
+            }
+        }
+
+        install(ContentNegotiation) { json(SBJson) }
+
+        install(HttpTimeout) {
+            connectTimeoutMillis = CONNECT_TIMEOUT_MS
+            requestTimeoutMillis = REQUEST_TIMEOUT_MS
+        }
+
+        defaultRequest {
+            header(HttpHeaders.UserAgent, "SBKernelManager-Android")
         }
     }
-
-    install(ContentNegotiation) { json(SBJson) }
-
-    install(HttpTimeout) {
-        connectTimeoutMillis = CONNECT_TIMEOUT_MS
-        requestTimeoutMillis = REQUEST_TIMEOUT_MS
-    }
-
-    defaultRequest {
-        header(HttpHeaders.UserAgent, "SBKernelManager-Android")
-    }
-}

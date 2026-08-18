@@ -41,9 +41,10 @@ fun SBSparkline(
     height: Dp = 40.dp,
 ) {
     Canvas(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(height),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .height(height),
     ) {
         if (values.size < 2) return@Canvas
 
@@ -52,38 +53,43 @@ fun SBSparkline(
         val span = (high - low).takeIf { it > 0f } ?: 1f
 
         val stepX = size.width / (values.size - 1)
-        val points = values.mapIndexed { index, value ->
-            val fraction = ((value - low) / span).coerceIn(0f, 1f)
-            Offset(x = index * stepX, y = size.height * (1f - fraction))
-        }
+        val points =
+            values.mapIndexed { index, value ->
+                val fraction = ((value - low) / span).coerceIn(0f, 1f)
+                Offset(x = index * stepX, y = size.height * (1f - fraction))
+            }
 
-        val line = Path().apply {
-            moveTo(points.first().x, points.first().y)
-            points.drop(1).forEach { lineTo(it.x, it.y) }
-        }
+        val line =
+            Path().apply {
+                moveTo(points.first().x, points.first().y)
+                points.drop(1).forEach { lineTo(it.x, it.y) }
+            }
 
         // A wash, never a saturated block.
-        val fill = Path().apply {
-            addPath(line)
-            lineTo(points.last().x, size.height)
-            lineTo(points.first().x, size.height)
-            close()
-        }
+        val fill =
+            Path().apply {
+                addPath(line)
+                lineTo(points.last().x, size.height)
+                lineTo(points.first().x, size.height)
+                close()
+            }
         drawPath(
             path = fill,
-            brush = Brush.verticalGradient(
-                listOf(color.copy(alpha = 0.14f), color.copy(alpha = 0.02f)),
-            ),
+            brush =
+                Brush.verticalGradient(
+                    listOf(color.copy(alpha = 0.14f), color.copy(alpha = 0.02f)),
+                ),
         )
 
         drawPath(
             path = line,
             color = color,
-            style = Stroke(
-                width = LineWidth.toPx(),
-                cap = StrokeCap.Round,
-                join = StrokeJoin.Round,
-            ),
+            style =
+                Stroke(
+                    width = LineWidth.toPx(),
+                    cap = StrokeCap.Round,
+                    join = StrokeJoin.Round,
+                ),
         )
 
         // The end dot marks "now"; the ring keeps it legible over the line.

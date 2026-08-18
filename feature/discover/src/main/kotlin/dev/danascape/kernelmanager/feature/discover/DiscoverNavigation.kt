@@ -13,8 +13,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data object DiscoverRoute
 
-fun NavController.navigateToDiscover(navOptions: NavOptions? = null) =
-    navigate(DiscoverRoute, navOptions)
+fun NavController.navigateToDiscover(navOptions: NavOptions? = null) = navigate(DiscoverRoute, navOptions)
 
 fun NavGraphBuilder.discoverScreen(
     contentPadding: PaddingValues,

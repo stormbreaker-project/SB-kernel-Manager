@@ -7,8 +7,9 @@ import android.content.Context
 import dev.danascape.kernelmanager.core.model.DeviceProfile
 
 /** Reads everything fixed for the life of the process, in one pass. */
-class DeviceProfileReader(context: Context) {
-
+class DeviceProfileReader(
+    context: Context,
+) {
     private val platform = PlatformVitalsReader(context)
 
     fun read(): DeviceProfile {

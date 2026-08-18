@@ -34,7 +34,6 @@ class DiscoverViewModel(
     private val deviceRepository: DeviceRepository,
     private val newsRepository: NewsRepository,
 ) : ViewModel() {
-
     private val _state = MutableStateFlow(DiscoverUiState())
     val state: StateFlow<DiscoverUiState> = _state.asStateFlow()
 
@@ -66,14 +65,15 @@ class DiscoverViewModel(
     }
 
     companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val container = checkNotNull(this[APPLICATION_KEY]).appContainer()
-                DiscoverViewModel(
-                    deviceRepository = container.deviceRepository,
-                    newsRepository = container.newsRepository,
-                )
+        val Factory: ViewModelProvider.Factory =
+            viewModelFactory {
+                initializer {
+                    val container = checkNotNull(this[APPLICATION_KEY]).appContainer()
+                    DiscoverViewModel(
+                        deviceRepository = container.deviceRepository,
+                        newsRepository = container.newsRepository,
+                    )
+                }
             }
-        }
     }
 }

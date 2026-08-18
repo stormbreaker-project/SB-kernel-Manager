@@ -31,17 +31,18 @@ fun SBApp() {
     // screen — reflect that rather than leaving the bar unselected.
     val current = backStackEntry?.destination.topLevelDestination() ?: SBDestination.DISCOVER
 
-    val tabs = remember {
-        SBDestination.entries.map {
-            PvotTabItem(
-                iconRes = it.iconRes,
-                labelRes = it.labelRes,
-                contentDescriptionRes = it.contentDescriptionRes,
-                expandedIconRes = it.expandedIconRes,
-                expandedLabelRes = it.expandedLabelRes,
-            )
+    val tabs =
+        remember {
+            SBDestination.entries.map {
+                PvotTabItem(
+                    iconRes = it.iconRes,
+                    labelRes = it.labelRes,
+                    contentDescriptionRes = it.contentDescriptionRes,
+                    expandedIconRes = it.expandedIconRes,
+                    expandedLabelRes = it.expandedLabelRes,
+                )
+            }
         }
-    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),

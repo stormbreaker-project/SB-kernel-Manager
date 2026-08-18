@@ -42,7 +42,6 @@ private const val SAMPLE_INTERVAL_MILLIS = 60_000L
  * the battery being measured — which is why it is opt-in and off by default.
  */
 class BatteryMonitorService : Service() {
-
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private lateinit var sampler: BatterySampler
     private lateinit var store: BatterySessionStore
@@ -56,11 +55,15 @@ class BatteryMonitorService : Service() {
      * these a sixty-second window straddling a screen-off would be filed
      * entirely as active.
      */
-    private val transitions = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            scope.launch { sampleOnce() }
+    private val transitions =
+        object : BroadcastReceiver() {
+            override fun onReceive(
+                context: Context?,
+                intent: Intent?,
+            ) {
+                scope.launch { sampleOnce() }
+            }
         }
-    }
 
     override fun onCreate() {
         super.onCreate()
@@ -80,16 +83,21 @@ class BatteryMonitorService : Service() {
         )
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    override fun onStartCommand(
+        intent: Intent?,
+        flags: Int,
+        startId: Int,
+    ): Int {
         running = true
         startInForeground()
         if (loop?.isActive != true) {
-            loop = scope.launch {
-                while (isActive) {
-                    sampleOnce()
-                    delay(SAMPLE_INTERVAL_MILLIS)
+            loop =
+                scope.launch {
+                    while (isActive) {
+                        sampleOnce()
+                        delay(SAMPLE_INTERVAL_MILLIS)
+                    }
                 }
-            }
         }
         return START_STICKY
     }
@@ -163,12 +171,13 @@ class BatteryMonitorService : Service() {
          *   may do outside an exemption. The caller decides whether that
          *   matters; from a user tap it cannot happen.
          */
-        fun start(context: Context): Boolean = try {
-            context.startForegroundService(Intent(context, BatteryMonitorService::class.java))
-            true
-        } catch (_: Exception) {
-            false
-        }
+        fun start(context: Context): Boolean =
+            try {
+                context.startForegroundService(Intent(context, BatteryMonitorService::class.java))
+                true
+            } catch (_: Exception) {
+                false
+            }
 
         fun stop(context: Context) {
             running = false

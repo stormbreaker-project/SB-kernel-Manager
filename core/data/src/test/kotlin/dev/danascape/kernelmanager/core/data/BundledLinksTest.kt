@@ -16,7 +16,6 @@ import java.io.File
  * silently empty offline, and nothing else would catch it.
  */
 class BundledLinksTest {
-
     private val asset = File("src/main/assets/links.json")
 
     @Test
