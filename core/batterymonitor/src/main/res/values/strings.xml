@@ -1,22 +1,20 @@
 <resources>
     <string name="battery_channel_name">Battery monitor</string>
     <string name="battery_channel_description">Ongoing battery statistics while monitoring is on.</string>
-    <string name="battery_notification_title">Battery monitor</string>
     <string name="battery_waiting">Waiting for the first reading…</string>
 
-    <string name="battery_now">Now: %1$s</string>
-    <string name="battery_now_current">%1$d mA</string>
-    <string name="battery_now_watts">%1$.1f W</string>
-    <string name="battery_now_temp">%1$.1f°</string>
-    <string name="battery_now_remaining">%1$s left</string>
-    <string name="battery_charging">charging</string>
+    <string name="battery_charging">Charging</string>
+    <string name="battery_discharging">Discharging</string>
+    <string name="battery_level">%1$d%%</string>
+    <string name="battery_temp">%1$.1f°</string>
+    <string name="battery_current">%1$d mA</string>
 
-    <string name="battery_rates">Active: %1$s · Idle: %2$s</string>
-    <string name="battery_rate_value">%1$.1f%%/h</string>
+    <string name="battery_drain_rates">Active drain: %1$s · Idle drain: %2$s</string>
+    <string name="battery_rate_value">%1$.1f %%/hr</string>
     <string name="battery_rate_pending">—</string>
 
-    <string name="battery_screen_on">Screen on: %1$s · %2$.1f%% (%3$d mAh)</string>
-    <string name="battery_screen_off">Screen off: %1$s · %2$.1f%% (%3$d mAh)</string>
-    <string name="battery_deep_sleep">Deep sleep: %1$s · %2$.1f%%</string>
-    <string name="battery_awake">Awake: %1$s · %2$.1f%%</string>
+    <string name="battery_screen_on">Screen on: %1$s (%2$d%%)</string>
+    <string name="battery_screen_off">Screen off: %1$s (%2$d%%)</string>
+    <string name="battery_deep_sleep">Deep sleep: %1$s (%2$d%%)</string>
+    <string name="battery_awake">Awake: %1$s (%2$d%%)</string>
 </resources>

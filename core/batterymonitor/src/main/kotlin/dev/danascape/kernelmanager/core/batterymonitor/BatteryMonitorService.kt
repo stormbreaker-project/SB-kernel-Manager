@@ -78,6 +78,7 @@ class BatteryMonitorService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        running = true
         startInForeground()
         if (loop?.isActive != true) {
             loop = scope.launch {
@@ -136,6 +137,7 @@ class BatteryMonitorService : Service() {
             PackageManager.PERMISSION_GRANTED
 
     override fun onDestroy() {
+        running = false
         runCatching { unregisterReceiver(transitions) }
         loop?.cancel()
         scope.cancel()
@@ -145,13 +147,28 @@ class BatteryMonitorService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     companion object {
-        fun start(context: Context) {
-            context.startForegroundService(
-                Intent(context, BatteryMonitorService::class.java),
-            )
+        /**
+         * Same process as the app, so a plain flag answers "already running?"
+         * without ActivityManager's deprecated service enumeration.
+         */
+        @Volatile
+        var running: Boolean = false
+            private set
+
+        /**
+         * @return false when the platform refused a background start, which it
+         *   may do outside an exemption. The caller decides whether that
+         *   matters; from a user tap it cannot happen.
+         */
+        fun start(context: Context): Boolean = try {
+            context.startForegroundService(Intent(context, BatteryMonitorService::class.java))
+            true
+        } catch (_: Exception) {
+            false
         }
 
         fun stop(context: Context) {
+            running = false
             context.stopService(Intent(context, BatteryMonitorService::class.java))
         }
     }
