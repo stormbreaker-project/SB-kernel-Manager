@@ -1,6 +1,8 @@
 plugins {
     id("sbkm.android.application")
     id("sbkm.android.compose")
+    // :app declares MoreGraphRoute, so it needs serializers generated too.
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {

@@ -6,30 +6,41 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.navigation
 import androidx.navigation.navOptions
 import dev.danascape.kernelmanager.feature.builds.buildsScreen
-import dev.danascape.kernelmanager.feature.builds.navigateToBuilds
 import dev.danascape.kernelmanager.feature.devices.devicesScreen
 import dev.danascape.kernelmanager.feature.devices.navigateToDevices
 import dev.danascape.kernelmanager.feature.discover.DiscoverRoute
 import dev.danascape.kernelmanager.feature.discover.discoverScreen
-import dev.danascape.kernelmanager.feature.discover.navigateToDiscover
 import dev.danascape.kernelmanager.feature.licenses.licensesScreen
 import dev.danascape.kernelmanager.feature.licenses.navigateToLicenses
 import dev.danascape.kernelmanager.feature.monitor.monitorScreen
-import dev.danascape.kernelmanager.feature.monitor.navigateToMonitor
+import dev.danascape.kernelmanager.feature.more.MoreRoute
 import dev.danascape.kernelmanager.feature.more.moreScreen
-import dev.danascape.kernelmanager.feature.more.navigateToMore
 import dev.danascape.kernelmanager.feature.news.navigateToNews
 import dev.danascape.kernelmanager.feature.news.newsScreen
-import dev.danascape.kernelmanager.feature.tune.navigateToTune
 import dev.danascape.kernelmanager.feature.tune.tuneScreen
+import kotlinx.serialization.Serializable
+
+/**
+ * More's nested graph.
+ *
+ * The graph route is what the nav bar tracks, so anything reached from More —
+ * News, Devices, Licenses — keeps More selected instead of dropping the bar
+ * back to the start destination. It also gives the tab its own back stack, so
+ * leaving and returning lands where the user left off.
+ *
+ * Owned by :app because grouping several features is a composition concern;
+ * the features themselves still only know their own routes.
+ */
+@Serializable
+data object MoreGraphRoute
 
 /**
  * Composes the feature graphs.
  *
- * Features never depend on each other, so anything cross-feature — More
- * opening News, Devices or Licenses — is wired here.
+ * Features never depend on each other, so anything cross-feature is wired here.
  *
  * @param contentPadding window insets including the floating nav bar. Screens
  *   apply these to their own content so scrolled content passes under the bar.
@@ -49,17 +60,18 @@ fun SBNavHost(
         tuneScreen(contentPadding)
         monitorScreen(contentPadding)
         buildsScreen(contentPadding)
-        moreScreen(
-            contentPadding = contentPadding,
-            onOpenDevices = { navController.navigateToDevices() },
-            onOpenNews = { navController.navigateToNews() },
-            onOpenLicenses = { navController.navigateToLicenses() },
-        )
 
-        // Reached from More rather than the bar.
-        newsScreen(contentPadding)
-        devicesScreen(contentPadding)
-        licensesScreen(contentPadding)
+        navigation<MoreGraphRoute>(startDestination = MoreRoute) {
+            moreScreen(
+                contentPadding = contentPadding,
+                onOpenDevices = { navController.navigateToDevices() },
+                onOpenNews = { navController.navigateToNews() },
+                onOpenLicenses = { navController.navigateToLicenses() },
+            )
+            newsScreen(contentPadding)
+            devicesScreen(contentPadding)
+            licensesScreen(contentPadding)
+        }
     }
 }
 
@@ -70,16 +82,12 @@ fun SBNavHost(
  * returning to a tab restores where the user left it.
  */
 fun NavHostController.navigateToTopLevel(destination: SBDestination) {
-    val options = navOptions {
-        popUpTo(graph.findStartDestination().id) { saveState = true }
-        launchSingleTop = true
-        restoreState = true
-    }
-    when (destination) {
-        SBDestination.DISCOVER -> navigateToDiscover(options)
-        SBDestination.TUNE -> navigateToTune(options)
-        SBDestination.MONITOR -> navigateToMonitor(options)
-        SBDestination.BUILDS -> navigateToBuilds(options)
-        SBDestination.MORE -> navigateToMore(options)
-    }
+    navigate(
+        destination.route,
+        navOptions {
+            popUpTo(graph.findStartDestination().id) { saveState = true }
+            launchSingleTop = true
+            restoreState = true
+        },
+    )
 }
