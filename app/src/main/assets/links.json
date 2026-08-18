@@ -1,0 +1,173 @@
+{
+  "schema": 1,
+  "sections": [
+    {
+      "id": "community",
+      "title": "Community",
+      "items": [
+        {
+          "id": "telegram",
+          "label": "Telegram",
+          "description": "Release updates and support",
+          "url": "https://t.me/stormbreakerkernelupdatescl",
+          "external": true,
+          "soon": false
+        },
+        {
+          "id": "discord",
+          "label": "Discord",
+          "description": "Chat with maintainers and testers",
+          "url": "https://discord.gg/cZZeSq8Dj",
+          "external": true,
+          "soon": false
+        },
+        {
+          "id": "twitter",
+          "label": "Twitter / X",
+          "description": "Announcements",
+          "url": "https://twitter.com/StormBreakerOSS",
+          "external": true,
+          "soon": false
+        },
+        {
+          "id": "email",
+          "label": "Email the team",
+          "description": "team.stormbreakerproject@gmail.com",
+          "url": "mailto:team.stormbreakerproject@gmail.com",
+          "external": true,
+          "soon": false
+        }
+      ]
+    },
+    {
+      "id": "contribute",
+      "title": "Contribute",
+      "items": [
+        {
+          "id": "projects",
+          "label": "Where to contribute",
+          "description": "Areas that need help right now",
+          "url": "https://stormbreaker.squadri.me/contribute/projects/",
+          "external": false,
+          "soon": false
+        },
+        {
+          "id": "guide",
+          "label": "Contributing guide",
+          "description": "How to send your first patch",
+          "url": "https://stormbreaker.squadri.me/contribute/guide/",
+          "external": false,
+          "soon": false
+        },
+        {
+          "id": "donate",
+          "label": "Donate",
+          "description": "Fund build servers and devices",
+          "url": "https://stormbreaker.squadri.me/contribute/donate/",
+          "external": false,
+          "soon": false
+        },
+        {
+          "id": "sponsors",
+          "label": "Sponsors",
+          "description": "Who keeps the lights on",
+          "url": "https://stormbreaker.squadri.me/contribute/sponsors/",
+          "external": false,
+          "soon": false
+        },
+        {
+          "id": "careers",
+          "label": "Join the team",
+          "description": "Become a maintainer",
+          "url": "https://stormbreaker.squadri.me/careers/",
+          "external": false,
+          "soon": false
+        }
+      ]
+    },
+    {
+      "id": "project",
+      "title": "Project",
+      "items": [
+        {
+          "id": "about",
+          "label": "About Team StormBreaker",
+          "description": null,
+          "url": "https://stormbreaker.squadri.me/about/",
+          "external": false,
+          "soon": false
+        },
+        {
+          "id": "maintainers",
+          "label": "Maintainers",
+          "description": "Who builds for which device",
+          "url": "https://stormbreaker.squadri.me/about/maintainers/",
+          "external": false,
+          "soon": false
+        },
+        {
+          "id": "charter",
+          "label": "Maintenance charter",
+          "description": "What \"supported\" means",
+          "url": "https://stormbreaker.squadri.me/devices/charter/",
+          "external": false,
+          "soon": false
+        },
+        {
+          "id": "github",
+          "label": "Source on GitHub",
+          "description": "Every kernel tree and tool",
+          "url": "https://github.com/stormbreaker-project",
+          "external": true,
+          "soon": false
+        },
+        {
+          "id": "issues",
+          "label": "Report a bug",
+          "description": "Issue tracker",
+          "url": "https://github.com/stormbreaker-project/issues/issues",
+          "external": true,
+          "soon": false
+        },
+        {
+          "id": "docs",
+          "label": "Documentation",
+          "description": null,
+          "url": null,
+          "external": false,
+          "soon": true
+        }
+      ]
+    },
+    {
+      "id": "legal",
+      "title": "Legal",
+      "items": [
+        {
+          "id": "coc",
+          "label": "Code of Conduct",
+          "description": null,
+          "url": "https://stormbreaker.squadri.me/about/coc/",
+          "external": false,
+          "soon": false
+        },
+        {
+          "id": "privacy",
+          "label": "Privacy",
+          "description": null,
+          "url": "https://stormbreaker.squadri.me/privacy/",
+          "external": false,
+          "soon": false
+        },
+        {
+          "id": "terms",
+          "label": "Terms",
+          "description": null,
+          "url": "https://stormbreaker.squadri.me/terms/",
+          "external": false,
+          "soon": false
+        }
+      ]
+    }
+  ]
+}

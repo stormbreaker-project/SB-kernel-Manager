@@ -18,6 +18,8 @@ object SBEndpoints {
 
     /** Versioned path: installed apps cannot be updated in step with the site. */
     const val NEWS: String = "$BASE_URL/api/v1/news.json"
+
+    const val LINKS: String = "$BASE_URL/api/v1/links.json"
 }
 
 /**
