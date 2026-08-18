@@ -176,3 +176,49 @@ still settling.
 Material You is deliberately off. The kernel, the site and the app are one
 product with one identity, and a wallpaper-derived palette would put unreviewed
 colours behind readouts where colour carries meaning.
+
+## Compose API conventions
+
+The app follows the [Compose API guidelines][compose-api]. Three decisions there
+are worth recording, because each looks like a violation until the reasoning is
+attached.
+
+**Modifiers are extension functions.** `pvotReveal` and `pvotPressScale` are
+declared as `fun Modifier.x(): Modifier`, not as standalone functions returning a
+`Modifier`. The guideline requires the factory form, and it is the difference
+between `modifier.pvotReveal(0).pvotPressScale(source)` and a call site wrapping
+every effect in `.then(...)`. A conditional effect still needs `.then()`, because
+there is nothing to chain onto when the condition is false:
+
+```kotlin
+.then(if (onClick != null) Modifier.pvotPressScale(interactionSource) else Modifier)
+```
+
+**Stability is declared in a file, not with annotations.** Every domain model
+carries a `List`, so the compiler infers it unstable. Under strong skipping an
+unstable parameter is compared with `===` rather than `==`, and since view models
+rebuild their state object on every emission, reference comparison always misses
+and the subtree recomposes even when nothing changed. `config/compose/stability.conf`
+declares the affected classes stable; `@Immutable` would have forced a Compose
+dependency into `:core:model`, which is a `sbkm.jvm.library` with none.
+
+Do not take a stability claim on trust — the compiler will tell you what it
+actually inferred:
+
+```
+./gradlew :feature:news:clean :feature:news:compileDebugKotlin -PcomposeMetrics
+grep UiState feature/news/build/compose-metrics/news-classes.txt
+```
+
+The classes report is only written on a real compile, so clean the module first
+or an up-to-date task will leave an empty file behind and read as a pass.
+
+**Enum values stay `UPPER_SNAKE`.** The guideline asks for PascalCase, but it
+binds "library development targeting or extending Jetpack Compose". Our enums
+live in `:core:model` and `:core:common`, which are pure-Kotlin modules with no
+Compose dependency; the modules that do target Compose expose no enums or public
+constants at all. Renaming is also not free: `SettingsStore` persists
+`ThemePreference.name` into DataStore, so `SYSTEM` -> `System` would silently
+reset the saved theme for every existing install on upgrade.
+
+[compose-api]: https://github.com/androidx/androidx/blob/androidx-main/compose/docs/compose-api-guidelines.md
