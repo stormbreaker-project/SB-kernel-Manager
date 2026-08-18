@@ -34,4 +34,28 @@
     <string name="news_error_malformed_message">The feed wasn\'t in a format this version understands. Updating the app may fix it.</string>
 
     <string name="action_retry">Retry</string>
+    <string name="action_back">Back</string>
+
+    <!-- More -->
+    <string name="more_kicker">more</string>
+    <string name="more_title">Project &amp; community</string>
+    <string name="more_soon">soon</string>
+
+
+    <string name="more_appearance">Appearance</string>
+    <string name="more_theme">Theme</string>
+    <string name="more_theme_system">System</string>
+    <string name="more_theme_light">Light</string>
+    <string name="more_theme_dark">Dark</string>
+
+    <string name="more_about">About</string>
+    <string name="more_about_version">App version</string>
+    <string name="more_about_licenses">Open-source licenses</string>
+    <string name="more_about_licenses_description">What this app is built on</string>
+
+    <!-- Licenses -->
+    <string name="licenses_kicker">licenses</string>
+    <string name="licenses_title">Open-source licenses</string>
+    <string name="licenses_subtitle">SB Kernel Manager ships the following third-party software.</string>
+    <string name="licenses_group">Bundled in this app</string>
 </resources>

@@ -28,6 +28,10 @@ sealed interface SBRoute {
 
     @Serializable
     data object More : SBRoute
+
+    /** Detail screen pushed from More; not a tab. */
+    @Serializable
+    data object Licenses : SBRoute
 }
 
 /**

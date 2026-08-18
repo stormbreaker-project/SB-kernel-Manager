@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import dev.danascape.kernelmanager.feature.devices.DevicesScreen
 import dev.danascape.kernelmanager.feature.downloads.DownloadsScreen
+import dev.danascape.kernelmanager.feature.licenses.LicensesScreen
 import dev.danascape.kernelmanager.feature.more.MoreScreen
 import dev.danascape.kernelmanager.feature.news.NewsScreen
 
@@ -26,7 +27,13 @@ fun SBNavHost(
         composable<SBRoute.News> { NewsScreen(contentPadding = contentPadding) }
         composable<SBRoute.Devices> { DevicesScreen(contentPadding = contentPadding) }
         composable<SBRoute.Downloads> { DownloadsScreen(contentPadding = contentPadding) }
-        composable<SBRoute.More> { MoreScreen(contentPadding = contentPadding) }
+        composable<SBRoute.More> {
+            MoreScreen(
+                contentPadding = contentPadding,
+                onOpenLicenses = { navController.navigate(SBRoute.Licenses) },
+            )
+        }
+        composable<SBRoute.Licenses> { LicensesScreen(contentPadding = contentPadding) }
     }
 }
 
