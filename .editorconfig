@@ -1,0 +1,27 @@
+# SPDX-FileCopyrightText: 2026 Saalim Quadri <danascape@gmail.com>
+# SPDX-License-Identifier: Apache-2.0
+
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+[*.{kt,kts}]
+max_line_length = 120
+ij_kotlin_allow_trailing_comma = true
+ij_kotlin_allow_trailing_comma_on_call_site = true
+# Composables are PascalCase, which ktlint's default naming rule rejects.
+ktlint_function_naming_ignore_when_annotated_with = Composable, Preview
+# Import order is handled by the IDE; ktlint's own ordering fights it.
+ktlint_standard_import-ordering = disabled
+
+[*.{xml,json,yml,yaml,toml}]
+indent_size = 4
+
+[*.md]
+trim_trailing_whitespace = false

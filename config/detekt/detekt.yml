@@ -1,0 +1,87 @@
+# SPDX-FileCopyrightText: 2026 Saalim Quadri <danascape@gmail.com>
+# SPDX-License-Identifier: Apache-2.0
+
+# Layered on detekt's defaults (buildUponDefaultConfig), so this file holds only
+# what we change — not a copy of the whole rule set that silently drifts.
+
+build:
+  maxIssues: 0
+
+complexity:
+  LongMethod:
+    # Composables read as one declarative block; splitting them to satisfy a
+    # line count usually makes them harder to follow, not easier.
+    ignoreAnnotated: ['Composable']
+  LongParameterList:
+    ignoreAnnotated: ['Composable']
+  TooManyFunctions:
+    ignoreAnnotated: ['Composable']
+    thresholdInFiles: 20
+    thresholdInClasses: 20
+
+style:
+  MagicNumber:
+    # Sizes, weights and durations are the values themselves; naming every dp
+    # constant adds indirection without meaning.
+    ignoreAnnotated: ['Composable', 'Preview']
+    ignorePropertyDeclaration: true
+    ignoreCompanionObjectPropertyDeclaration: true
+  MaxLineLength:
+    maxLineLength: 120
+  ReturnCount:
+    max: 4
+  UnusedPrivateMember:
+    ignoreAnnotated: ['Preview']
+
+naming:
+  FunctionNaming:
+    # Composables are PascalCase by convention.
+    ignoreAnnotated: ['Composable']
+  TopLevelPropertyNaming:
+    constantPattern: '[A-Z][A-Za-z0-9]*'
+    privatePropertyPattern: '_?[A-Z][A-Za-z0-9]*|_?[a-z][A-Za-z0-9]*'
+
+exceptions:
+  TooGenericExceptionCaught:
+    # Reading sysfs and the network fails in many unrelated ways, and the
+    # response is the same for all of them: report nothing rather than crash.
+    active: false
+  SwallowedException:
+    active: false
+
+# Compose-specific analysis, from io.nlopez.compose.rules.
+Compose:
+  ComposableAnnotationNaming:
+    active: true
+  ComposableParametersOrdering:
+    active: true
+  ContentEmitterReturningValues:
+    active: true
+  ModifierComposable:
+    active: true
+  ModifierMissing:
+    active: true
+  ModifierNotUsedAtRoot:
+    active: true
+  ModifierReused:
+    active: true
+  ModifierWithoutDefault:
+    active: true
+  MultipleEmitters:
+    active: true
+  MutableParams:
+    active: true
+  ComposableNaming:
+    active: true
+  PreviewAnnotationNaming:
+    active: true
+  PreviewPublic:
+    active: true
+  RememberMissing:
+    active: true
+  UnstableCollections:
+    # Every list here is built once and never mutated; enabling this would
+    # demand ImmutableList wrappers across the whole model layer for no gain.
+    active: false
+  ViewModelForwarding:
+    active: true

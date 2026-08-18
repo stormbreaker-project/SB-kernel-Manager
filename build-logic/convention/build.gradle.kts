@@ -22,6 +22,8 @@ dependencies {
     compileOnly(libs.android.gradlePlugin)
     compileOnly(libs.kotlin.gradlePlugin)
     compileOnly(libs.compose.gradlePlugin)
+    compileOnly(libs.ktlint.gradlePlugin)
+    compileOnly(libs.detekt.gradlePlugin)
 }
 
 gradlePlugin {
@@ -45,6 +47,10 @@ gradlePlugin {
         register("jvmLibrary") {
             id = "sbkm.jvm.library"
             implementationClass = "JvmLibraryConventionPlugin"
+        }
+        register("kotlinQuality") {
+            id = "sbkm.kotlin.quality"
+            implementationClass = "KotlinQualityConventionPlugin"
         }
     }
 }
