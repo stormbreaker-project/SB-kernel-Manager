@@ -14,9 +14,13 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                     minorApiLevel = SdkVersions.COMPILE_MINOR
                 }
             }
+            val version = SemanticVersion.parse(libs.findVersion("app").get().requiredVersion)
+
             defaultConfig {
                 minSdk = SdkVersions.MIN
                 targetSdk = SdkVersions.TARGET
+                versionName = version.name
+                versionCode = version.code
                 testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
             }
             compileOptions {
