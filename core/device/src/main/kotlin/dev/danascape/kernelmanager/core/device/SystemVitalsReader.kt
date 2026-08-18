@@ -34,6 +34,7 @@ class SystemVitalsReader(context: Context) {
         network = platform.network(),
         thermal = platform.thermalStatus(),
         uptimeMillis = platform.uptimeMillis(),
+        sleep = platform.sleepStats(),
     )
 
     private fun readMemory(): MemoryVitals? {
@@ -67,6 +68,7 @@ class SystemVitalsReader(context: Context) {
             charging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
                 status == BatteryManager.BATTERY_STATUS_FULL,
             currentMicroAmps = readCurrentMicroAmps(),
+            chargeCounterMicroAmpHours = platform.chargeCounterMicroAmpHours(),
             health = intent.getIntExtra(BatteryManager.EXTRA_HEALTH, -1).toHealthName(),
             technology = intent.getStringExtra(BatteryManager.EXTRA_TECHNOLOGY),
         )

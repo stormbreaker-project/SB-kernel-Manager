@@ -42,6 +42,7 @@ import dev.danascape.kernelmanager.core.model.DeviceIdentity
 import dev.danascape.kernelmanager.core.model.DeviceProfile
 import dev.danascape.kernelmanager.core.model.NetworkVitals
 import dev.danascape.kernelmanager.core.model.OsBuild
+import dev.danascape.kernelmanager.core.model.SleepStats
 import dev.danascape.kernelmanager.core.model.SocInfo
 import dev.danascape.kernelmanager.core.model.StorageVitals
 import dev.danascape.kernelmanager.core.model.ThermalStatus
@@ -334,17 +335,19 @@ private fun DiscoverPreview() {
                     ),
                     soc = SocInfo("lito", "qcom", "Qualcomm", "SM7225", listOf("arm64-v8a")),
                     cpu = null,
+                    gpu = null,
                     suBinaryPresent = true,
                 ),
                 vitals = Vitals(
                     cpu = CpuVitals(listOf(1_804_800, 820_000), 2_208_000, "schedutil", null),
                     load = null,
                     memory = MemoryVitals(6_600_000_000, 12_000_000_000),
-                    battery = BatteryVitals(72, 31.4f, false, -420_000, "Good", "Li-ion"),
+                    battery = BatteryVitals(72, 31.4f, false, -420_000, 3_100_000, "Good", "Li-ion"),
                     storage = StorageVitals(84_000_000_000, 128_000_000_000, "f2fs"),
                     network = NetworkVitals(1_200_000_000, 240_000_000),
                     thermal = ThermalStatus.NONE,
                     uptimeMillis = 9_000_000,
+                    sleep = SleepStats(9_000_000, 3_400_000),
                 ),
             ),
             contentPadding = PaddingValues(),

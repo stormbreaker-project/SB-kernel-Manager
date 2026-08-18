@@ -56,6 +56,9 @@ class DeviceReadersTest {
             }
         } ?: Log.i(TAG, "cpu topology unreadable")
 
+        Log.i(TAG, "=== GPU ===")
+        Log.i(TAG, "gpu=${profile.gpu}")
+
         // The identity fields come from Build and are always populated.
         assertTrue(profile.identity.codename.isNotBlank())
         assertTrue(profile.os.sdkInt > 0)
@@ -80,8 +83,15 @@ class DeviceReadersTest {
         Log.i(TAG, "storage=${vitals.storage}")
         Log.i(TAG, "network=${vitals.network}")
         Log.i(TAG, "thermal=${vitals.thermal} uptimeMs=${vitals.uptimeMillis}")
+        Log.i(
+            TAG,
+            "sleep: awake=${vitals.sleep.awakeMillis}ms deep=${vitals.sleep.deepSleepMillis}ms " +
+                "(${"%.1f".format(vitals.sleep.deepSleepFraction * 100)}%)",
+        )
 
         assertTrue(vitals.uptimeMillis > 0)
+        // Awake can never exceed elapsed, or the sleep split is nonsense.
+        assertTrue(vitals.sleep.awakeMillis <= vitals.sleep.elapsedMillis)
         // Derived load must be a real fraction, never negative or above one.
         vitals.load?.perCore?.forEach { assertTrue("load out of range: $it", it in 0f..1f) }
         vitals.memory?.let { assertTrue(it.usedBytes in 0..it.totalBytes) }

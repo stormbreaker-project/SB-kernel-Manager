@@ -4,11 +4,13 @@ import android.content.Context
 import android.net.TrafficStats
 import android.os.Build
 import android.os.Environment
+import android.os.BatteryManager
 import android.os.PowerManager
 import android.os.StatFs
 import android.os.SystemClock
 import androidx.core.content.getSystemService
 import dev.danascape.kernelmanager.core.model.NetworkVitals
+import dev.danascape.kernelmanager.core.model.SleepStats
 import dev.danascape.kernelmanager.core.model.StorageVitals
 import dev.danascape.kernelmanager.core.model.ThermalStatus
 import java.io.File
@@ -26,6 +28,22 @@ class PlatformVitalsReader(context: Context) {
 
     /** Milliseconds since boot, replacing the denied /proc/uptime. */
     fun uptimeMillis(): Long = SystemClock.elapsedRealtime()
+
+    /**
+     * Deep sleep versus awake, from the gap between the two clocks:
+     * elapsedRealtime counts time spent suspended, uptimeMillis does not.
+     */
+    fun sleepStats(): SleepStats = SleepStats(
+        elapsedMillis = SystemClock.elapsedRealtime(),
+        awakeMillis = SystemClock.uptimeMillis(),
+    )
+
+    /** Remaining charge in microamp-hours; scales to a capacity estimate by level. */
+    fun chargeCounterMicroAmpHours(): Int? {
+        val manager = appContext.getSystemService<BatteryManager>() ?: return null
+        return manager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CHARGE_COUNTER)
+            .takeIf { it != Int.MIN_VALUE && it > 0 }
+    }
 
     fun thermalStatus(): ThermalStatus {
         val power = appContext.getSystemService<PowerManager>() ?: return ThermalStatus.UNKNOWN

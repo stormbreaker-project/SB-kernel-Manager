@@ -11,6 +11,7 @@ data class DeviceProfile(
     val boot: BootState,
     val soc: SocInfo,
     val cpu: CpuTopology?,
+    val gpu: GpuInfo?,
     /** A su binary exists. Not a guarantee this app has been granted root. */
     val suBinaryPresent: Boolean,
 )

@@ -16,6 +16,7 @@ data class Vitals(
     val network: NetworkVitals?,
     val thermal: ThermalStatus,
     val uptimeMillis: Long,
+    val sleep: SleepStats,
 )
 
 data class CpuVitals(
@@ -43,6 +44,8 @@ data class BatteryVitals(
     val charging: Boolean,
     /** Instantaneous draw in microamps; negative while discharging on most devices. */
     val currentMicroAmps: Int?,
+    /** Remaining charge in microamp-hours. */
+    val chargeCounterMicroAmpHours: Int?,
     val health: String?,
     val technology: String?,
 )

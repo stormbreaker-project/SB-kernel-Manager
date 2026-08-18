@@ -17,6 +17,7 @@ class DeviceProfileReader(context: Context) {
             boot = osBuild.readBootState(),
             soc = osBuild.readSoc(),
             cpu = CpuTopologyReader.read(),
+            gpu = GpuInfoReader.read(),
             suBinaryPresent = platform.suBinaryPresent(),
         )
     }

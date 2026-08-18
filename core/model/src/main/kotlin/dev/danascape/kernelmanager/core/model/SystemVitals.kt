@@ -31,3 +31,27 @@ data class NetworkVitals(
     val rxBytes: Long,
     val txBytes: Long,
 )
+
+/**
+ * How much of the time since boot the device actually slept.
+ *
+ * Both clocks are public API and need no permission: elapsedRealtime counts
+ * deep sleep, uptimeMillis does not, so the difference is sleep. This is the
+ * one battery statistic that needs neither root nor BATTERY_STATS.
+ */
+data class SleepStats(
+    val elapsedMillis: Long,
+    val awakeMillis: Long,
+) {
+    val deepSleepMillis: Long get() = (elapsedMillis - awakeMillis).coerceAtLeast(0)
+
+    val deepSleepFraction: Float
+        get() = if (elapsedMillis > 0) deepSleepMillis.toFloat() / elapsedMillis else 0f
+}
+
+/** Identification only. Usage and frequency live behind denied vendor nodes. */
+data class GpuInfo(
+    val vendor: String?,
+    val renderer: String?,
+    val glVersion: String?,
+)
