@@ -49,8 +49,8 @@ fun MetricCard(
         modifier =
             modifier
                 .fillMaxWidth()
-                .then(pvotReveal(revealIndex))
-                .then(if (onClick != null) pvotPressScale(interactionSource) else Modifier)
+                .pvotReveal(revealIndex)
+                .then(if (onClick != null) Modifier.pvotPressScale(interactionSource) else Modifier)
                 .clip(shape)
                 .background(MaterialTheme.colorScheme.surfaceContainerHigh)
                 .then(

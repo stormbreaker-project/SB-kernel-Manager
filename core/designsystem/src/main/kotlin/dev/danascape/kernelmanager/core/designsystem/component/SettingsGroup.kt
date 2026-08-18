@@ -72,7 +72,7 @@ fun SettingsGroup(
             // Leads the cascade its rows follow, so the group arrives as one.
             modifier =
                 Modifier
-                    .then(pvotReveal(0))
+                    .pvotReveal(0)
                     .padding(start = 4.dp),
         )
         Column(
@@ -106,8 +106,8 @@ private fun GroupedRow(
         modifier =
             modifier
                 .fillMaxWidth()
-                .then(pvotReveal(revealIndex))
-                .then(pvotPressScale(interactionSource))
+                .pvotReveal(revealIndex)
+                .pvotPressScale(interactionSource)
                 .clip(shape)
                 .background(MaterialTheme.colorScheme.surfaceContainerHigh)
                 .then(

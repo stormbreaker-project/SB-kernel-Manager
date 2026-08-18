@@ -64,8 +64,8 @@ fun NewsCard(
         modifier =
             modifier
                 .fillMaxWidth()
-                .then(pvotReveal(revealIndex))
-                .then(pvotPressScale(interactionSource))
+                .pvotReveal(revealIndex)
+                .pvotPressScale(interactionSource)
                 .clip(shape)
                 .background(MaterialTheme.colorScheme.surfaceContainerHigh)
                 .clickable(

@@ -4,8 +4,6 @@
 package dev.danascape.kernelmanager.core.di
 
 import android.content.Context
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import dev.danascape.kernelmanager.core.battery.BatterySession
 import dev.danascape.kernelmanager.core.batterymonitor.BatterySessionStore
 import dev.danascape.kernelmanager.core.data.device.DeviceRepository
@@ -60,6 +58,3 @@ interface AppContainerOwner {
 
 /** The container for the current context, for use in ViewModel factories. */
 fun Context.appContainer(): AppContainer = (applicationContext as AppContainerOwner).appContainer
-
-@Composable
-fun rememberAppContainer(): AppContainer = LocalContext.current.appContainer()

@@ -129,7 +129,7 @@ private fun IdentityCard(identity: DeviceIdentity) {
         modifier =
             Modifier
                 .fillMaxWidth()
-                .then(pvotReveal(0))
+                .pvotReveal(0)
                 .clip(RoundedCornerShape(24.dp))
                 .background(MaterialTheme.colorScheme.surfaceContainerHigh)
                 .padding(20.dp),

@@ -193,7 +193,7 @@ private fun BrowseGroup(
 @Composable
 private fun Header() {
     Column(
-        modifier = Modifier.then(pvotReveal(0)),
+        modifier = Modifier.pvotReveal(0),
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
         Text(
@@ -276,7 +276,7 @@ private fun AboutGroup(onOpenLicenses: () -> Unit) {
     SettingsGroup(title = stringResource(R.string.more_about)) {
         ValueRow(
             label = stringResource(R.string.more_about_version),
-            value = rememberAppVersion(),
+            value = appVersion(),
             index = 0,
             count = 2,
         )
@@ -292,7 +292,7 @@ private fun AboutGroup(onOpenLicenses: () -> Unit) {
 
 /** Read from the installed package, so a feature module needs no app BuildConfig. */
 @Composable
-private fun rememberAppVersion(): String {
+private fun appVersion(): String {
     val context = LocalContext.current
     val info = remember(context) { context.packageManager.getPackageInfo(context.packageName, 0) }
     return stringResource(

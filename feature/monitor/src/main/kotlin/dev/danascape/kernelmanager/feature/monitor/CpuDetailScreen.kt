@@ -64,7 +64,7 @@ fun CpuDetailScreen(
     ) {
         item(key = "header") {
             Column(
-                modifier = Modifier.then(pvotReveal(0)),
+                modifier = Modifier.pvotReveal(0),
                 verticalArrangement = Arrangement.spacedBy(6.dp),
             ) {
                 Text(
@@ -131,7 +131,7 @@ private fun CoreChart(
         modifier =
             Modifier
                 .fillMaxWidth()
-                .then(pvotReveal(revealIndex))
+                .pvotReveal(revealIndex)
                 .clip(RoundedCornerShape(20.dp))
                 .background(MaterialTheme.colorScheme.surfaceContainerHigh)
                 .padding(16.dp),

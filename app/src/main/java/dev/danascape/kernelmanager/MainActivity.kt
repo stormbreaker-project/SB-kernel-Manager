@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
         val themeRepository = (application as SBApplication).appContainer.themeRepository
 
         setContent {
-            SBTheme(darkTheme = rememberDarkTheme(themeRepository)) {
+            SBTheme(darkTheme = isDarkTheme(themeRepository)) {
                 SBApp()
             }
         }
@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
  * disk — matches what the launch window already painted.
  */
 @Composable
-private fun rememberDarkTheme(repository: ThemeRepository): Boolean {
+private fun isDarkTheme(repository: ThemeRepository): Boolean {
     val systemDark = isSystemInDarkTheme()
     val preference by repository.theme.collectAsStateWithLifecycle(
         initialValue = ThemePreference.SYSTEM,
