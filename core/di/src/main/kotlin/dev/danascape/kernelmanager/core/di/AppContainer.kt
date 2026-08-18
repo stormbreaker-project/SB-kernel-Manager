@@ -8,6 +8,7 @@ import dev.danascape.kernelmanager.core.data.links.LinksRepository
 import dev.danascape.kernelmanager.core.data.news.NewsRepository
 import dev.danascape.kernelmanager.core.data.settings.ThemeRepository
 import dev.danascape.kernelmanager.core.datastore.SettingsStore
+import dev.danascape.kernelmanager.core.device.DeviceProfileReader
 import dev.danascape.kernelmanager.core.device.SystemVitalsReader
 import dev.danascape.kernelmanager.core.network.createHttpClient
 import io.ktor.client.HttpClient
@@ -31,7 +32,10 @@ class AppContainer(context: Context) {
     val newsRepository: NewsRepository by lazy { NewsRepository(httpClient) }
 
     val deviceRepository: DeviceRepository by lazy {
-        DeviceRepository(SystemVitalsReader(appContext))
+        DeviceRepository(
+            profileReader = DeviceProfileReader(appContext),
+            vitalsReader = SystemVitalsReader(appContext),
+        )
     }
 
     val linksRepository: LinksRepository by lazy {

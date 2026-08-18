@@ -36,7 +36,15 @@ import dev.danascape.kernelmanager.core.designsystem.component.openArticle
 import dev.danascape.kernelmanager.core.designsystem.theme.SBTheme
 import dev.danascape.kernelmanager.core.model.BatteryVitals
 import dev.danascape.kernelmanager.core.model.CpuVitals
+import dev.danascape.kernelmanager.core.model.BootState
+import dev.danascape.kernelmanager.core.model.CustomRom
 import dev.danascape.kernelmanager.core.model.DeviceIdentity
+import dev.danascape.kernelmanager.core.model.DeviceProfile
+import dev.danascape.kernelmanager.core.model.NetworkVitals
+import dev.danascape.kernelmanager.core.model.OsBuild
+import dev.danascape.kernelmanager.core.model.SocInfo
+import dev.danascape.kernelmanager.core.model.StorageVitals
+import dev.danascape.kernelmanager.core.model.ThermalStatus
 import dev.danascape.kernelmanager.core.model.MemoryVitals
 import dev.danascape.kernelmanager.core.model.NewsPost
 import dev.danascape.kernelmanager.core.model.Vitals
@@ -84,7 +92,9 @@ private fun DiscoverContent(
         contentPadding = contentPadding.expandedBy(horizontal = 16.dp, top = 24.dp, bottom = 24.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
-        item(key = "identity") { IdentityCard(state.identity) }
+        state.profile?.let { profile ->
+            item(key = "identity") { IdentityCard(profile.identity) }
+        }
         item(key = "update") { UpdateGroup() }
         item(key = "vitals") { VitalsGroup(state.vitals, onOpenMonitoring) }
 
@@ -293,22 +303,48 @@ private fun formatGigabytes(bytes: Long): String =
 @Preview
 @Composable
 private fun DiscoverPreview() {
+    val identity = DeviceIdentity(
+        codename = "billie",
+        model = "BE2029",
+        manufacturer = "OnePlus",
+        androidRelease = "14",
+        sdkInt = 34,
+        kernelRelease = "4.19.322-StormBreaker",
+        isStormBreakerKernel = true,
+    )
     SBTheme {
         DiscoverContent(
             state = DiscoverUiState(
-                identity = DeviceIdentity(
-                    codename = "billie",
-                    model = "BE2029",
-                    manufacturer = "OnePlus",
-                    androidRelease = "14",
-                    sdkInt = 34,
-                    kernelRelease = "4.19.322-StormBreaker",
-                    isStormBreakerKernel = true,
+                profile = DeviceProfile(
+                    identity = identity,
+                    os = OsBuild(
+                        androidRelease = "14",
+                        sdkInt = 34,
+                        securityPatch = "2026-08-05",
+                        buildId = "UP1A.231005.007",
+                        fingerprint = null,
+                        tags = "release-keys",
+                        type = "user",
+                        rom = CustomRom("LineageOS", "21.0"),
+                    ),
+                    boot = BootState(
+                        bootloaderUnlocked = true,
+                        verifiedBootState = "orange",
+                        encryption = "file",
+                    ),
+                    soc = SocInfo("lito", "qcom", "Qualcomm", "SM7225", listOf("arm64-v8a")),
+                    cpu = null,
+                    suBinaryPresent = true,
                 ),
                 vitals = Vitals(
                     cpu = CpuVitals(listOf(1_804_800, 820_000), 2_208_000, "schedutil", null),
+                    load = null,
                     memory = MemoryVitals(6_600_000_000, 12_000_000_000),
-                    battery = BatteryVitals(72, 31.4f, charging = false),
+                    battery = BatteryVitals(72, 31.4f, false, -420_000, "Good", "Li-ion"),
+                    storage = StorageVitals(84_000_000_000, 128_000_000_000, "f2fs"),
+                    network = NetworkVitals(1_200_000_000, 240_000_000),
+                    thermal = ThermalStatus.NONE,
+                    uptimeMillis = 9_000_000,
                 ),
             ),
             contentPadding = PaddingValues(),

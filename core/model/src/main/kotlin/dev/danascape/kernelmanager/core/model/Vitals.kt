@@ -1,23 +1,22 @@
 package dev.danascape.kernelmanager.core.model
 
 /**
- * A glanceable snapshot of system state.
+ * Live system state.
  *
- * Each field is independently nullable because Android 12+ SELinux denies an
- * unprivileged app most of these nodes, and which ones differ per device. A
- * null field means "no readable source here", not "not loaded yet".
+ * Every field is independently nullable: Android 12+ denies an unprivileged app
+ * most of these sources, and which ones differ per device. Null means "no
+ * readable source here", not "not loaded yet".
  */
 data class Vitals(
     val cpu: CpuVitals?,
+    val load: CpuLoad?,
     val memory: MemoryVitals?,
     val battery: BatteryVitals?,
-) {
-    /**
-     * True when nothing at all could be read — the case a StormBreaker kernel
-     * exposing its own node is meant to fix.
-     */
-    val isEmpty: Boolean get() = cpu == null && memory == null && battery == null
-}
+    val storage: StorageVitals?,
+    val network: NetworkVitals?,
+    val thermal: ThermalStatus,
+    val uptimeMillis: Long,
+)
 
 data class CpuVitals(
     /** Current frequency per core, in kHz. Empty when cpufreq is not readable. */
@@ -25,8 +24,8 @@ data class CpuVitals(
     val maxKhz: Int?,
     val governor: String?,
     /**
-     * Thermal zones are denied to unprivileged apps on most modern devices, so
-     * this is normally false until the kernel exposes a readable node.
+     * Normally null: thermal zones are denied to unprivileged apps, which is
+     * the restriction a StormBreaker kernel node is meant to lift.
      */
     val temperatureC: Float?,
 )
@@ -42,4 +41,8 @@ data class BatteryVitals(
     val percent: Int,
     val temperatureC: Float?,
     val charging: Boolean,
+    /** Instantaneous draw in microamps; negative while discharging on most devices. */
+    val currentMicroAmps: Int?,
+    val health: String?,
+    val technology: String?,
 )

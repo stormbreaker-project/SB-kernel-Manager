@@ -10,7 +10,7 @@ import dev.danascape.kernelmanager.core.common.DataResult
 import dev.danascape.kernelmanager.core.data.device.DeviceRepository
 import dev.danascape.kernelmanager.core.data.news.NewsRepository
 import dev.danascape.kernelmanager.core.di.appContainer
-import dev.danascape.kernelmanager.core.model.DeviceIdentity
+import dev.danascape.kernelmanager.core.model.DeviceProfile
 import dev.danascape.kernelmanager.core.model.NewsPost
 import dev.danascape.kernelmanager.core.model.Vitals
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 private const val HEADLINE_COUNT = 3
 
 data class DiscoverUiState(
-    val identity: DeviceIdentity,
+    val profile: DeviceProfile? = null,
     val vitals: Vitals? = null,
     val headlines: List<NewsPost> = emptyList(),
 )
@@ -31,7 +31,7 @@ class DiscoverViewModel(
     private val newsRepository: NewsRepository,
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(DiscoverUiState(identity = deviceRepository.identity))
+    private val _state = MutableStateFlow(DiscoverUiState())
     val state: StateFlow<DiscoverUiState> = _state.asStateFlow()
 
     init {
@@ -39,6 +39,9 @@ class DiscoverViewModel(
     }
 
     fun refresh() {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(profile = deviceRepository.profile())
+        }
         viewModelScope.launch {
             _state.value = _state.value.copy(vitals = deviceRepository.vitals())
         }
