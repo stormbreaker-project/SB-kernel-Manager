@@ -93,6 +93,25 @@ Two things needed pinning: the daemon toolchain, because the system JVM ships
 no compiler, and Kotlin's `jvmTarget` on JVM modules, which otherwise follows
 the daemon and disagrees with Java.
 
+## Versioning
+
+The app is semantically versioned. `app` in `gradle/libs.versions.toml` is the
+only place it is written:
+
+```toml
+app = "0.1.0"     # -> versionName "0.1.0", versionCode 100
+```
+
+`versionCode` is derived rather than maintained alongside it — two digits each
+for minor and patch, so `1.2.3` becomes `10203` and integer ordering matches
+semantic ordering. Keeping the two in step by hand is how a release ends up
+unable to install over its predecessor.
+
+Pre-release suffixes are rejected by the parser. `0.1.0-beta.1` and `0.1.0`
+would derive the same `versionCode`, so the release could not be installed over
+the beta. A malformed or out-of-range version fails the build with the reason
+rather than producing a wrong code.
+
 ## Backend
 
 There is no server. The website publishes static JSON with its own deploy and
