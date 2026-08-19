@@ -83,7 +83,10 @@ SPDX-License-Identifier: Apache-2.0
     <string name="device_info_technology">Technology</string>
     <string name="device_info_temperature">Temperature</string>
     <string name="device_info_current">Current</string>
-    <string name="device_info_charge_counter">Charge counter</string>
+    <string name="device_info_charge_remaining">Charge remaining</string>
+    <string name="device_info_voltage">Voltage</string>
+    <string name="device_info_design_capacity">Design capacity</string>
+    <string name="device_info_cycle_count">Cycle count</string>
 
     <string name="device_info_decoders">Decoders</string>
     <string name="device_info_encoders">Encoders</string>
@@ -129,6 +132,7 @@ SPDX-License-Identifier: Apache-2.0
     <string name="device_info_percent">%1$d%%</string>
     <string name="device_info_milliamps">%1$d mA</string>
     <string name="device_info_milliamp_hours">%1$d mAh</string>
+    <string name="device_info_volts">%1$s V</string>
     <string name="device_info_milliwatts">%1$s mA</string>
     <string name="device_info_yes">Yes</string>
     <string name="device_info_no">No</string>

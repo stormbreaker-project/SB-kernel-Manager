@@ -38,4 +38,7 @@ data class BatteryVitals(
     val chargeCounterMicroAmpHours: Int?,
     val health: String?,
     val technology: String?,
+    val voltageMillivolts: Int?,
+    val cycleCount: Int?,
+    val designCapacityMah: Int?,
 )

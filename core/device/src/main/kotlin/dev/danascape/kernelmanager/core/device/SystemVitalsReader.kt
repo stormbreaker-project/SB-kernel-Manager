@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
+import android.os.Build
 import androidx.core.content.getSystemService
 import dev.danascape.kernelmanager.core.model.BatteryVitals
 import dev.danascape.kernelmanager.core.model.MemoryVitals
@@ -72,8 +73,19 @@ class SystemVitalsReader(
             chargeCounterMicroAmpHours = platform.chargeCounterMicroAmpHours(),
             health = intent.getIntExtra(BatteryManager.EXTRA_HEALTH, -1).toHealthName(),
             technology = intent.getStringExtra(BatteryManager.EXTRA_TECHNOLOGY),
+            voltageMillivolts = intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1).takeIf { it > 0 },
+            cycleCount = readCycleCount(intent),
+            designCapacityMah = BatteryCapacity.designMah(appContext),
         )
     }
+
+    /** Added in Android 14; older releases keep it behind the same denied sysfs node. */
+    private fun readCycleCount(intent: Intent): Int? =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            intent.getIntExtra(BatteryManager.EXTRA_CYCLE_COUNT, -1).takeIf { it > 0 }
+        } else {
+            null
+        }
 
     /** /sys/class/power_supply is denied, so this is the only route to draw. */
     private fun readCurrentMicroAmps(): Int? {

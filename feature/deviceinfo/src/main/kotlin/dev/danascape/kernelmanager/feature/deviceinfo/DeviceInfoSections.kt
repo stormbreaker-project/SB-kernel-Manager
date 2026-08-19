@@ -169,10 +169,19 @@ internal fun BatteryGroup(vitals: Vitals?) {
                     battery.temperatureC?.let { stringResource(R.string.device_info_celsius, it) },
                 stringResource(R.string.device_info_current) to
                     battery.currentMicroAmps?.let { stringResource(R.string.device_info_milliamps, it / 1000) },
-                stringResource(R.string.device_info_charge_counter) to
+                stringResource(R.string.device_info_voltage) to
+                    battery.voltageMillivolts?.let {
+                        stringResource(R.string.device_info_volts, (it / 1000f).decimals(3))
+                    },
+                stringResource(R.string.device_info_design_capacity) to
+                    battery.designCapacityMah?.let {
+                        stringResource(R.string.device_info_milliamp_hours, it)
+                    },
+                stringResource(R.string.device_info_charge_remaining) to
                     battery.chargeCounterMicroAmpHours?.let {
                         stringResource(R.string.device_info_milliamp_hours, it / 1000)
                     },
+                stringResource(R.string.device_info_cycle_count) to battery.cycleCount?.toString(),
             ),
     )
 }
