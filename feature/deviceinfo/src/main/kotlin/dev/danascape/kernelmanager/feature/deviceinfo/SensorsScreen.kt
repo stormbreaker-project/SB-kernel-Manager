@@ -36,7 +36,7 @@ private val SensorRowGap = 3.dp
 fun SensorsScreen(
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
-    viewModel: DeviceInfoViewModel = viewModel(factory = DeviceInfoViewModel.Factory),
+    viewModel: SensorsViewModel = viewModel(factory = SensorsViewModel.Factory),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     SensorsContent(state = state, contentPadding = contentPadding, modifier = modifier)
@@ -44,11 +44,11 @@ fun SensorsScreen(
 
 @Composable
 private fun SensorsContent(
-    state: DeviceInfoUiState,
+    state: SensorsUiState,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
-    val sensors = state.details?.sensors.orEmpty()
+    val sensors = state.sensors
 
     LazyColumn(
         modifier =
@@ -65,7 +65,7 @@ private fun SensorsContent(
         verticalArrangement = Arrangement.spacedBy(SensorRowGap),
     ) {
         item(key = "header") {
-            SensorHeader(count = sensors.size, deviceName = state.profile?.identity?.displayName)
+            SensorHeader(count = sensors.size, deviceName = state.deviceName)
         }
         if (sensors.isNotEmpty()) {
             item(key = "title") {

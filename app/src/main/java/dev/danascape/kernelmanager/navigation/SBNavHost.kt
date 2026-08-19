@@ -64,7 +64,7 @@ fun SBNavHost(
                 onOpenMonitoring = { navController.navigateToMonitor() },
                 onOpenNews = { navController.navigateToNews() },
             )
-            deviceGraph(navController = navController, contentPadding = contentPadding)
+            deviceGraph(contentPadding = contentPadding)
         }
         tuneScreen(contentPadding)
         navigation<MonitorGraphRoute>(startDestination = MonitorRoute) {

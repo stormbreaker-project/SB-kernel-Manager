@@ -26,6 +26,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -52,6 +53,9 @@ internal data class InfoSection(
     val rows: List<Pair<String, String>>,
 )
 
+/** The only tabs whose rows come from a live read. */
+private val TABS_NEEDING_VITALS = setOf(DeviceInfoTab.MEMORY, DeviceInfoTab.BATTERY)
+
 private val RowGap = 3.dp
 private val TitleGap = 7.dp
 private val GroupGap = 17.dp
@@ -63,19 +67,30 @@ fun DeviceInfoScreen(
     viewModel: DeviceInfoViewModel = viewModel(factory = DeviceInfoViewModel.Factory),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    DeviceInfoContent(state = state, contentPadding = contentPadding, modifier = modifier)
+    DeviceInfoContent(
+        state = state,
+        contentPadding = contentPadding,
+        onNeedVitals = viewModel::ensureVitals,
+        modifier = modifier,
+    )
 }
 
 @Composable
 private fun DeviceInfoContent(
     state: DeviceInfoUiState,
     contentPadding: PaddingValues,
+    onNeedVitals: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var tab by rememberSaveable { mutableStateOf(DeviceInfoTab.SYSTEM) }
     val listState = rememberLazyListState()
     val stripState = rememberLazyListState()
     val profile = state.profile
+
+    val needVitals by rememberUpdatedState(onNeedVitals)
+    LaunchedEffect(tab) {
+        if (tab in TABS_NEEDING_VITALS) needVitals()
+    }
 
     // A restored tab can sit off the end of the strip, and its rows start at the top.
     LaunchedEffect(tab) {
