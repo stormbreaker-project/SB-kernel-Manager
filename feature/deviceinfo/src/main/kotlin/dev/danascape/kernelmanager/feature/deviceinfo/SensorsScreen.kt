@@ -77,6 +77,7 @@ private fun SensorsContent(
                     value = stringResource(R.string.sensors_subtitle, sensor.type, sensor.vendor),
                     index = index,
                     count = sensors.size,
+                    revealIndex = null,
                 )
             }
         }

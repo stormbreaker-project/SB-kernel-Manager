@@ -77,7 +77,7 @@ fun SettingsGroup(
 private fun GroupedRow(
     index: Int,
     count: Int,
-    revealIndex: Int,
+    revealIndex: Int?,
     onClick: (() -> Unit)?,
     modifier: Modifier = Modifier,
     content: @Composable RowScope.() -> Unit,
@@ -89,7 +89,7 @@ private fun GroupedRow(
         modifier =
             modifier
                 .fillMaxWidth()
-                .pvotReveal(revealIndex)
+                .then(if (revealIndex != null) Modifier.pvotReveal(revealIndex) else Modifier)
                 .then(if (onClick != null) Modifier.pvotPressScale(interactionSource) else Modifier)
                 .clip(shape)
                 .background(MaterialTheme.colorScheme.surfaceContainerHigh)
@@ -112,7 +112,13 @@ private fun GroupedRow(
     }
 }
 
-/** A label and a readout. Values sit in the mono channel. */
+/**
+ * A label and a readout. Values sit in the mono channel.
+ *
+ * Pass a null [revealIndex] inside a lazy list: items there are composed as they
+ * scroll into view, so revealing them means fast scrolling shows blank rows
+ * fading in rather than content.
+ */
 @Composable
 fun ValueRow(
     label: String,
@@ -120,7 +126,7 @@ fun ValueRow(
     index: Int,
     count: Int,
     modifier: Modifier = Modifier,
-    revealIndex: Int = index,
+    revealIndex: Int? = index,
 ) {
     GroupedRow(
         index = index,
@@ -152,7 +158,7 @@ fun ValueBlock(
     index: Int,
     count: Int,
     modifier: Modifier = Modifier,
-    revealIndex: Int = index,
+    revealIndex: Int? = index,
 ) {
     GroupedRow(
         index = index,
@@ -190,7 +196,7 @@ fun ActionRow(
     description: String? = null,
     trailing: String? = null,
     enabled: Boolean = true,
-    revealIndex: Int = index,
+    revealIndex: Int? = index,
 ) {
     GroupedRow(
         index = index,

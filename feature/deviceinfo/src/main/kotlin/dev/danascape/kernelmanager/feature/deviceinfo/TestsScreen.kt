@@ -57,7 +57,7 @@ fun TestsScreen(
             TestsHeader()
         }
         items(items = DeviceTest.entries, key = { it.name }) { test ->
-            TestCard(label = stringResource(test.labelRes), revealIndex = test.ordinal)
+            TestCard(label = stringResource(test.labelRes))
         }
     }
 }
@@ -91,16 +91,12 @@ private fun TestsHeader() {
 }
 
 @Composable
-private fun TestCard(
-    label: String,
-    revealIndex: Int,
-) {
+private fun TestCard(label: String) {
     Column(
         modifier =
             Modifier
                 .fillMaxWidth()
                 .height(CardHeight)
-                .pvotReveal(revealIndex)
                 .clip(RoundedCornerShape(20.dp))
                 .background(MaterialTheme.colorScheme.surfaceContainerHigh)
                 .padding(16.dp),

@@ -168,7 +168,6 @@ private fun TabStrip(
                 label = stringResource(entry.labelRes),
                 selected = entry == selected,
                 onClick = { onSelect(entry) },
-                revealIndex = entry.ordinal,
             )
         }
     }
@@ -179,7 +178,6 @@ private fun TabChip(
     label: String,
     selected: Boolean,
     onClick: () -> Unit,
-    revealIndex: Int,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     Text(
@@ -188,7 +186,6 @@ private fun TabChip(
         color = if (selected) MaterialTheme.colorScheme.onPrimary else SBTheme.colors.muted,
         modifier =
             Modifier
-                .pvotReveal(revealIndex)
                 .pvotPressScale(interactionSource)
                 .clip(RoundedCornerShape(100.dp))
                 .background(
@@ -258,9 +255,9 @@ internal fun InfoRow(
     count: Int,
 ) {
     if (value.length > INLINE_VALUE_LIMIT || '\n' in value) {
-        ValueBlock(label = label, value = value, index = index, count = count)
+        ValueBlock(label = label, value = value, index = index, count = count, revealIndex = null)
     } else {
-        ValueRow(label = label, value = value, index = index, count = count)
+        ValueRow(label = label, value = value, index = index, count = count, revealIndex = null)
     }
 }
 
