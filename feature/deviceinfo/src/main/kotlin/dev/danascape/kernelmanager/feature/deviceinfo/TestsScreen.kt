@@ -26,7 +26,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.prauga.pvot.designsystem.modifier.pvotReveal
 import dev.danascape.kernelmanager.core.designsystem.component.expandedBy
-import dev.danascape.kernelmanager.core.designsystem.component.topInset
 import dev.danascape.kernelmanager.core.designsystem.theme.SBTheme
 
 private val CardHeight = 92.dp
@@ -39,16 +38,12 @@ fun TestsScreen(
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
-        modifier =
-            modifier
-                .fillMaxSize()
-                .padding(top = contentPadding.topInset()),
+        modifier = modifier.fillMaxSize(),
         contentPadding =
             contentPadding.expandedBy(
                 horizontal = 16.dp,
                 top = 24.dp,
                 bottom = 24.dp,
-                includeTopInset = false,
             ),
         horizontalArrangement = Arrangement.spacedBy(CardGap),
         verticalArrangement = Arrangement.spacedBy(CardGap),

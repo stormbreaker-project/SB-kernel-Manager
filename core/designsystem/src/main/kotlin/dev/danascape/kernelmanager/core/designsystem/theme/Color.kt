@@ -23,10 +23,12 @@ private val DarkBrand2 = Color(0xFF4D8DFF)
 private val DarkAccent = Color(0xFF35E0D4)
 private val DarkBrandText = Color(0xFF0A1020)
 
-private val LightBg = Color(0xFFF6F7FB)
-private val LightBg2 = Color(0xFFEEF0F7)
+// The canvas is tinted and the cards are white, so cards read as raised without a
+// border. A near-white canvas under near-white cards was the flat, washed look.
+private val LightBg = Color(0xFFE8EBF3)
+private val LightBg2 = Color(0xFFFFFFFF)
 private val LightSurface = Color(0xFFFFFFFF)
-private val LightSurface2 = Color(0xFFF2F3FA)
+private val LightSurface2 = Color(0xFFF7F8FC)
 private val LightBorder = Color(0xFFE3E4EF)
 private val LightBorder2 = Color(0xFFD3D5E5)
 private val LightText = Color(0xFF14142A)
@@ -100,10 +102,10 @@ internal val SBLightColorScheme =
         surfaceVariant = LightSurface2,
         onSurfaceVariant = LightMuted,
         surfaceContainerLowest = Color(0xFFFFFFFF),
-        surfaceContainerLow = Color(0xFFFAFBFE),
+        surfaceContainerLow = Color(0xFFFBFCFE),
         surfaceContainer = LightSurface2,
         surfaceContainerHigh = LightBg2,
-        surfaceContainerHighest = Color(0xFFE8EAF3),
+        surfaceContainerHighest = Color(0xFFF0F2F8),
         outline = LightBorder2,
         outlineVariant = LightBorder,
         inverseSurface = LightText,

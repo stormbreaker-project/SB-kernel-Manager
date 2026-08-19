@@ -29,7 +29,6 @@ import com.prauga.pvot.designsystem.modifier.pvotReveal
 import dev.danascape.kernelmanager.core.designsystem.component.MetricLine
 import dev.danascape.kernelmanager.core.designsystem.component.SBSparkline
 import dev.danascape.kernelmanager.core.designsystem.component.expandedBy
-import dev.danascape.kernelmanager.core.designsystem.component.topInset
 import dev.danascape.kernelmanager.core.designsystem.theme.SBTheme
 import dev.danascape.kernelmanager.core.model.CpuCluster
 
@@ -49,16 +48,12 @@ fun CpuDetailScreen(
     val topology = state.profile?.cpu
 
     LazyColumn(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .padding(top = contentPadding.topInset()),
+        modifier = modifier.fillMaxSize(),
         contentPadding =
             contentPadding.expandedBy(
                 horizontal = 16.dp,
                 top = 24.dp,
                 bottom = 24.dp,
-                includeTopInset = false,
             ),
         verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {

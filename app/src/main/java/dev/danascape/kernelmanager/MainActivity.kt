@@ -3,13 +3,17 @@
 
 package dev.danascape.kernelmanager
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.danascape.kernelmanager.core.data.settings.ThemeRepository
 import dev.danascape.kernelmanager.core.designsystem.theme.SBTheme
@@ -24,9 +28,25 @@ class MainActivity : ComponentActivity() {
         val themeRepository = (application as SBApplication).appContainer.themeRepository
 
         setContent {
-            SBTheme(darkTheme = isDarkTheme(themeRepository)) {
+            val darkTheme = isDarkTheme(themeRepository)
+            SystemBarIcons(darkTheme)
+            SBTheme(darkTheme = darkTheme) {
                 SBApp()
             }
+        }
+    }
+}
+
+/** The bars are transparent, so their icons have to follow the app's theme, not the system's. */
+@Composable
+private fun SystemBarIcons(darkTheme: Boolean) {
+    val view = LocalView.current
+    if (view.isInEditMode) return
+    val window = (view.context as Activity).window
+    LaunchedEffect(darkTheme) {
+        WindowCompat.getInsetsController(window, view).apply {
+            isAppearanceLightStatusBars = !darkTheme
+            isAppearanceLightNavigationBars = !darkTheme
         }
     }
 }

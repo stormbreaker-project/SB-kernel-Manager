@@ -39,7 +39,6 @@ import dev.danascape.kernelmanager.core.designsystem.theme.SBTheme
 import dev.danascape.kernelmanager.core.common.LoadError
 import dev.danascape.kernelmanager.core.model.NewsPost
 import dev.danascape.kernelmanager.core.designsystem.component.expandedBy
-import dev.danascape.kernelmanager.core.designsystem.component.topInset
 import dev.danascape.kernelmanager.core.designsystem.component.openArticle
 import java.time.LocalDate
 
@@ -116,16 +115,12 @@ private fun NewsList(
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .padding(top = contentPadding.topInset()),
+        modifier = modifier.fillMaxSize(),
         contentPadding =
             contentPadding.expandedBy(
                 horizontal = 16.dp,
                 top = 24.dp,
                 bottom = 24.dp,
-                includeTopInset = false,
             ),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
