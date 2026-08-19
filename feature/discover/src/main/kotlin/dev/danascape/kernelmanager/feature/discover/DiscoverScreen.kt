@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,6 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -141,34 +143,53 @@ private fun IdentityCard(identity: DeviceIdentity) {
             color = MaterialTheme.colorScheme.onSurface,
         )
         Text(
-            text = identity.codename,
-            style = MaterialTheme.typography.labelMedium,
-            color = SBTheme.colors.muted,
-        )
-        Text(
-            text = identity.kernelRelease,
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(top = 6.dp),
-        )
-        StatusLine(identity)
-        Text(
             text =
                 stringResource(
-                    R.string.discover_android,
+                    R.string.discover_identity_meta,
+                    identity.codename,
                     identity.androidRelease,
                     identity.sdkInt,
                 ),
-            style = MaterialTheme.typography.labelSmall,
-            color = SBTheme.colors.faint,
+            style = MaterialTheme.typography.labelMedium,
+            color = SBTheme.colors.muted,
         )
+
+        HorizontalDivider(
+            modifier = Modifier.padding(vertical = 10.dp),
+            color = SBTheme.colors.hairline,
+        )
+
+        Text(
+            text = identity.kernelVersion,
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+        )
+        if (identity.kernelBuild.isNotEmpty()) {
+            Text(
+                text = identity.kernelBuild,
+                style = MaterialTheme.typography.labelSmall,
+                color = SBTheme.colors.faint,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+
+        StatusChip(identity, modifier = Modifier.padding(top = 10.dp))
     }
 }
 
 @Composable
-private fun StatusLine(identity: DeviceIdentity) {
+private fun StatusChip(
+    identity: DeviceIdentity,
+    modifier: Modifier = Modifier,
+) {
     val running = identity.isStormBreakerKernel
     Row(
+        modifier =
+            modifier
+                .clip(RoundedCornerShape(100.dp))
+                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                .padding(horizontal = 12.dp, vertical = 7.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -184,8 +205,8 @@ private fun StatusLine(identity: DeviceIdentity) {
                 stringResource(
                     if (running) R.string.discover_kernel_running else R.string.discover_kernel_stock,
                 ),
-            style = MaterialTheme.typography.bodySmall,
-            color = SBTheme.colors.muted,
+            style = MaterialTheme.typography.labelSmall,
+            color = if (running) MaterialTheme.colorScheme.onSurface else SBTheme.colors.muted,
         )
     }
 }

@@ -10,6 +10,7 @@ SPDX-License-Identifier: Apache-2.0
     <string name="discover_kernel_stock">Not a StormBreaker kernel</string>
     <string name="discover_kernel_running">Running normally</string>
     <string name="discover_android">Android %1$s · API %2$d</string>
+    <string name="discover_identity_meta">%1$s · Android %2$s · API %3$d</string>
 
     <!-- Update -->
     <string name="discover_update">Kernel</string>
