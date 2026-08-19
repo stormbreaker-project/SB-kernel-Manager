@@ -144,6 +144,41 @@ fun ValueRow(
     }
 }
 
+/** A label over its readout, for values too long to sit beside one. */
+@Composable
+fun ValueBlock(
+    label: String,
+    value: String,
+    index: Int,
+    count: Int,
+    modifier: Modifier = Modifier,
+    revealIndex: Int = index,
+) {
+    GroupedRow(
+        index = index,
+        count = count,
+        revealIndex = revealIndex,
+        onClick = null,
+        modifier = modifier,
+    ) {
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Text(
+                text = value,
+                style = MaterialTheme.typography.labelMedium,
+                color = SBTheme.colors.muted,
+            )
+        }
+    }
+}
+
 /** A tappable row. */
 @Composable
 fun ActionRow(

@@ -11,6 +11,7 @@ import dev.danascape.kernelmanager.core.data.links.LinksRepository
 import dev.danascape.kernelmanager.core.data.news.NewsRepository
 import dev.danascape.kernelmanager.core.data.settings.ThemeRepository
 import dev.danascape.kernelmanager.core.datastore.SettingsStore
+import dev.danascape.kernelmanager.core.device.DeviceDetailsReader
 import dev.danascape.kernelmanager.core.device.DeviceProfileReader
 import dev.danascape.kernelmanager.core.device.SystemVitalsReader
 import dev.danascape.kernelmanager.core.network.createHttpClient
@@ -29,6 +30,7 @@ class AppContainer(
     val deviceRepository: DeviceRepository by lazy {
         DeviceRepository(
             profileReader = DeviceProfileReader(appContext),
+            detailsReader = DeviceDetailsReader(appContext),
             vitalsReader = SystemVitalsReader(appContext),
         )
     }

@@ -7,4 +7,128 @@ SPDX-License-Identifier: Apache-2.0
     <string name="device_info_kicker">device</string>
     <string name="device_info_title">Device information</string>
     <string name="device_info_description">Nothing here yet.</string>
+
+    <string name="device_info_loading">Reading the device…</string>
+
+    <string name="device_info_section_system">System</string>
+    <string name="device_info_section_soc">SoC</string>
+    <string name="device_info_section_gpu">GPU</string>
+    <string name="device_info_section_screen">Screen</string>
+    <string name="device_info_section_memory">Memory</string>
+    <string name="device_info_section_storage">Storage</string>
+    <string name="device_info_section_battery">Battery</string>
+    <string name="device_info_section_codecs">Media codecs</string>
+    <string name="device_info_section_boot">Boot and security</string>
+    <string name="device_info_section_sensors">Sensors</string>
+    <string name="device_info_section_camera">Camera %1$s · %2$s</string>
+
+    <string name="device_info_manufacturer">Manufacturer</string>
+    <string name="device_info_brand">Brand</string>
+    <string name="device_info_model">Model</string>
+    <string name="device_info_device">Device</string>
+    <string name="device_info_product">Product</string>
+    <string name="device_info_board">Board</string>
+    <string name="device_info_release">Release</string>
+    <string name="device_info_api">API</string>
+    <string name="device_info_build">Build</string>
+    <string name="device_info_incremental">Incremental</string>
+    <string name="device_info_build_type">Build type</string>
+    <string name="device_info_tags">Tags</string>
+    <string name="device_info_security_patch">Security patch</string>
+    <string name="device_info_build_date">Build date</string>
+    <string name="device_info_build_host">Host</string>
+    <string name="device_info_java_vm">Java VM</string>
+    <string name="device_info_bootloader">Bootloader</string>
+    <string name="device_info_baseband">Baseband</string>
+    <string name="device_info_fingerprint">Fingerprint</string>
+    <string name="device_info_rom">ROM</string>
+    <string name="device_info_kernel">Kernel</string>
+    <string name="device_info_kernel_full">Kernel string</string>
+
+    <string name="device_info_soc_vendor">Vendor</string>
+    <string name="device_info_soc_model">SoC</string>
+    <string name="device_info_platform">Platform</string>
+    <string name="device_info_hardware">Hardware</string>
+    <string name="device_info_cores">Cores</string>
+    <string name="device_info_clusters">Clusters</string>
+    <string name="device_info_governor">Governor</string>
+    <string name="device_info_abis">Supported ABIs</string>
+    <string name="device_info_instructions">Instructions</string>
+    <string name="device_info_cluster_value">%1$d × %2$s</string>
+
+    <string name="device_info_renderer">Renderer</string>
+    <string name="device_info_gl_version">OpenGL ES</string>
+
+    <string name="device_info_resolution">Resolution</string>
+    <string name="device_info_density">Density</string>
+    <string name="device_info_dpi">Physical DPI</string>
+    <string name="device_info_diagonal">Diagonal</string>
+    <string name="device_info_aspect">Aspect ratio</string>
+    <string name="device_info_refresh">Refresh rate</string>
+    <string name="device_info_refresh_modes">Supported modes</string>
+    <string name="device_info_hdr">HDR</string>
+
+    <string name="device_info_ram_total">Total RAM</string>
+    <string name="device_info_ram_available">Available</string>
+    <string name="device_info_ram_threshold">Low memory at</string>
+    <string name="device_info_swap">Swap</string>
+    <string name="device_info_page_size">Page size</string>
+    <string name="device_info_storage_used">Used</string>
+    <string name="device_info_storage_total">Total</string>
+    <string name="device_info_filesystem">File system</string>
+
+    <string name="device_info_level">Level</string>
+    <string name="device_info_health">Health</string>
+    <string name="device_info_technology">Technology</string>
+    <string name="device_info_temperature">Temperature</string>
+    <string name="device_info_current">Current</string>
+    <string name="device_info_charge_counter">Charge counter</string>
+
+    <string name="device_info_decoders">Decoders</string>
+    <string name="device_info_encoders">Encoders</string>
+    <string name="device_info_hw_accelerated">Hardware accelerated</string>
+    <string name="device_info_formats">Notable formats</string>
+
+    <string name="device_info_bootloader_state">Bootloader</string>
+    <string name="device_info_verified_boot">Verified boot</string>
+    <string name="device_info_encryption">Encryption</string>
+    <string name="device_info_su">su binary</string>
+    <string name="device_info_unlocked">Unlocked</string>
+    <string name="device_info_locked">Locked</string>
+    <string name="device_info_present">Present</string>
+    <string name="device_info_absent">Absent</string>
+
+    <string name="device_info_sensor_vendor">Vendor</string>
+    <string name="device_info_sensor_power">Power</string>
+    <string name="device_info_sensor_range">Max range</string>
+    <string name="device_info_sensor_resolution">Resolution</string>
+    <string name="device_info_sensor_wake">Wake-up</string>
+
+    <string name="device_info_cam_resolution">Resolution</string>
+    <string name="device_info_cam_aperture">Aperture</string>
+    <string name="device_info_cam_focal">Focal length</string>
+    <string name="device_info_cam_sensor_size">Sensor size</string>
+    <string name="device_info_cam_pixel_size">Pixel size</string>
+    <string name="device_info_cam_iso">ISO</string>
+    <string name="device_info_cam_zoom">Max digital zoom</string>
+    <string name="device_info_cam_flash">Flash</string>
+    <string name="device_info_cam_level">Hardware level</string>
+
+    <string name="device_info_megapixels">%1$s MP (%2$d×%3$d)</string>
+    <string name="device_info_millimetres">%1$s mm</string>
+    <string name="device_info_microns">%1$s µm</string>
+    <string name="device_info_iso_range">%1$d–%2$d</string>
+    <string name="device_info_zoom">%1$s×</string>
+    <string name="device_info_hertz">%1$s Hz</string>
+    <string name="device_info_dpi_value">%1$d dpi</string>
+    <string name="device_info_dpi_physical">%1$s × %2$s</string>
+    <string name="device_info_inches">%1$s\"</string>
+    <string name="device_info_pixels">%1$d × %2$d</string>
+    <string name="device_info_celsius">%1$.1f °C</string>
+    <string name="device_info_percent">%1$d%%</string>
+    <string name="device_info_milliamps">%1$d mA</string>
+    <string name="device_info_milliamp_hours">%1$d mAh</string>
+    <string name="device_info_milliwatts">%1$s mA</string>
+    <string name="device_info_yes">Yes</string>
+    <string name="device_info_no">No</string>
 </resources>

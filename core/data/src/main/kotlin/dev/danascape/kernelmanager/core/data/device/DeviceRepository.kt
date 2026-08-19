@@ -4,8 +4,11 @@
 package dev.danascape.kernelmanager.core.data.device
 
 import dev.danascape.kernelmanager.core.device.CpuLoadReader
+import dev.danascape.kernelmanager.core.device.DeviceDetailsReader
 import dev.danascape.kernelmanager.core.device.DeviceProfileReader
+import dev.danascape.kernelmanager.core.device.SystemProperties
 import dev.danascape.kernelmanager.core.device.SystemVitalsReader
+import dev.danascape.kernelmanager.core.model.DeviceDetails
 import dev.danascape.kernelmanager.core.model.DeviceProfile
 import dev.danascape.kernelmanager.core.model.Vitals
 import kotlinx.coroutines.CoroutineDispatcher
@@ -17,6 +20,7 @@ private const val LOAD_WINDOW_MILLIS = 500L
 
 class DeviceRepository(
     private val profileReader: DeviceProfileReader,
+    private val detailsReader: DeviceDetailsReader,
     private val vitalsReader: SystemVitalsReader,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
@@ -28,6 +32,15 @@ class DeviceRepository(
 
     @Volatile
     private var cachedProfile: DeviceProfile? = null
+
+    /** Read once and cached, like the profile. */
+    suspend fun details(): DeviceDetails =
+        cachedDetails ?: withContext(ioDispatcher) {
+            detailsReader.read(SystemProperties.read()).also { cachedDetails = it }
+        }
+
+    @Volatile
+    private var cachedDetails: DeviceDetails? = null
 
     /** Suspends for the sampling window: utilisation needs two spaced samples. */
     suspend fun vitals(): Vitals =
