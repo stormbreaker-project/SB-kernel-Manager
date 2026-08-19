@@ -13,6 +13,8 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.navOptions
 import dev.danascape.kernelmanager.feature.builds.buildsScreen
 import dev.danascape.kernelmanager.feature.devices.devicesScreen
+import dev.danascape.kernelmanager.feature.deviceinfo.deviceInfoScreen
+import dev.danascape.kernelmanager.feature.deviceinfo.navigateToDeviceInfo
 import dev.danascape.kernelmanager.feature.devices.navigateToDevices
 import dev.danascape.kernelmanager.feature.discover.DiscoverRoute
 import dev.danascape.kernelmanager.feature.discover.discoverScreen
@@ -29,6 +31,10 @@ import dev.danascape.kernelmanager.feature.news.navigateToNews
 import dev.danascape.kernelmanager.feature.news.newsScreen
 import dev.danascape.kernelmanager.feature.tune.tuneScreen
 import kotlinx.serialization.Serializable
+
+/** Discover's nested graph, so the device screen keeps Discover selected. */
+@Serializable
+data object DiscoverGraphRoute
 
 /** More's nested graph. */
 @Serializable
@@ -47,15 +53,18 @@ fun SBNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = DiscoverRoute,
+        startDestination = DiscoverGraphRoute,
         modifier = modifier,
     ) {
-        discoverScreen(
-            contentPadding = contentPadding,
-            onOpenDevice = {},
-            onOpenMonitoring = { navController.navigateToMonitor() },
-            onOpenNews = { navController.navigateToNews() },
-        )
+        navigation<DiscoverGraphRoute>(startDestination = DiscoverRoute) {
+            discoverScreen(
+                contentPadding = contentPadding,
+                onOpenDevice = { navController.navigateToDeviceInfo() },
+                onOpenMonitoring = { navController.navigateToMonitor() },
+                onOpenNews = { navController.navigateToNews() },
+            )
+            deviceInfoScreen(contentPadding)
+        }
         tuneScreen(contentPadding)
         navigation<MonitorGraphRoute>(startDestination = MonitorRoute) {
             monitorScreen(

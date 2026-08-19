@@ -28,6 +28,7 @@ dependencies {
     // The shell owns navigation and the Application; every screen lives behind
     // a feature module.
     implementation(project(":feature:devices"))
+    implementation(project(":feature:deviceinfo"))
     implementation(project(":feature:builds"))
     implementation(project(":feature:discover"))
     implementation(project(":feature:monitor"))

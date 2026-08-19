@@ -10,7 +10,6 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import dev.danascape.kernelmanager.R
 import dev.danascape.kernelmanager.feature.builds.BuildsRoute
-import dev.danascape.kernelmanager.feature.discover.DiscoverRoute
 import dev.danascape.kernelmanager.feature.tune.TuneRoute
 
 /** Top-level destinations, in nav bar order. */
@@ -23,7 +22,7 @@ enum class SBDestination(
     @param:StringRes val expandedLabelRes: Int? = null,
 ) {
     DISCOVER(
-        route = DiscoverRoute,
+        route = DiscoverGraphRoute,
         iconRes = R.drawable.ic_tab_discover,
         labelRes = R.string.tab_discover,
         contentDescriptionRes = R.string.tab_discover_description,

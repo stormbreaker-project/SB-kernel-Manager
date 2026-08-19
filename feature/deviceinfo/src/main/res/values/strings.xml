@@ -1,0 +1,10 @@
+<!--
+SPDX-FileCopyrightText: 2026 Saalim Quadri <danascape@gmail.com>
+SPDX-License-Identifier: Apache-2.0
+-->
+
+<resources>
+    <string name="device_info_kicker">device</string>
+    <string name="device_info_title">Device information</string>
+    <string name="device_info_description">Nothing here yet.</string>
+</resources>

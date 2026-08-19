@@ -44,6 +44,7 @@ include(":feature:monitor")
 include(":feature:builds")
 include(":feature:news")
 include(":feature:devices")
+include(":feature:deviceinfo")
 include(":feature:more")
 include(":feature:licenses")
 
