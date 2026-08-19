@@ -10,6 +10,14 @@ SPDX-License-Identifier: Apache-2.0
 
     <string name="device_info_loading">Reading the device…</string>
 
+    <string name="sensors_kicker">sensors</string>
+    <string name="sensors_available">Available</string>
+    <string name="sensors_subtitle">%1$s · %2$s</string>
+    <plurals name="sensors_count">
+        <item quantity="one">%1$d sensor</item>
+        <item quantity="other">%1$d sensors</item>
+    </plurals>
+
     <string name="device_info_section_system">System</string>
     <string name="device_info_section_soc">SoC</string>
     <string name="device_info_section_gpu">GPU</string>

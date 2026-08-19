@@ -145,10 +145,6 @@ private fun TabContent(
             CameraGroups(state.details)
         }
 
-        DeviceInfoTab.SENSORS -> {
-            SensorGroups(state.details)
-        }
-
         DeviceInfoTab.CODECS -> {
             CodecGroup(state.details)
         }

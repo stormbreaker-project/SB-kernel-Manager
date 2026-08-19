@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+SPDX-FileCopyrightText: 2026 Saalim Quadri <danascape@gmail.com>
+SPDX-License-Identifier: Apache-2.0
+-->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <path
+        android:pathData="M6.5,6.5h11v11h-11z"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="1.75"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M10,10h4v4h-4z"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="1.75"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M9.5,3v3.5M14.5,3v3.5M9.5,17.5v3.5M14.5,17.5v3.5M3,9.5h3.5M3,14.5h3.5M17.5,9.5h3.5M17.5,14.5h3.5"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="1.75"
+        android:strokeLineCap="round" />
+</vector>

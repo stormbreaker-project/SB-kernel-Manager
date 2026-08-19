@@ -13,10 +13,21 @@ import kotlinx.serialization.Serializable
 @Serializable
 data object DeviceInfoRoute
 
+@Serializable
+data object SensorsRoute
+
 fun NavController.navigateToDeviceInfo(navOptions: NavOptions? = null) = navigate(DeviceInfoRoute, navOptions)
+
+fun NavController.navigateToSensors(navOptions: NavOptions? = null) = navigate(SensorsRoute, navOptions)
 
 fun NavGraphBuilder.deviceInfoScreen(contentPadding: PaddingValues) {
     composable<DeviceInfoRoute> {
         DeviceInfoScreen(contentPadding = contentPadding)
+    }
+}
+
+fun NavGraphBuilder.sensorsScreen(contentPadding: PaddingValues) {
+    composable<SensorsRoute> {
+        SensorsScreen(contentPadding = contentPadding)
     }
 }

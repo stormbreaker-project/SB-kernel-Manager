@@ -14,7 +14,6 @@ enum class DeviceInfoTab(
     MEMORY(R.string.device_info_section_memory),
     BATTERY(R.string.device_info_section_battery),
     CAMERAS(R.string.device_info_section_cameras),
-    SENSORS(R.string.device_info_section_sensors),
     CODECS(R.string.device_info_section_codecs),
     BOOT(R.string.device_info_section_boot),
 }

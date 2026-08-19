@@ -14,8 +14,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.prauga.pvot.designsystem.components.navigation.PvotNavBar
 import com.prauga.pvot.designsystem.components.navigation.PvotTabItem
+import dev.danascape.kernelmanager.navigation.DeviceDestination
 import dev.danascape.kernelmanager.navigation.SBDestination
 import dev.danascape.kernelmanager.navigation.SBNavHost
+import dev.danascape.kernelmanager.navigation.deviceDestination
+import dev.danascape.kernelmanager.navigation.navigateToDevice
 import dev.danascape.kernelmanager.navigation.navigateToTopLevel
 import dev.danascape.kernelmanager.navigation.topLevelDestination
 
@@ -25,7 +28,19 @@ fun SBApp(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
 
+    val device = backStackEntry?.destination.deviceDestination()
     val current = backStackEntry?.destination.topLevelDestination() ?: SBDestination.DISCOVER
+
+    val deviceTabs =
+        remember {
+            DeviceDestination.entries.map {
+                PvotTabItem(
+                    iconRes = it.iconRes,
+                    labelRes = it.labelRes,
+                    contentDescriptionRes = it.contentDescriptionRes,
+                )
+            }
+        }
 
     val tabs =
         remember {
@@ -44,11 +59,19 @@ fun SBApp(modifier: Modifier = Modifier) {
         modifier = modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
-            PvotNavBar(
-                selectedTab = current.ordinal,
-                onTabClick = { index -> navController.navigateToTopLevel(SBDestination.entries[index]) },
-                tabs = tabs,
-            )
+            if (device != null) {
+                PvotNavBar(
+                    selectedTab = device.ordinal,
+                    onTabClick = { index -> navController.navigateToDevice(DeviceDestination.entries[index]) },
+                    tabs = deviceTabs,
+                )
+            } else {
+                PvotNavBar(
+                    selectedTab = current.ordinal,
+                    onTabClick = { index -> navController.navigateToTopLevel(SBDestination.entries[index]) },
+                    tabs = tabs,
+                )
+            }
         },
     ) { innerPadding ->
         SBNavHost(

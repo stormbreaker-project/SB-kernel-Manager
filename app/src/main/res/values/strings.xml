@@ -18,4 +18,8 @@ SPDX-License-Identifier: Apache-2.0
     <string name="tab_builds_description">Kernel releases and changelogs</string>
     <string name="tab_more">More</string>
     <string name="tab_more_description">Devices, news, settings and about</string>
+    <string name="tab_device_hw">Device HW</string>
+    <string name="tab_device_hw_description">Hardware and build details</string>
+    <string name="tab_sensors">Sensors</string>
+    <string name="tab_sensors_description">Every sensor on this device</string>
 </resources>

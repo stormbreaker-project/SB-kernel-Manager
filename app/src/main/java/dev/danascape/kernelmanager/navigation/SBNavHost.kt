@@ -13,8 +13,10 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.navOptions
 import dev.danascape.kernelmanager.feature.builds.buildsScreen
 import dev.danascape.kernelmanager.feature.devices.devicesScreen
+import dev.danascape.kernelmanager.feature.deviceinfo.DeviceInfoRoute
 import dev.danascape.kernelmanager.feature.deviceinfo.deviceInfoScreen
 import dev.danascape.kernelmanager.feature.deviceinfo.navigateToDeviceInfo
+import dev.danascape.kernelmanager.feature.deviceinfo.sensorsScreen
 import dev.danascape.kernelmanager.feature.devices.navigateToDevices
 import dev.danascape.kernelmanager.feature.discover.DiscoverRoute
 import dev.danascape.kernelmanager.feature.discover.discoverScreen
@@ -31,6 +33,10 @@ import dev.danascape.kernelmanager.feature.news.navigateToNews
 import dev.danascape.kernelmanager.feature.news.newsScreen
 import dev.danascape.kernelmanager.feature.tune.tuneScreen
 import kotlinx.serialization.Serializable
+
+/** The device screens, which carry their own nav bar. */
+@Serializable
+data object DeviceGraphRoute
 
 /** Discover's nested graph, so the device screen keeps Discover selected. */
 @Serializable
@@ -63,7 +69,10 @@ fun SBNavHost(
                 onOpenMonitoring = { navController.navigateToMonitor() },
                 onOpenNews = { navController.navigateToNews() },
             )
-            deviceInfoScreen(contentPadding)
+            navigation<DeviceGraphRoute>(startDestination = DeviceInfoRoute) {
+                deviceInfoScreen(contentPadding)
+                sensorsScreen(contentPadding)
+            }
         }
         tuneScreen(contentPadding)
         navigation<MonitorGraphRoute>(startDestination = MonitorRoute) {
@@ -87,6 +96,18 @@ fun SBNavHost(
             licensesScreen(contentPadding)
         }
     }
+}
+
+/** Switches between the device screens without stacking them. */
+fun NavHostController.navigateToDevice(destination: DeviceDestination) {
+    navigate(
+        destination.route,
+        navOptions {
+            popUpTo(DeviceGraphRoute) { saveState = true }
+            launchSingleTop = true
+            restoreState = true
+        },
+    )
 }
 
 /** Switches top-level tabs. */
