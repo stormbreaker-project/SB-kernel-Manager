@@ -5,6 +5,7 @@ SPDX-License-Identifier: Apache-2.0
 
 <resources>
     <string name="discover_kicker">discover</string>
+    <string name="discover_tap_detail">Tap for detail</string>
 
     <!-- Identity -->
     <string name="discover_kernel_stock">Not a StormBreaker kernel</string>

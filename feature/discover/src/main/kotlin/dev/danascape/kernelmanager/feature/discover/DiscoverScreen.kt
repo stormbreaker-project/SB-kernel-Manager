@@ -4,6 +4,8 @@
 package dev.danascape.kernelmanager.feature.discover
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.prauga.pvot.designsystem.modifier.pvotPressScale
 import com.prauga.pvot.designsystem.modifier.pvotReveal
 import dev.danascape.kernelmanager.core.designsystem.component.ActionRow
 import dev.danascape.kernelmanager.core.designsystem.component.SettingsGroup
@@ -63,6 +67,7 @@ private const val BYTES_PER_GB = 1_073_741_824f
 @Composable
 fun DiscoverScreen(
     contentPadding: PaddingValues,
+    onOpenDevice: () -> Unit,
     onOpenMonitoring: () -> Unit,
     onOpenNews: () -> Unit,
     modifier: Modifier = Modifier,
@@ -74,6 +79,7 @@ fun DiscoverScreen(
 
     DiscoverContent(
         state = state,
+        onOpenDevice = onOpenDevice,
         contentPadding = contentPadding,
         onOpenMonitoring = onOpenMonitoring,
         onOpenNews = onOpenNews,
@@ -87,6 +93,7 @@ fun DiscoverScreen(
 private fun DiscoverContent(
     state: DiscoverUiState,
     contentPadding: PaddingValues,
+    onOpenDevice: () -> Unit,
     onOpenMonitoring: () -> Unit,
     onOpenNews: () -> Unit,
     onHeadlineClick: (NewsPost) -> Unit,
@@ -107,7 +114,7 @@ private fun DiscoverContent(
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         state.profile?.let { profile ->
-            item(key = "identity") { IdentityCard(profile.identity) }
+            item(key = "identity") { IdentityCard(profile.identity, onOpenDevice) }
         }
         item(key = "update") { UpdateGroup() }
         item(key = "vitals") { VitalsGroup(state.vitals, onOpenMonitoring) }
@@ -121,22 +128,43 @@ private fun DiscoverContent(
 }
 
 @Composable
-private fun IdentityCard(identity: DeviceIdentity) {
+private fun IdentityCard(
+    identity: DeviceIdentity,
+    onClick: () -> Unit,
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+
     Column(
         modifier =
             Modifier
                 .fillMaxWidth()
                 .pvotReveal(0)
+                .pvotPressScale(interactionSource)
                 .clip(RoundedCornerShape(24.dp))
                 .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-                .padding(20.dp),
+                .clickable(
+                    interactionSource = interactionSource,
+                    indication = null,
+                    onClick = onClick,
+                ).padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
-        Text(
-            text = stringResource(R.string.discover_kicker),
-            style = MaterialTheme.typography.labelSmall,
-            color = SBTheme.colors.accent,
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = stringResource(R.string.discover_kicker),
+                style = MaterialTheme.typography.labelSmall,
+                color = SBTheme.colors.accent,
+            )
+            Text(
+                text = stringResource(R.string.discover_tap_detail),
+                style = MaterialTheme.typography.labelSmall,
+                color = SBTheme.colors.faint,
+            )
+        }
         Text(
             text = identity.displayName,
             style = MaterialTheme.typography.headlineSmall,
@@ -415,6 +443,7 @@ private fun DiscoverPreview() {
                         ),
                 ),
             contentPadding = PaddingValues(),
+            onOpenDevice = {},
             onOpenMonitoring = {},
             onOpenNews = {},
             onHeadlineClick = {},

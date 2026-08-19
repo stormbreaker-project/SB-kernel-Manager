@@ -52,6 +52,7 @@ fun SBNavHost(
     ) {
         discoverScreen(
             contentPadding = contentPadding,
+            onOpenDevice = {},
             onOpenMonitoring = { navController.navigateToMonitor() },
             onOpenNews = { navController.navigateToNews() },
         )

@@ -17,12 +17,14 @@ fun NavController.navigateToDiscover(navOptions: NavOptions? = null) = navigate(
 
 fun NavGraphBuilder.discoverScreen(
     contentPadding: PaddingValues,
+    onOpenDevice: () -> Unit,
     onOpenMonitoring: () -> Unit,
     onOpenNews: () -> Unit,
 ) {
     composable<DiscoverRoute> {
         DiscoverScreen(
             contentPadding = contentPadding,
+            onOpenDevice = onOpenDevice,
             onOpenMonitoring = onOpenMonitoring,
             onOpenNews = onOpenNews,
         )
