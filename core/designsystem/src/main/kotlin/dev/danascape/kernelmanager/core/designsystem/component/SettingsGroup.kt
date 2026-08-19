@@ -90,7 +90,7 @@ private fun GroupedRow(
             modifier
                 .fillMaxWidth()
                 .pvotReveal(revealIndex)
-                .pvotPressScale(interactionSource)
+                .then(if (onClick != null) Modifier.pvotPressScale(interactionSource) else Modifier)
                 .clip(shape)
                 .background(MaterialTheme.colorScheme.surfaceContainerHigh)
                 .then(

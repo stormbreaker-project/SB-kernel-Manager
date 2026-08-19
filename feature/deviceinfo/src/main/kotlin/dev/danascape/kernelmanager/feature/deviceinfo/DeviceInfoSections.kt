@@ -3,24 +3,41 @@
 
 package dev.danascape.kernelmanager.feature.deviceinfo
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import java.util.Locale
 import dev.danascape.kernelmanager.core.model.DeviceDetails
 import dev.danascape.kernelmanager.core.model.DeviceProfile
 import dev.danascape.kernelmanager.core.model.Vitals
+import java.util.Locale
 
 @Composable
-internal fun SystemGroup(
+internal fun tabSections(
+    tab: DeviceInfoTab,
+    state: DeviceInfoUiState,
+    profile: DeviceProfile,
+): List<InfoSection> {
+    val sections =
+        when (tab) {
+            DeviceInfoTab.SYSTEM -> listOf(systemSection(profile, state.details))
+            DeviceInfoTab.SOC -> listOf(socSection(profile), gpuSection(profile))
+            DeviceInfoTab.SCREEN -> listOf(screenSection(state.details))
+            DeviceInfoTab.MEMORY -> listOf(memorySection(state.details), storageSection(state.vitals))
+            DeviceInfoTab.BATTERY -> listOf(batterySection(state.vitals))
+            DeviceInfoTab.CAMERAS -> cameraSections(state.details)
+            DeviceInfoTab.CODECS -> listOf(codecSection(state.details))
+            DeviceInfoTab.BOOT -> listOf(bootSection(profile))
+        }
+    return sections.filter { it.rows.isNotEmpty() }
+}
+
+@Composable
+private fun systemSection(
     profile: DeviceProfile,
     details: DeviceDetails?,
-) {
+): InfoSection {
     val os = profile.os
     val build = details?.build
-    InfoGroup(
+    return InfoSection(
         title = stringResource(R.string.device_info_section_system),
         rows =
             buildRows(
@@ -51,7 +68,7 @@ internal fun SystemGroup(
 }
 
 @Composable
-internal fun SocGroup(profile: DeviceProfile) {
+private fun socSection(profile: DeviceProfile): InfoSection {
     val soc = profile.soc
     val cpu = profile.cpu
     val clusterTemplate = stringResource(R.string.device_info_cluster_value)
@@ -64,7 +81,7 @@ internal fun SocGroup(profile: DeviceProfile) {
                 cluster.hardwareMaxKhz?.khzAsGhz() ?: cluster.maxKhz?.khzAsGhz().orEmpty(),
             )
         }
-    InfoGroup(
+    return InfoSection(
         title = stringResource(R.string.device_info_section_soc),
         rows =
             buildRows(
@@ -82,52 +99,54 @@ internal fun SocGroup(profile: DeviceProfile) {
 }
 
 @Composable
-internal fun GpuGroup(profile: DeviceProfile) {
-    val gpu = profile.gpu ?: return
-    InfoGroup(
+private fun gpuSection(profile: DeviceProfile): InfoSection {
+    val gpu = profile.gpu
+    return InfoSection(
         title = stringResource(R.string.device_info_section_gpu),
         rows =
             buildRows(
-                stringResource(R.string.device_info_renderer) to gpu.renderer,
-                stringResource(R.string.device_info_soc_vendor) to gpu.vendor,
-                stringResource(R.string.device_info_gl_version) to gpu.glVersion,
+                stringResource(R.string.device_info_renderer) to gpu?.renderer,
+                stringResource(R.string.device_info_soc_vendor) to gpu?.vendor,
+                stringResource(R.string.device_info_gl_version) to gpu?.glVersion,
             ),
     )
 }
 
 @Composable
-internal fun ScreenGroup(details: DeviceDetails?) {
-    val display = details?.display ?: return
-    InfoGroup(
+private fun screenSection(details: DeviceDetails?): InfoSection {
+    val display = details?.display
+    return InfoSection(
         title = stringResource(R.string.device_info_section_screen),
         rows =
             buildRows(
                 stringResource(R.string.device_info_resolution) to
-                    stringResource(R.string.device_info_pixels, display.widthPx, display.heightPx),
-                stringResource(R.string.device_info_aspect) to display.aspectRatio,
+                    display?.let { stringResource(R.string.device_info_pixels, it.widthPx, it.heightPx) },
+                stringResource(R.string.device_info_aspect) to display?.aspectRatio,
                 stringResource(R.string.device_info_density) to
-                    stringResource(R.string.device_info_dpi_value, display.densityDpi),
+                    display?.let { stringResource(R.string.device_info_dpi_value, it.densityDpi) },
                 stringResource(R.string.device_info_dpi) to
-                    stringResource(
-                        R.string.device_info_dpi_physical,
-                        display.xDpi.decimals(0),
-                        display.yDpi.decimals(0),
-                    ),
+                    display?.let {
+                        stringResource(
+                            R.string.device_info_dpi_physical,
+                            it.xDpi.decimals(0),
+                            it.yDpi.decimals(0),
+                        )
+                    },
                 stringResource(R.string.device_info_diagonal) to
-                    display.diagonalInches?.let { stringResource(R.string.device_info_inches, it.decimals(1)) },
+                    display?.diagonalInches?.let { stringResource(R.string.device_info_inches, it.decimals(1)) },
                 stringResource(R.string.device_info_refresh) to
-                    stringResource(R.string.device_info_hertz, display.refreshHz.decimals(0)),
+                    display?.let { stringResource(R.string.device_info_hertz, it.refreshHz.decimals(0)) },
                 stringResource(R.string.device_info_refresh_modes) to
-                    display.supportedRefreshHz.joinDistinct(places = 0, suffix = " Hz"),
-                stringResource(R.string.device_info_hdr) to display.hdrTypes.joinToString(", "),
+                    display?.supportedRefreshHz?.joinDistinct(places = 0, suffix = " Hz"),
+                stringResource(R.string.device_info_hdr) to display?.hdrTypes?.joinToString(", "),
             ),
     )
 }
 
 @Composable
-internal fun MemoryGroup(details: DeviceDetails?) {
+private fun memorySection(details: DeviceDetails?): InfoSection {
     val memory = details?.memory
-    InfoGroup(
+    return InfoSection(
         title = stringResource(R.string.device_info_section_memory),
         rows =
             buildRows(
@@ -141,130 +160,119 @@ internal fun MemoryGroup(details: DeviceDetails?) {
 }
 
 @Composable
-internal fun StorageGroup(vitals: Vitals?) {
-    val storage = vitals?.storage ?: return
-    InfoGroup(
+private fun storageSection(vitals: Vitals?): InfoSection {
+    val storage = vitals?.storage
+    return InfoSection(
         title = stringResource(R.string.device_info_section_storage),
         rows =
             buildRows(
-                stringResource(R.string.device_info_storage_used) to storage.usedBytes.asByteSize(),
-                stringResource(R.string.device_info_storage_total) to storage.totalBytes.asByteSize(),
-                stringResource(R.string.device_info_filesystem) to storage.fileSystem,
+                stringResource(R.string.device_info_storage_used) to storage?.usedBytes?.asByteSize(),
+                stringResource(R.string.device_info_storage_total) to storage?.totalBytes?.asByteSize(),
+                stringResource(R.string.device_info_filesystem) to storage?.fileSystem,
             ),
     )
 }
 
 @Composable
-internal fun BatteryGroup(vitals: Vitals?) {
-    val battery = vitals?.battery ?: return
-    InfoGroup(
+private fun batterySection(vitals: Vitals?): InfoSection {
+    val battery = vitals?.battery
+    return InfoSection(
         title = stringResource(R.string.device_info_section_battery),
         rows =
             buildRows(
                 stringResource(R.string.device_info_level) to
-                    stringResource(R.string.device_info_percent, battery.percent),
-                stringResource(R.string.device_info_health) to battery.health,
-                stringResource(R.string.device_info_technology) to battery.technology,
+                    battery?.let { stringResource(R.string.device_info_percent, it.percent) },
+                stringResource(R.string.device_info_health) to battery?.health,
+                stringResource(R.string.device_info_technology) to battery?.technology,
                 stringResource(R.string.device_info_temperature) to
-                    battery.temperatureC?.let { stringResource(R.string.device_info_celsius, it) },
+                    battery?.temperatureC?.let { stringResource(R.string.device_info_celsius, it) },
                 stringResource(R.string.device_info_current) to
-                    battery.currentMicroAmps?.let { stringResource(R.string.device_info_milliamps, it / 1000) },
+                    battery?.currentMicroAmps?.let { stringResource(R.string.device_info_milliamps, it / 1000) },
                 stringResource(R.string.device_info_voltage) to
-                    battery.voltageMillivolts?.let {
+                    battery?.voltageMillivolts?.let {
                         stringResource(R.string.device_info_volts, (it / 1000f).decimals(3))
                     },
                 stringResource(R.string.device_info_design_capacity) to
-                    battery.designCapacityMah?.let {
-                        stringResource(R.string.device_info_milliamp_hours, it)
-                    },
+                    battery?.designCapacityMah?.let { stringResource(R.string.device_info_milliamp_hours, it) },
                 stringResource(R.string.device_info_charge_remaining) to
-                    battery.chargeCounterMicroAmpHours?.let {
+                    battery?.chargeCounterMicroAmpHours?.let {
                         stringResource(R.string.device_info_milliamp_hours, it / 1000)
                     },
-                stringResource(R.string.device_info_cycle_count) to battery.cycleCount?.toString(),
+                stringResource(R.string.device_info_cycle_count) to battery?.cycleCount?.toString(),
             ),
     )
 }
 
 @Composable
-internal fun CameraGroups(details: DeviceDetails?) {
-    val cameras = details?.cameras.orEmpty()
-    if (cameras.isEmpty()) return
-    Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
-        cameras.forEach { camera ->
-            InfoGroup(
-                title = stringResource(R.string.device_info_section_camera, camera.id, camera.facing),
-                rows =
-                    buildRows(
-                        stringResource(R.string.device_info_cam_resolution) to
-                            stringResource(
-                                R.string.device_info_megapixels,
-                                camera.megapixels.decimals(1),
-                                camera.widthPx,
-                                camera.heightPx,
-                            ),
-                        stringResource(R.string.device_info_cam_aperture) to
-                            camera.apertures
-                                .takeIf { it.isNotEmpty() }
-                                ?.distinct()
-                                ?.sorted()
-                                ?.joinToString(", ") { "f/${it.decimals(1)}" },
-                        stringResource(R.string.device_info_cam_focal) to
-                            camera.focalLengths.takeIf { it.isNotEmpty() }?.joinDistinct(places = 2, suffix = " mm"),
-                        stringResource(R.string.device_info_cam_sensor_size) to
-                            camera.sensorWidthMm?.let { width ->
-                                camera.sensorHeightMm?.let { height ->
-                                    "${width.decimals(2)} × ${height.decimals(2)} mm"
-                                }
-                            },
-                        stringResource(R.string.device_info_cam_pixel_size) to
-                            camera.pixelSizeMicrons?.let {
-                                stringResource(R.string.device_info_microns, it.decimals(2))
-                            },
-                        stringResource(R.string.device_info_cam_iso) to
-                            camera.isoMin?.let { min ->
-                                camera.isoMax?.let { max -> stringResource(R.string.device_info_iso_range, min, max) }
-                            },
-                        stringResource(R.string.device_info_cam_zoom) to
-                            camera.maxDigitalZoom?.let { stringResource(R.string.device_info_zoom, it.decimals(1)) },
-                        stringResource(R.string.device_info_cam_level) to camera.hardwareLevel,
-                        stringResource(R.string.device_info_cam_flash) to
-                            stringResource(
-                                if (camera.hasFlash) R.string.device_info_yes else R.string.device_info_no,
-                            ),
-                    ),
-            )
-        }
+private fun cameraSections(details: DeviceDetails?): List<InfoSection> =
+    details?.cameras.orEmpty().map { camera ->
+        InfoSection(
+            title = stringResource(R.string.device_info_section_camera, camera.id, camera.facing),
+            rows =
+                buildRows(
+                    stringResource(R.string.device_info_cam_resolution) to
+                        stringResource(
+                            R.string.device_info_megapixels,
+                            camera.megapixels.decimals(1),
+                            camera.widthPx,
+                            camera.heightPx,
+                        ),
+                    stringResource(R.string.device_info_cam_aperture) to
+                        camera.apertures
+                            .takeIf { it.isNotEmpty() }
+                            ?.distinct()
+                            ?.sorted()
+                            ?.joinToString(", ") { "f/${it.decimals(1)}" },
+                    stringResource(R.string.device_info_cam_focal) to
+                        camera.focalLengths.takeIf { it.isNotEmpty() }?.joinDistinct(places = 2, suffix = " mm"),
+                    stringResource(R.string.device_info_cam_sensor_size) to
+                        camera.sensorWidthMm?.let { width ->
+                            camera.sensorHeightMm?.let { height ->
+                                "${width.decimals(2)} × ${height.decimals(2)} mm"
+                            }
+                        },
+                    stringResource(R.string.device_info_cam_pixel_size) to
+                        camera.pixelSizeMicrons?.let {
+                            stringResource(R.string.device_info_microns, it.decimals(2))
+                        },
+                    stringResource(R.string.device_info_cam_iso) to
+                        camera.isoMin?.let { min ->
+                            camera.isoMax?.let { max -> stringResource(R.string.device_info_iso_range, min, max) }
+                        },
+                    stringResource(R.string.device_info_cam_zoom) to
+                        camera.maxDigitalZoom?.let { stringResource(R.string.device_info_zoom, it.decimals(1)) },
+                    stringResource(R.string.device_info_cam_level) to camera.hardwareLevel,
+                    stringResource(R.string.device_info_cam_flash) to
+                        stringResource(if (camera.hasFlash) R.string.device_info_yes else R.string.device_info_no),
+                ),
+        )
     }
-}
 
 @Composable
-internal fun CodecGroup(details: DeviceDetails?) {
-    val codecs = details?.codecs ?: return
-    InfoGroup(
+private fun codecSection(details: DeviceDetails?): InfoSection {
+    val codecs = details?.codecs
+    return InfoSection(
         title = stringResource(R.string.device_info_section_codecs),
         rows =
             buildRows(
-                stringResource(R.string.device_info_decoders) to codecs.decoders.toString(),
-                stringResource(R.string.device_info_encoders) to codecs.encoders.toString(),
-                stringResource(R.string.device_info_hw_accelerated) to codecs.hardwareAccelerated.toString(),
-                stringResource(R.string.device_info_formats) to codecs.notableFormats.joinToString(", "),
+                stringResource(R.string.device_info_decoders) to codecs?.decoders?.toString(),
+                stringResource(R.string.device_info_encoders) to codecs?.encoders?.toString(),
+                stringResource(R.string.device_info_hw_accelerated) to codecs?.hardwareAccelerated?.toString(),
+                stringResource(R.string.device_info_formats) to codecs?.notableFormats?.joinToString(", "),
             ),
     )
 }
 
 @Composable
-internal fun BootGroup(profile: DeviceProfile) {
+private fun bootSection(profile: DeviceProfile): InfoSection {
     val boot = profile.boot
-    InfoGroup(
+    return InfoSection(
         title = stringResource(R.string.device_info_section_boot),
         rows =
             buildRows(
                 stringResource(R.string.device_info_bootloader_state) to
                     boot.bootloaderUnlocked?.let {
-                        stringResource(
-                            if (it) R.string.device_info_unlocked else R.string.device_info_locked,
-                        )
+                        stringResource(if (it) R.string.device_info_unlocked else R.string.device_info_locked)
                     },
                 stringResource(R.string.device_info_verified_boot) to boot.verifiedBootState,
                 stringResource(R.string.device_info_encryption) to boot.encryption,
@@ -273,18 +281,5 @@ internal fun BootGroup(profile: DeviceProfile) {
                         if (profile.suBinaryPresent) R.string.device_info_present else R.string.device_info_absent,
                     ),
             ),
-    )
-}
-
-@Composable
-internal fun SensorGroups(details: DeviceDetails?) {
-    val sensors = details?.sensors.orEmpty()
-    if (sensors.isEmpty()) return
-    InfoGroup(
-        title = stringResource(R.string.device_info_section_sensors),
-        rows =
-            sensors.map { sensor ->
-                sensor.type to sensor.name
-            },
     )
 }

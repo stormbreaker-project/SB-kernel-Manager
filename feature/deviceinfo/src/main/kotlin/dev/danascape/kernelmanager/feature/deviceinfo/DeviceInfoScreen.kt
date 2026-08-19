@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -35,7 +36,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.prauga.pvot.designsystem.modifier.pvotPressScale
 import com.prauga.pvot.designsystem.modifier.pvotReveal
-import dev.danascape.kernelmanager.core.designsystem.component.SettingsGroup
 import dev.danascape.kernelmanager.core.designsystem.component.ValueBlock
 import dev.danascape.kernelmanager.core.designsystem.component.ValueRow
 import dev.danascape.kernelmanager.core.designsystem.component.expandedBy
@@ -45,6 +45,16 @@ import dev.danascape.kernelmanager.core.model.DeviceProfile
 
 /** Longer than this and the value gets its own line rather than starving the label. */
 private const val INLINE_VALUE_LIMIT = 28
+
+/** A titled block of readouts, resolved once so the list can emit its rows lazily. */
+internal data class InfoSection(
+    val title: String,
+    val rows: List<Pair<String, String>>,
+)
+
+private val RowGap = 3.dp
+private val TitleGap = 7.dp
+private val GroupGap = 17.dp
 
 @Composable
 fun DeviceInfoScreen(
@@ -92,6 +102,8 @@ private fun DeviceInfoContent(
         HeaderCard(profile, modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp))
         TabStrip(selected = tab, stripState = stripState, onSelect = { tab = it })
 
+        val sections = tabSections(tab = tab, state = state, profile = profile)
+
         LazyColumn(
             state = listState,
             modifier = Modifier.fillMaxSize(),
@@ -101,56 +113,24 @@ private fun DeviceInfoContent(
                     bottom = 24.dp,
                     includeTopInset = false,
                 ),
-            verticalArrangement = Arrangement.spacedBy(20.dp),
+            verticalArrangement = Arrangement.spacedBy(RowGap),
         ) {
-            item(key = tab.name) {
-                Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
-                    TabContent(tab = tab, state = state, profile = profile)
+            sections.forEach { section ->
+                item(key = "${section.title}#title") {
+                    GroupTitle(section.title)
+                }
+                itemsIndexed(
+                    items = section.rows,
+                    key = { _, row -> "${section.title}#${row.first}" },
+                ) { index, row ->
+                    InfoRow(
+                        label = row.first,
+                        value = row.second,
+                        index = index,
+                        count = section.rows.size,
+                    )
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun TabContent(
-    tab: DeviceInfoTab,
-    state: DeviceInfoUiState,
-    profile: DeviceProfile,
-) {
-    when (tab) {
-        DeviceInfoTab.SYSTEM -> {
-            SystemGroup(profile, state.details)
-        }
-
-        DeviceInfoTab.SOC -> {
-            SocGroup(profile)
-            GpuGroup(profile)
-        }
-
-        DeviceInfoTab.SCREEN -> {
-            ScreenGroup(state.details)
-        }
-
-        DeviceInfoTab.MEMORY -> {
-            MemoryGroup(state.details)
-            StorageGroup(state.vitals)
-        }
-
-        DeviceInfoTab.BATTERY -> {
-            BatteryGroup(state.vitals)
-        }
-
-        DeviceInfoTab.CAMERAS -> {
-            CameraGroups(state.details)
-        }
-
-        DeviceInfoTab.CODECS -> {
-            CodecGroup(state.details)
-        }
-
-        DeviceInfoTab.BOOT -> {
-            BootGroup(profile)
         }
     }
 }
@@ -243,31 +223,29 @@ private fun HeaderCard(
     }
 }
 
-/** A titled group, skipped entirely when nothing under it could be read. */
+/** The group heading, matching SettingsGroup's but emitted as its own list item. */
 @Composable
-internal fun InfoGroup(
-    title: String,
-    rows: List<Pair<String, String>>,
+internal fun GroupTitle(title: String) {
+    Text(
+        text = title,
+        style = MaterialTheme.typography.labelSmall,
+        color = SBTheme.colors.accent,
+        modifier = Modifier.padding(start = 4.dp, top = GroupGap, bottom = TitleGap),
+    )
+}
+
+/** One readout, stacked when the value is too long to sit beside its label. */
+@Composable
+internal fun InfoRow(
+    label: String,
+    value: String,
+    index: Int,
+    count: Int,
 ) {
-    if (rows.isEmpty()) return
-    SettingsGroup(title = title) {
-        rows.forEachIndexed { index, (label, value) ->
-            if (value.length > INLINE_VALUE_LIMIT || '\n' in value) {
-                ValueBlock(
-                    label = label,
-                    value = value,
-                    index = index,
-                    count = rows.size,
-                )
-            } else {
-                ValueRow(
-                    label = label,
-                    value = value,
-                    index = index,
-                    count = rows.size,
-                )
-            }
-        }
+    if (value.length > INLINE_VALUE_LIMIT || '\n' in value) {
+        ValueBlock(label = label, value = value, index = index, count = count)
+    } else {
+        ValueRow(label = label, value = value, index = index, count = count)
     }
 }
 

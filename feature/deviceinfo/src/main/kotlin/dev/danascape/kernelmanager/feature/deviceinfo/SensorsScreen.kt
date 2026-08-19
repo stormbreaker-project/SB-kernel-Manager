@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -24,12 +25,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.prauga.pvot.designsystem.modifier.pvotReveal
-import dev.danascape.kernelmanager.core.designsystem.component.SettingsGroup
 import dev.danascape.kernelmanager.core.designsystem.component.ValueBlock
 import dev.danascape.kernelmanager.core.designsystem.component.expandedBy
 import dev.danascape.kernelmanager.core.designsystem.component.topInset
 import dev.danascape.kernelmanager.core.designsystem.theme.SBTheme
-import dev.danascape.kernelmanager.core.model.SensorInfo
+
+private val SensorRowGap = 3.dp
 
 @Composable
 fun SensorsScreen(
@@ -61,14 +62,22 @@ private fun SensorsContent(
                 bottom = 24.dp,
                 includeTopInset = false,
             ),
-        verticalArrangement = Arrangement.spacedBy(20.dp),
+        verticalArrangement = Arrangement.spacedBy(SensorRowGap),
     ) {
         item(key = "header") {
             SensorHeader(count = sensors.size, deviceName = state.profile?.identity?.displayName)
         }
         if (sensors.isNotEmpty()) {
-            item(key = "list") {
-                SensorList(sensors)
+            item(key = "title") {
+                GroupTitle(stringResource(R.string.sensors_available))
+            }
+            itemsIndexed(items = sensors, key = { _, sensor -> sensor.name }) { index, sensor ->
+                ValueBlock(
+                    label = sensor.name,
+                    value = stringResource(R.string.sensors_subtitle, sensor.type, sensor.vendor),
+                    index = index,
+                    count = sensors.size,
+                )
             }
         }
     }
@@ -104,20 +113,6 @@ private fun SensorHeader(
                 text = it,
                 style = MaterialTheme.typography.labelMedium,
                 color = SBTheme.colors.muted,
-            )
-        }
-    }
-}
-
-@Composable
-private fun SensorList(sensors: List<SensorInfo>) {
-    SettingsGroup(title = stringResource(R.string.sensors_available)) {
-        sensors.forEachIndexed { index, sensor ->
-            ValueBlock(
-                label = sensor.name,
-                value = stringResource(R.string.sensors_subtitle, sensor.type, sensor.vendor),
-                index = index,
-                count = sensors.size,
             )
         }
     }
