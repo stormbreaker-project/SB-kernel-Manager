@@ -21,6 +21,7 @@ SPDX-License-Identifier: Apache-2.0
     <string name="device_info_section_boot">Boot and security</string>
     <string name="device_info_section_sensors">Sensors</string>
     <string name="device_info_section_camera">Camera %1$s · %2$s</string>
+    <string name="device_info_section_cameras">Cameras</string>
 
     <string name="device_info_manufacturer">Manufacturer</string>
     <string name="device_info_brand">Brand</string>
