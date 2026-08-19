@@ -22,4 +22,6 @@ SPDX-License-Identifier: Apache-2.0
     <string name="tab_device_hw_description">Hardware and build details</string>
     <string name="tab_sensors">Sensors</string>
     <string name="tab_sensors_description">Every sensor on this device</string>
+    <string name="tab_tests">Tests</string>
+    <string name="tab_tests_description">Check the hardware works</string>
 </resources>

@@ -24,9 +24,14 @@ data object DeviceInfoRoute
 @Serializable
 data object SensorsRoute
 
+@Serializable
+data object TestsRoute
+
 fun NavController.navigateToDeviceInfo(navOptions: NavOptions? = null) = navigate(DeviceInfoRoute, navOptions)
 
 fun NavController.navigateToSensors(navOptions: NavOptions? = null) = navigate(SensorsRoute, navOptions)
+
+fun NavController.navigateToTests(navOptions: NavOptions? = null) = navigate(TestsRoute, navOptions)
 
 /**
  * The device screens, sharing one view model.
@@ -51,6 +56,9 @@ fun NavGraphBuilder.deviceGraph(
                 contentPadding = contentPadding,
                 viewModel = sharedDeviceViewModel(navController, entry),
             )
+        }
+        composable<TestsRoute> {
+            TestsScreen(contentPadding = contentPadding)
         }
     }
 }

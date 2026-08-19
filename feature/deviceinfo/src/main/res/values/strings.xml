@@ -10,6 +10,27 @@ SPDX-License-Identifier: Apache-2.0
 
     <string name="device_info_loading">Reading the device…</string>
 
+    <string name="tests_kicker">tests</string>
+    <string name="tests_title">Hardware checks</string>
+    <string name="tests_description">Run each one and confirm the hardware behaves. Nothing is wired up yet.</string>
+    <string name="tests_not_run">Not run</string>
+    <string name="test_display">Display</string>
+    <string name="test_touch">Touch</string>
+    <string name="test_multitouch">Multitouch</string>
+    <string name="test_flashlight">Flashlight</string>
+    <string name="test_vibration">Vibration</string>
+    <string name="test_speaker">Speaker</string>
+    <string name="test_earpiece">Earpiece</string>
+    <string name="test_microphone">Microphone</string>
+    <string name="test_volume_up">Volume up</string>
+    <string name="test_volume_down">Volume down</string>
+    <string name="test_proximity">Proximity</string>
+    <string name="test_light_sensor">Light sensor</string>
+    <string name="test_accelerometer">Accelerometer</string>
+    <string name="test_gyroscope">Gyroscope</string>
+    <string name="test_fingerprint">Fingerprint</string>
+    <string name="test_battery">Battery</string>
+
     <string name="sensors_kicker">sensors</string>
     <string name="sensors_available">Available</string>
     <string name="sensors_subtitle">%1$s · %2$s</string>

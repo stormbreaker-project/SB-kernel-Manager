@@ -11,6 +11,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import dev.danascape.kernelmanager.R
 import dev.danascape.kernelmanager.feature.deviceinfo.DeviceInfoRoute
 import dev.danascape.kernelmanager.feature.deviceinfo.SensorsRoute
+import dev.danascape.kernelmanager.feature.deviceinfo.TestsRoute
 
 /** The nav bar swaps to these while the device screens are open. */
 enum class DeviceDestination(
@@ -30,6 +31,12 @@ enum class DeviceDestination(
         iconRes = R.drawable.ic_tab_sensors,
         labelRes = R.string.tab_sensors,
         contentDescriptionRes = R.string.tab_sensors_description,
+    ),
+    TESTS(
+        route = TestsRoute,
+        iconRes = R.drawable.ic_tab_tests,
+        labelRes = R.string.tab_tests,
+        contentDescriptionRes = R.string.tab_tests_description,
     ),
 }
 
